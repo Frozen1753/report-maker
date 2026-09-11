@@ -1,6 +1,7 @@
 import coverImg from "./assets/default-og-image.png";
 import { CoverPage } from './components/cover-page/CoverPage';
 import { Header } from './components/header/Header';
+import { TableOfContent } from "./components/toc/TableOfContent";
 import Report, { toc } from './report.mdx';
 
 export default function App() {
@@ -28,17 +29,7 @@ export default function App() {
           authorAffiliation={["IUT de Nevers, BUT Informatique"]}
         />
 
-        <nav className="toc">
-          <ul>
-            {toc.map((item) => (
-              <li key={item.id} className={`lvl${item.depth}`} style={{ marginLeft: (item.depth - 1) * 12 }}>
-                <a href={`#${item.id}`}>
-                  {item.number} — {item.text}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <TableOfContent items={toc} />
 
         <div className="content">
           <Report />

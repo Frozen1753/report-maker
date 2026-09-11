@@ -12,9 +12,9 @@
 - [X] `<Header">`
 - [X] `<CoverPage">`
 - [ ] `<Separator">`
-- [ ] `<TableOfContents items={toc} />` — remplace le `<ul>` brut de `App.example.tsx`
-- [X] `<Collapsible title="...">` — utilise `<details>/<summary>` en interne pour l'accessibilité gratuite
-- [ ] `<BeforeAfter before="..." after="..." />` — slider ou côte-à-côte
+- [X] `<TableOfContents items={toc} />`
+- [X] `<Collapsible title="...">`
+- [ ] `<BeforeAfter before="..." after="..." />` — slider possiblement avec animation
 - [ ] `<Figure src="..." caption="..." />` — image/gif/vidéo + légende + lightbox optionnelle
 - [ ] `<Callout type="info|warning|note">` — encadrés d'admonition
 - [ ] `<Code type="inline|bloc">`
