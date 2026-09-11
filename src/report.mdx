@@ -1,3 +1,5 @@
+import { Collapsible } from "./components/collapsible/Collapsible"
+
 # Introduction
 
 This is the opening section of the report. Regular Markdown works exactly as you'd expect — **bold**, _italics_, lists, tables, code blocks, all of it.
@@ -33,3 +35,24 @@ And here's where a `<Collapsible title="Methodology">...</Collapsible>` would go
 # Conclusion
 
 Wrap-up section.
+
+À partir de cette simple déclaration, le composant génère automatiquement l'ensemble des métadonnées nécessaires.
+
+<Collapsible title="Bonjour">
+
+```html
+<head>
+    <...>
+    <title>UnlockIt – Accueil</title>
+    <meta name="description" content="UnlockIt : achetez vos jeux PC moins cher. Clés Steam, Origin et Uplay livrées instantanément au meilleur prix.">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="UnlockIt – Accueil">
+    <meta ...>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta ...>
+    <link rel="canonical" href="https://unlock-it.com/">
+    <...>
+</head>
+```
+
+</Collapsible>

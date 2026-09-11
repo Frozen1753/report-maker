@@ -13,7 +13,7 @@
 - [X] `<CoverPage">`
 - [ ] `<Separator">`
 - [ ] `<TableOfContents items={toc} />` — remplace le `<ul>` brut de `App.example.tsx`
-- [ ] `<Collapsible title="...">` — utilise `<details>/<summary>` en interne pour l'accessibilité gratuite
+- [X] `<Collapsible title="...">` — utilise `<details>/<summary>` en interne pour l'accessibilité gratuite
 - [ ] `<BeforeAfter before="..." after="..." />` — slider ou côte-à-côte
 - [ ] `<Figure src="..." caption="..." />` — image/gif/vidéo + légende + lightbox optionnelle
 - [ ] `<Callout type="info|warning|note">` — encadrés d'admonition
