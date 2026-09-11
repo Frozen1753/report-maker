@@ -1,0 +1,348 @@
+/* ==========================================================
+   UNLOCKIT SAE 4.01 - RAPPORT QUALITE (THEME CLAIR PRO)
+   ========================================================== */
+
+:root {
+  --text-black: #000000;
+  --text-white: #ffffff;
+
+  --bg-white: #f8f8f8;
+  --bg-grey: #d9d9d9;
+
+  --accent-primary: #0149ad;
+  --accent-secondary: #4fb0ff;
+  --accent-tertiary: #ececec;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--bg-grey);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-grey);
+  font-family: "Segoe UI", sans-serif;
+}
+
+.false-body {
+  font-size: 18px;
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 60px 60px 60px;
+  line-height: 1.8;
+  color: var(--text-black);
+  background: var(--bg-white);
+  min-height: 100vh;
+  text-align: justify;
+}
+
+.false-body img {
+  display: block;
+  margin: 20px auto;
+  max-width: 100%;
+  height: auto;
+}
+
+/* ==========================================================
+   HEADER
+   ========================================================== */
+
+.sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+
+    background: var(--accent-primary);
+
+    padding: 12px 60px;
+
+    display: flex;
+    justify-content: space-between; /* Titre à gauche, logo à droite */
+    align-items: center;            /* Centrage vertical */
+
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.header-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text-white);
+}
+
+.header-logo {
+    height: 40px;
+    object-fit: contain;
+}
+
+/* ==========================================================
+   TITRES
+   ========================================================== */
+
+h1 {
+  background: var(--accent-primary);
+  color: var(--text-white);
+  font-weight: 700;
+  padding: 14px 20px;
+  border-radius: 6px;
+  margin-top: 60px;
+}
+
+h2 {
+  background: var(--accent-tertiary);
+  color: var(--text-black);
+  border-left: 6px solid var(--accent-secondary);
+  padding: 8px 16px;
+  border-radius: 8px;
+  margin-top: 40px;
+}
+
+h3 {
+  color: var(--accent-primary);
+  font-weight: 700;
+  padding-left: 12px;
+}
+
+/* ==========================================================
+   PAGE DE GARDE (VERSION PRO)
+   ========================================================== */
+
+.cover-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+
+.cover-page img.logo {
+    max-width: 200px;
+    margin: 0 auto 30px auto;
+}
+
+.cover-page h1 {
+    background: none;
+    color: var(--accent-primary);
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    margin-top: 0px;
+    border-radius: 0px;
+}
+
+.cover-page h2 {
+    background: none;
+    color: var(--accent-secondary);
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 40px;
+}
+
+.cover-image {
+    margin: 40px auto;
+    border-radius: 16px;
+    max-width: 700px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, .15);
+}
+
+.cover-authors {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+}
+
+.cover-authors .info-line {
+    font-size: 1.2rem;
+    color: var(--text-black);
+}
+
+.cover-authors .authors a {
+    color: var(--accent-primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.cover-authors .authors a:hover {
+    color: var(--accent-secondary);
+}
+
+/* ==========================================================
+   SOMMAIRE
+   ========================================================== */
+
+.toc {
+  background: var(--accent-tertiary);
+  border: 1px solid var(--accent-tertiary);
+  border-radius: 12px;
+  padding: 30px;
+  margin: 40px 0;
+}
+
+.toc ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.toc li {
+  margin: 6px 0;
+}
+
+.toc a {
+  text-decoration: none;
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+.toc a:hover {
+  color: var(--accent-secondary);
+}
+
+.toc li:not(.lvl2):not(.lvl3) a {
+  font-weight: 700;
+}
+
+/* Sous‑titres (h2) */
+.toc .lvl2 {
+  padding-left: 20px;
+  font-weight: 500;
+  color: var(--text-black);
+  border-left: 3px solid var(--accent-secondary);
+  margin-left: 10px;
+}
+
+/* Sous‑sous‑titres (h3) */
+.toc .lvl3 {
+  padding-left: 40px;
+  font-weight: 400;
+  color: var(--text-black);
+  opacity: 0.8;
+  border-left: 2px solid var(--accent-tertiary);
+  margin-left: 10px;
+}
+
+/* ==========================================================
+   CARTES / BULLES
+   ========================================================== */
+
+.card,
+.before,
+.after,
+.note,
+.success {
+  background: var(--accent-tertiary);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 20px 0;
+}
+
+.card h4,
+.before h4,
+.after h4,
+.note h4,
+.success h4 {
+  margin-top: 0;
+}
+
+/* ==========================================================
+   COMPARAISON
+   ========================================================== */
+
+.comparison {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin: 40px 0;
+}
+
+.before h4 {
+  color: #b91c1c;
+}
+
+.after h4 {
+  color: #15803d;
+}
+
+/* ==========================================================
+   CODE
+   ========================================================== */
+
+pre {
+  border-radius: 16px;
+}
+
+/* ==========================================================
+   TABLEAUX
+   ========================================================== */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 30px 0;
+}
+
+th,
+td {
+  border: 1px solid var(--accent-tertiary);
+  padding: 12px;
+}
+
+th {
+  background: var(--accent-tertiary);
+}
+
+/* ==========================================================
+   PAGE BREAK
+   ========================================================== */
+
+.page-break {
+  page-break-after: always;
+}
+
+/* ==========================================================
+   SECTIONS
+   ========================================================== */
+
+.accordion summary {
+    cursor: pointer;
+    padding: 0px 10px;
+    background: var(--accent-secondary);
+    border-radius: 8px;
+    font-weight: 600;
+    color: white;
+}
+
+.accordion[open] {
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.accordion[open] summary {
+    background: var(--accent-tertiary);
+    border: 1px solid var(--text-black);
+    color: black;
+}
+
+/* ==========================================================
+   CODE
+   ========================================================== */
+
+/* Style inline pour `code` */
+.c {
+  background: #ececec;
+  color: #0149ad !important;
+  padding: 1px 3px;
+  border-radius: 6px;
+  font-size: 16px !important;
+  border: 1px solid #d0d0d0;
+}
+
+/* ==========================================================
+   DISTANCE DE SCROLL
+   ========================================================== */
+
+h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
+    scroll-margin-top: 80px;
+}

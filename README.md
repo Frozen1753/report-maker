@@ -1,35 +1,64 @@
-# React + TypeScript + Vite
+# report-maker — scaffold
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Ces fichiers sont à fusionner dans ton projet React-TypeScript (Vite) existant.
 
-Currently, two official plugins are available:
+## 1. Installer les dépendances
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm install -D @mdx-js/rollup remark-gfm unist-util-visit mdast-util-to-string \ github-slugger estree-util-value-to-estree vite-plugin-singlefile image-size \ @types/mdast
+```
 
-## React Compiler
+`@vitejs/plugin-react` est probablement déjà présent dans ton projet blank Vite ; sinon ajoute-le aussi.
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## 2. Copier les fichiers
 
-Note: This will impact Vite dev & build performances.
-You can also try [the experimental native React Compiler support in plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md#rust-react-compiler) by using `compiler: true` in the plugin options instead of using the Babel plugin.
+```
+vite.config.ts                          → remplace le tien (fusionne si tu as déjà des plugins)
+report.assets.config.json               → racine du projet
+scripts/build-report.mjs
+scripts/asset-rules.ts
+scripts/export-server-plugin.ts
+src/mdx-plugins/remark-heading-numbers.ts
+src/types/mdx.d.ts
+src/report.mdx                          → contenu de démo, à remplacer par ton vrai rapport
+src/App.example.tsx                     → exemple, à adapter/renommer en App.tsx
+TODO.md
+```
 
-## Expanding the Oxlint configuration
+## 3. Ajouter les scripts npm
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+Dans `package.json` :
 
 ```json
 {
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
+  "scripts": {
+    "build:folder": "node scripts/build-report.mjs folder",
+    "build:singlefile": "node scripts/build-report.mjs singlefile",
+    "build:hybrid": "node scripts/build-report.mjs hybrid"
   }
 }
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## 4. Vérifier tsconfig.json
+
+Assure-toi d'avoir :
+
+```json
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "moduleResolution": "bundler"
+  }
+}
+```
+
+## 5. Tester
+
+```bash
+npm run dev              # vérifie que report.mdx s'affiche avec la numérotation
+npm run build:folder     # dist/folder/ avec assets séparés
+npm run build:singlefile # dist/singlefile/index.html, tout inliné
+npm run build:hybrid     # dist/hybrid/index.html + dist/hybrid/assets/ pour les gros fichiers
+```
+
+Voir `TODO.md` pour la suite (composants, thème, panneau d'export UI).
