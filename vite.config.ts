@@ -1,11 +1,11 @@
-import { defineConfig, type PluginOption } from 'vite'
-import react from '@vitejs/plugin-react'
 import mdx from '@mdx-js/rollup'
+import react from '@vitejs/plugin-react'
 import remarkGfm from 'remark-gfm'
+import { defineConfig, type PluginOption } from 'vite'
 import { viteSingleFile } from 'vite-plugin-singlefile'
-import remarkHeadingNumbers from './src/mdx-plugins/remark-heading-numbers.ts'
-import { exportServerPlugin } from './scripts/export-server-plugin.ts'
 import { loadAssetConfig, shouldInlineAsset } from './scripts/asset-rules.ts'
+import { exportServerPlugin } from './scripts/export-server-plugin.ts'
+import remarkHeadingNumbers from './src/utils/mdx-plugins/remark-heading-numbers.ts'
 
 // Set by scripts/build-report.mjs (see package.json "build:*" scripts):
 //   folder     -> normal Vite build, assets emitted to dist/folder/assets/
