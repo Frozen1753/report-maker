@@ -26,7 +26,7 @@ body {
   font-family: "Segoe UI", sans-serif;
 }
 
-.false-body {
+main {
   font-size: 18px;
   max-width: 1200px;
   margin: auto;
@@ -38,7 +38,7 @@ body {
   text-align: justify;
 }
 
-.false-body img {
+.report-layout img {
   display: block;
   margin: 20px auto;
   max-width: 100%;
