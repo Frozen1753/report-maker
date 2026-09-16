@@ -11,7 +11,7 @@
 ## Composants
 - [X] `<Header">`
 - [X] `<CoverPage">`
-- [ ] `<Separator">`
+- [ ] `<Separator">` (garder `<hr>` mais changer CSS)
 - [X] `<TableOfContents items={toc} />`
 - [X] `<Collapsible title="...">`
 - [ ] `<BeforeAfter before="..." after="..." />` — slider possiblement avec animation
