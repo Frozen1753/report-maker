@@ -13,5 +13,9 @@ console.log(`\n📦 Building report in "${mode}" mode -> dist/${mode}/\n`)
 
 execSync('vite build', {
   stdio: 'inherit',
-  env: { ...process.env, REPORT_BUILD_MODE: mode },
+  env: {
+    ...process.env,
+    NODE_ENV: 'production',
+    REPORT_BUILD_MODE: mode,
+  },
 })

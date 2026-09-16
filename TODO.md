@@ -14,11 +14,10 @@
 - [ ] `<Separator">` (garder `<hr>` mais changer CSS)
 - [X] `<TableOfContents items={toc} />`
 - [X] `<Collapsible title="...">`
-- [ ] `<BeforeAfter before="..." after="..." />` — slider possiblement avec animation
+- [ ] `<BeforeAfter before="..." after="..." />` — slider
 - [ ] `<Figure src="..." caption="..." />` — image/gif/vidéo + légende + lightbox optionnelle
-- [ ] `<Callout type="info|warning|note">` — encadrés d'admonition
+- [ ] `<Callout type="info|warning|note">`
 - [ ] `<Code type="inline|bloc">`
-- [ ] `theme.css` — variables CSS globales (`--color-bg`, `--color-accent`, `--font-heading`, etc.)
 - [ ] `<ExportPanel>` : toggle folder/singlefile/hybrid + checkboxes (exclure gifs, vidéos, images > X px)
   - [ ] Appel `fetch('/api/export', { method: 'POST', body: JSON.stringify(options) })` (voir `scripts/export-server-plugin.ts`)
   - [ ] Afficher le `log` retourné (succès/erreur) et un lien vers `dist/<mode>/`

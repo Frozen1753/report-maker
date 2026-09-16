@@ -5,16 +5,11 @@ import { valueToEstree } from 'estree-util-value-to-estree'
 import type { Root, Heading } from 'mdast'
 import type { Plugin } from 'unified'
 
-// @types/mdast doesn't ship an index signature on `Data` anymore, so custom
-// fields like hProperties (the mdast-util-to-hast convention for passing
-// through HTML attributes) need to be registered explicitly. Without this,
-// `data.hProperties = ...` below is a type error even though it works fine
-// at runtime.
-declare module 'mdast' {
-  interface Data {
-    hProperties?: Record<string, unknown>
-  }
-}
+// Note: `hProperties` is already declared on mdast's `Data` type by
+// mdast-util-to-hast (typed as hast's `Properties`, i.e. string/number/
+// boolean/array values) — no module augmentation needed here. Redeclaring
+// it with an incompatible type (e.g. `Record<string, unknown>`) causes a
+// "subsequent property declarations must have the same type" error.
 
 export interface TocEntry {
   id: string
@@ -69,7 +64,7 @@ const remarkHeadingNumbers: Plugin<[HeadingNumbersOptions?], Root> = (options = 
 
       const data = (node.data ??= {})
       data.hProperties = {
-        ...(data.hProperties as Record<string, unknown> | undefined),
+        ...data.hProperties,
         id,
         'data-heading-number': number,
       }

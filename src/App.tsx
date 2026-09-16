@@ -1,5 +1,6 @@
 import coverImg from "./assets/default-og-image.png";
 import { CoverPage } from './components/cover-page/CoverPage';
+import { ExportPanel } from "./components/export-panel/ExportPanel";
 import { Header } from './components/header/Header';
 import { TableOfContent } from "./components/toc/TableOfContent";
 import Report, { toc } from './report.mdx';
@@ -35,6 +36,8 @@ export default function App() {
           <Report />
         </div>
       </main>
+
+      {import.meta.env.DEV && <ExportPanel />}
     </div>
   )
 }

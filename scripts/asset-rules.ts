@@ -1,6 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import sizeOf from 'image-size'
+import { imageSize } from 'image-size'
 
 export interface AssetExclusionConfig {
   /** File extensions that always stay external, regardless of size, e.g. video/gif */
@@ -43,7 +43,7 @@ export function shouldInlineAsset(filePath: string, content: Buffer, config: Ass
 
   if (['.png', '.jpg', '.jpeg', '.webp'].includes(ext)) {
     try {
-      const { width } = sizeOf(content)
+      const { width } = imageSize(content)
       if (width && width > config.maxImageWidth) return false
     } catch {
       // Couldn't read dimensions (corrupt/odd file) — fall through and let it inline.
