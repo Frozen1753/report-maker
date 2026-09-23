@@ -346,3 +346,264 @@ th {
 h1[id], h2[id], h3[id], h4[id], h5[id], h6[id] {
     scroll-margin-top: 80px;
 }
+
+/* ==========================================================
+   SEPARATOR
+   ========================================================== */
+
+hr.separator {
+  border: none;
+  border-top: 1px solid var(--accent-tertiary);
+  margin: 40px 0;
+}
+
+.separator-labeled {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 40px 0;
+}
+
+.separator-labeled .separator-line {
+  flex: 1;
+  height: 1px;
+  background: var(--accent-tertiary);
+}
+
+.separator-labeled .separator-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent-primary);
+  white-space: nowrap;
+}
+
+/* ==========================================================
+   BEFORE / AFTER (fondu)
+   ========================================================== */
+
+.before-after {
+  margin: 40px 0;
+}
+
+.before-after-toggle {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.before-after-toggle button {
+  border: 1px solid var(--accent-tertiary);
+  background: var(--bg-white);
+  color: var(--text-black);
+  font-weight: 600;
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 6px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+
+.before-after-toggle button:hover {
+  border-color: var(--accent-secondary);
+}
+
+.before-after-toggle button.active {
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
+  color: var(--text-white);
+}
+
+.before-after-stage {
+  display: grid;
+}
+
+.before-after-stage .before-after-layer {
+  grid-area: 1 / 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .35s ease;
+}
+
+.before-after-stage .before-after-layer.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.before-after-stage .before-after-layer img,
+.before-after-stage .before-after-layer video {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  border-radius: 12px;
+}
+
+/* ==========================================================
+   FIGURE
+   ========================================================== */
+
+figure.figure {
+  margin: 30px 0;
+  text-align: center;
+}
+
+figure.figure img,
+figure.figure video {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  border-radius: 12px;
+}
+
+figure.figure.clickable {
+  cursor: zoom-in;
+}
+
+figure.figure figcaption {
+  margin-top: 10px;
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--text-black);
+  opacity: 0.75;
+}
+
+.figure-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  cursor: zoom-out;
+}
+
+.figure-lightbox img {
+  max-width: 100%;
+  max-height: 100%;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, .4);
+}
+
+/* ==========================================================
+   CALLOUT
+   ========================================================== */
+
+.callout {
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 20px 0;
+  border-left: 6px solid var(--accent-secondary);
+  background: var(--accent-tertiary);
+}
+
+.callout-title {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.callout-info {
+  border-left-color: var(--accent-secondary);
+}
+
+.callout-info .callout-title {
+  color: var(--accent-primary);
+}
+
+.callout-warning {
+  border-left-color: #d97706;
+  background: #fef3c7;
+}
+
+.callout-warning .callout-title {
+  color: #b45309;
+}
+
+.callout-note {
+  border-left-color: #6b7280;
+  background: #f0f0f0;
+}
+
+.callout-note .callout-title {
+  color: #374151;
+}
+
+/* ==========================================================
+   CODE BLOC (highlight.js)
+   ========================================================== */
+
+pre.code-bloc {
+  background: #0d1117;
+  border-radius: 16px;
+  padding: 18px 20px;
+  overflow-x: auto;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+pre.code-bloc code {
+  font-family: "Fira Code", "Consolas", monospace;
+  color: #e6edf3;
+  background: none;
+}
+
+/* highlight.js token colors, tuned to the report accent palette */
+.hljs-comment,
+.hljs-quote {
+  color: #8b949e;
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-title.function_ {
+  color: var(--accent-secondary);
+}
+
+.hljs-string,
+.hljs-attr,
+.hljs-symbol,
+.hljs-bullet {
+  color: #a5d6ff;
+}
+
+.hljs-number,
+.hljs-built_in,
+.hljs-type {
+  color: #79c0ff;
+}
+
+.hljs-title,
+.hljs-title.class_,
+.hljs-name,
+.hljs-selector-id {
+  color: #ffa657;
+}
+
+.hljs-variable,
+.hljs-template-variable,
+.hljs-attribute {
+  color: #ffa198;
+}
+
+.hljs-tag {
+  color: #7ee787;
+}
+
+.hljs-deletion {
+  color: #ffa198;
+}
+
+.hljs-addition {
+  color: #7ee787;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: 700;
+}

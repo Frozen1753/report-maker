@@ -1,3 +1,4 @@
+
 type CoverPageProps = {
     title: string;
     coverImg?: {
@@ -19,7 +20,6 @@ export function CoverPage({ title = "My report", coverImg, date, authors, author
     return (
         <div className="cover-page">
             <h1>{title}</h1>
-            <hr />
             {coverImg &&
                 <div>
                     <a href={coverImg.coverImgHref} target="_blank">

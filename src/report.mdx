@@ -1,58 +1,84 @@
-import { Collapsible } from "./components/collapsible/Collapsible"
+import coverAfter from './assets/after.png'
+import coverBefore from './assets/before.png'
+import { BeforeAfter } from './components/report/BeforeAfter'
+import { Callout } from './components/report/Callout'
+import { Code } from './components/report/Code'
+import { Collapsible } from './components/report/Collapsible'
+import { Figure } from './components/report/Figure'
+import { Mermaid } from './components/report/Mermaid'
+import { Separator } from './components/report/Separator'
 
 # Introduction
 
-This is the opening section of the report. Regular Markdown works exactly as you'd expect — **bold**, _italics_, lists, tables, code blocks, all of it.
+This is the opening section of the report. Regular Markdown works exactly as you'd expect — **bold**, _italics_, lists, tables — alongside real React components dropped in wherever needed.
+
+<Callout type="info" title="Reading this report">
+  Every section below is numbered and linked automatically from the table of contents — no manual bookkeeping required.
+</Callout>
 
 ## Context
 
-Some background text here.
+Some inline code looks like this: <Code>npm run build:hybrid</Code>, rendered inline without breaking the paragraph flow.
 
 ### Why this matters
 
-A nested sub-point.
+<Callout type="warning">
+  This is a warning-style callout — use it to flag things a reader shouldn't skip.
+</Callout>
 
 ## Objectives
 
-What we set out to do.
+<Collapsible title="Full methodology (click to expand)">
+  This is optional, detailed content kept out of the main reading flow. Drop in as much depth as you want here without cluttering the report for a reader who just wants the summary.
+</Collapsible>
+
+<Separator />
 
 # Results
 
-The second top-level section. Notice its number picks up at 2, not 1.
+The second top-level section — its numbering picks up at 2, not 1.
 
 ## Before / after comparison
 
-This is where you'd drop in your own `<BeforeAfter />` component once you've built it:
+<BeforeAfter before={coverBefore} after={coverAfter} beforeLabel="Before" afterLabel="After" />
 
-```mdx
-<BeforeAfter before="/assets/before.png" after="/assets/after.png" />
-```
+## A figure with a caption
 
-## Optional details
+<Figure
+  src={coverBefore}
+  alt="Example screenshot"
+  caption="Figure 1 — an example screenshot with a caption and lightbox."
+  lightbox
+/>
 
-And here's where a `<Collapsible title="Methodology">...</Collapsible>` would go, once you've built it, to keep the main flow uncluttered.
+## Code blocks
+
+Highlighted at runtime via highlight.js, themed with `github-dark`:
+
+<Code type="bloc" lang="typescript">
+{`interface Report {
+  title: string
+  sections: Section[]
+}
+
+function buildToc(report: Report): TocEntry[] {
+  return report.sections.map(toEntry)
+}`}
+</Code>
+
+<Separator label="Section break" />
+
+## Diagrams
+
+Mermaid renders live SVG in the browser:
+
+<Mermaid chart={`graph TD
+  A[Start] --> B{Decision}
+  B -->|Yes| C[Do thing]
+  B -->|No| D[Do other thing]`} />
 
 # Conclusion
 
-Wrap-up section.
-
-À partir de cette simple déclaration, le composant génère automatiquement l'ensemble des métadonnées nécessaires.
-
-<Collapsible title="Bonjour">
-
-```html
-<head>
-    <...>
-    <title>UnlockIt – Accueil</title>
-    <meta name="description" content="UnlockIt : achetez vos jeux PC moins cher. Clés Steam, Origin et Uplay livrées instantanément au meilleur prix.">
-    <meta name="robots" content="index, follow">
-    <meta property="og:title" content="UnlockIt – Accueil">
-    <meta ...>
-    <meta name="twitter:card" content="summary_large_image">
-    <meta ...>
-    <link rel="canonical" href="https://unlock-it.com/">
-    <...>
-</head>
-```
-
-</Collapsible>
+<Callout type="note" title="Wrap-up">
+  Swap this demo content out for your real report — every component above is ready to reuse.
+</Callout>

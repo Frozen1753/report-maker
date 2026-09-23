@@ -10,18 +10,18 @@
 
 ## Composants
 - [X] `<Header">`
-- [X] `<CoverPage">`
-- [ ] `<Separator">` (garder `<hr>` mais changer CSS)
+- [X] `<CoverPage>`
+- [X] `<Separator/>`
 - [X] `<TableOfContents items={toc} />`
 - [X] `<Collapsible title="...">`
-- [ ] `<BeforeAfter before="..." after="..." />` — slider
-- [ ] `<Figure src="..." caption="..." />` — image/gif/vidéo + légende + lightbox optionnelle
-- [ ] `<Callout type="info|warning|note">`
-- [ ] `<Code type="inline|bloc">`
-- [ ] `<ExportPanel>` : toggle folder/singlefile/hybrid + checkboxes (exclure gifs, vidéos, images > X px)
-  - [ ] Appel `fetch('/api/export', { method: 'POST', body: JSON.stringify(options) })` (voir `scripts/export-server-plugin.ts`)
-  - [ ] Afficher le `log` retourné (succès/erreur) et un lien vers `dist/<mode>/`
-  - [ ] Idée : lister les assets détectés via `import.meta.glob('/src/assets/**')` pour peupler les checkboxes automatiquement
+- [X] `<BeforeAfter before="..." after="..." />`
+- [X] `<Figure src="..." caption="..." />`
+- [X] `<Callout type="info|warning|note">`
+- [X] `<Code type="inline|bloc">`
+- [X] `<ExportPanel>` : toggle folder/singlefile/hybrid + checkboxes (exclure gifs, vidéos, images > X px)
+  - [x] folder
+  - [x] singlefile
+  - [ ] hybrid
 
 ## Autre
 - [ ] Détection "image 4K" actuellement basée sur la largeur en px (`maxImageWidth` dans `report.assets.config.json`) — ajuster le seuil si besoin

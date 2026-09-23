@@ -1,9 +1,20 @@
+import type { ReactElement } from "react";
 import coverImg from "./assets/default-og-image.png";
 import { CoverPage } from './components/cover-page/CoverPage';
 import { ExportPanel } from "./components/export-panel/ExportPanel";
 import { Header } from './components/header/Header';
+import { Mermaid } from "./components/report/Mermaid";
 import { TableOfContent } from "./components/toc/TableOfContent";
 import Report, { toc } from './report.mdx';
+
+// MDX compiles a ```mermaid fence to <pre><code className="language-mermaid">...
+// Intercepting `pre` lets every report.mdx just write plain ```mermaid blocks,
+// no manual <Mermaid chart="..."> needed.
+function PreOrMermaid({ children, ...props }: { children?: ReactElement<{ className?: string; children?: string }> }) {
+  const isMermaid = children?.props?.className?.includes('language-mermaid')
+  if (isMermaid) return <Mermaid chart={String(children?.props?.children ?? '')} />
+  return <pre {...props}>{children}</pre>
+}
 
 export default function App() {
   return (
@@ -23,8 +34,8 @@ export default function App() {
           date="Mars – Juin 2026"
           authors={
             [
-              { firstName: "Eliot", lastName: "NADOUCE", alias: "Frozen1753", authorHref: "https://github.com/Frozen1753" },
-              { firstName: "Noah", lastName: "GAUCHE", alias: "ElPotato", authorHref: "https://github.com/ElPotatoCorp" },
+              { firstName: "?", lastName: "?", alias: "Frozen1753", authorHref: "https://github.com/Frozen1753" },
+              { firstName: "?", lastName: "?", alias: "ElPotato", authorHref: "https://github.com/ElPotatoCorp" },
             ]
           }
           authorAffiliation={["IUT de Nevers, BUT Informatique"]}
@@ -33,7 +44,7 @@ export default function App() {
         <TableOfContent items={toc} />
 
         <div className="content">
-          <Report />
+          <Report components={{ pre: PreOrMermaid }} />
         </div>
       </main>
 
