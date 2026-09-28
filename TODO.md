@@ -12,6 +12,7 @@
 - [ ] `<Header">` (revisite)
 - [ ] `<CoverPage>` (revisite)
 - [ ] `<Separator/>` (revisite)
+- [X] Headings styles (h3, h4, h5, etc.)
 - [ ] `<TableOfContents items={toc} />` (revisite)
 - [X] `<Collapsible title="...">`
 - [X] `<Tabs/>`
@@ -26,3 +27,4 @@
     - [ ] Détection "image 4K" actuellement basée sur la largeur en px (`maxImageWidth` dans `report.assets.config.json`) — ajuster le seuil si besoin
     - [ ] Décider si `useRecommendedBuildConfig: false` en mode hybride a des effets de bord à corriger au cas par cas (voir commentaires dans `vite.config.ts`)
 - [ ] `<ThemePanel>` : to change colors and other simple stuff
+- [ ] Custom Fonts
