@@ -7,10 +7,15 @@ import { Collapsible } from './components/report/Collapsible'
 import { Figure } from './components/report/Figure'
 import { Mermaid } from './components/report/Mermaid'
 import { Separator } from './components/report/Separator'
+import { Tabs } from './components/report/Tabs'
 
 # Introduction
 
-This is the opening section of the report. Regular Markdown works exactly as you'd expect — **bold**, _italics_, lists, tables — alongside real React components dropped in wherever needed.
+Sometimes, Markdown isn’t enough to create a report; in fact, even a Markdown variant isn’t enough. You want HTML, Markdown, mathematical formulas, and even scripts… and at that point, it becomes impossible to read or write in your uncompiled file!
+
+Here, we make smart use of React components and scripts, along with classic Markdown and its main extensions, to create a fully customizable report.
+
+We’ve also made sure to add some cool features, like automatic heading numbering and compilation options, so you end up with just a single HTML file!
 
 <Callout type="info" title="Reading this report">
   Every section below is numbered and linked automatically from the table of contents — no manual bookkeeping required.
@@ -32,15 +37,127 @@ Some inline code looks like this: <Code>npm run build:hybrid</Code>, rendered in
   This is optional, detailed content kept out of the main reading flow. Drop in as much depth as you want here without cluttering the report for a reader who just wants the summary.
 </Collapsible>
 
+<Collapsible title="Can still be open by default" open>
+  You should be able to read this without clicking once
+</Collapsible>
+
 <Separator />
 
 # Results
 
 The second top-level section — its numbering picks up at 2, not 1.
 
-## Before / after comparison
+## Callouts
 
-<BeforeAfter before={coverBefore} after={coverAfter} beforeLabel="Before" afterLabel="After" />
+<Callout>
+  This is an informational callout.
+</Callout>
+
+<Callout type="tip">
+  Prefer using a semantic HTML element where possible.
+</Callout>
+
+<Callout type="warning" title="Before continuing">
+  Make sure your configuration is backed up.
+</Callout>
+
+<Callout type="caution">
+  This operation cannot be undone.
+</Callout>
+
+<Callout type="important">
+  Remember this for later.
+</Callout>
+
+<Callout type="note" title="Wrap-up">
+  Swap this demo content out for your real report — every component above is ready to reuse.
+</Callout>
+
+## Tabs
+
+### Classic Tabs
+
+<Tabs
+  tabs={[
+    {
+      label: "Overview",
+      content: <p>General information.</p>,
+    },
+    {
+      label: "Implementation",
+      content: <pre>...</pre>,
+    },
+    {
+      label: "Notes",
+      content: <p>Additional notes.</p>,
+    },
+  ]}
+/>
+
+
+### Before / after comparison
+
+<BeforeAfter before={<img src={coverBefore} alt=""/>} after={<img src={coverAfter} alt=""/>} beforeLabel="Before" afterLabel="After" />
+
+<BeforeAfter
+before={
+  <Code type="bloc" lang="md">
+  {`<link rel="stylesheet" href="./src/style.css">
+<link rel="stylesheet" href="./src/hljs.css">
+
+<header class="sticky-header">
+    <span class="header-title">Rapport SAÉ 4.01 - Qualité</span>
+    <img src="src/assets/unlock-it.svg" alt="UnlockIt Logo" class="header-logo">
+</header>
+
+<div class="false-body">
+
+<div class="cover-page">
+
+# Sommaire
+
+<div class="toc">
+
+<ul>
+  [...]
+</ul>
+
+</div>
+
+# 1. Introduction
+
+## 1.1 Présentation du projet
+
+[...]`}
+  </Code>
+}
+after={
+  <>
+  <Code type="bloc" lang="html">
+{`<div className="page">
+    <Header title="My report" logoAlt="logo here" />
+
+    <main>
+      <CoverPage/>
+
+      <TableOfContent items={toc} />
+
+      <div className="content">
+        <Report />
+      </div>
+    </main>
+  </div>`}
+  </Code>
+  <Code type="bloc" lang="typescript">
+{`import coverAfter from './assets/after.png'
+import coverBefore from './assets/before.png'
+import { BeforeAfter } from './components/report/BeforeAfter'
+
+<BeforeAfter before={<img src={coverBefore} alt=""/>} after={<img src={coverAfter} alt=""/>} beforeLabel="Before" afterLabel="After" />`}
+  </Code>
+  </>
+}
+/>
 
 ## A figure with a caption
 
@@ -72,10 +189,104 @@ function buildToc(report: Report): TocEntry[] {
 
 Mermaid renders live SVG in the browser:
 
-<Mermaid chart={`graph TD
+<Mermaid chart={
+  `graph TD
+
+    classDef style1 fill:#DE3131,stroke:#940000,stroke-width:2px,color:#000;
+    classDef style2 fill:#ffe9b3,stroke:#d1a84f,stroke-width:2px,color:#000;
+    classDef style3 fill:#61dafb,stroke:#1b7aa6,stroke-width:2px,color:#000;
+    classDef style4 fill:#60B500,stroke:#3F7500,stroke-width:2px,color:#000;
+
+    A:::style1
+    B:::style2
+    C:::style3
+    D:::style4
+
   A[Start] --> B{Decision}
   B -->|Yes| C[Do thing]
   B -->|No| D[Do other thing]`} />
+
+  <Mermaid chart={
+  `pie showData
+    title Browser Market Share
+    "Chrome" : 65
+    "Safari" : 19
+    "Firefox" : 8
+    "Edge" : 5
+    "Other" : 3`} />
+
+    <Mermaid chart={
+  `mindmap
+  root((Project Ideas))
+    Marketing
+      Social Media Campaign
+      Email Newsletter
+      Content Strategy
+    Development
+      Mobile App
+        iOS
+        Android
+      Web Platform
+        Frontend
+        Backend
+    Research
+      User Interviews
+      Competitor Analysis
+      Market Trends`} />
+
+      <Mermaid chart={
+  `classDiagram
+    class Animal {
+        +String name
+        +int age
+        +makeSound()
+    }
+    class Dog {
+        +String breed
+        +fetch()
+        +bark()
+    }
+    class Cat {
+        +bool isIndoor
+        +meow()
+        +purr()
+    }
+    Animal <|-- Dog
+    Animal <|-- Cat
+    Dog ..> Toy : plays with
+    class Toy {
+        +String type
+    }`} />
+
+    <Mermaid chart={
+  `    gitGraph
+       commit
+       commit
+       branch develop
+       commit
+       commit
+       commit
+       checkout main
+       commit
+       commit
+`} />
+
+<Mermaid chart={
+  `   gantt
+      accTitle: My Gantt Chart Accessibility Title
+      accDescr: My Gantt Chart Accessibility Description
+
+    title A Gantt Diagram
+    dateFormat  YYYY-MM-DD
+    section Section
+    A task           :a1, 2014-01-01, 30d
+    Another task     :after a1  , 20d
+    section Another
+    Task in sec      :2014-01-12  , 12d
+    another task      : 24d
+
+
+`} />
 
 # Conclusion
 

@@ -1,4 +1,5 @@
-import { useState, type ReactNode } from "react";
+import type { ReactNode } from "react";
+import { Tabs, type TabItem } from "./Tabs";
 
 type Slot = string | ReactNode;
 
@@ -9,47 +10,22 @@ type BeforeAfterProps = {
     afterLabel?: string;
 };
 
-function renderSlot(slot: Slot) {
-    if (typeof slot === "string") {
-        return <img src={slot} alt="" />;
-    }
-    return slot;
+export function BeforeAfter({
+    before,
+    after,
+    beforeLabel = "Avant",
+    afterLabel = "Après",
+}: BeforeAfterProps) {
+    const tabs: TabItem[] = [
+        {
+            label: beforeLabel,
+            content: <div className="before-after-content">{before}</div>,
+        },
+        {
+            label: afterLabel,
+            content: <div className="before-after-content">{after}</div>,
+        },
+    ];
+
+    return <Tabs tabs={tabs} className="before-after" />;
 }
-
-export function BeforeAfter({ before, after, beforeLabel = "Avant", afterLabel = "Après" }: BeforeAfterProps) {
-    const [active, setActive] = useState<"before" | "after">("before");
-
-    return (
-        <div className="before-after">
-            <div className="before-after-toggle" role="tablist">
-                <button
-                    type="button"
-                    role="tab"
-                    aria-selected={active === "before"}
-                    className={active === "before" ? "active" : ""}
-                    onClick={() => setActive("before")}
-                >
-                    {beforeLabel}
-                </button>
-                <button
-                    type="button"
-                    role="tab"
-                    aria-selected={active === "after"}
-                    className={active === "after" ? "active" : ""}
-                    onClick={() => setActive("after")}
-                >
-                    {afterLabel}
-                </button>
-            </div>
-
-            <div className="before-after-stage">
-                <div className={`before-after-layer${active === "before" ? " visible" : ""}`}>
-                    {renderSlot(before)}
-                </div>
-                <div className={`before-after-layer${active === "after" ? " visible" : ""}`}>
-                    {renderSlot(after)}
-                </div>
-            </div>
-        </div>
-    );
-};

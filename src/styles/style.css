@@ -338,7 +338,7 @@ th {
 
   padding: 14px 16px;
 
-    cursor: pointer;
+  cursor: pointer;
   list-style: none;
   user-select: none;
 
@@ -441,6 +441,131 @@ hr.separator {
   font-weight: 600;
   color: var(--accent-primary);
   white-space: nowrap;
+}
+
+/* ==========================================================
+   TABS
+   ========================================================== */
+
+.tabs {
+  --tabs-border: color-mix(
+    in srgb,
+    var(--accent-primary) 25%,
+    var(--bg-grey)
+  );
+
+  margin: 40px 0;
+}
+
+.tabs-list {
+  display: flex;
+  gap: 4px;
+
+  width: fit-content;
+  max-width: 100%;
+  margin-bottom: 16px;
+  padding: 4px;
+
+  overflow-x: auto;
+
+  border: 1px solid var(--tabs-border);
+  border-radius: 10px;
+  background: var(--accent-tertiary);
+}
+
+.tabs-trigger {
+  flex: 0 0 auto;
+
+  padding: 8px 16px;
+
+  border: 0;
+  border-radius: 7px;
+
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-black);
+
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  white-space: nowrap;
+
+  transition:
+    color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.tabs-trigger:hover:not(:disabled) {
+  background: color-mix(
+    in srgb,
+    var(--accent-secondary) 25%,
+    transparent
+  );
+}
+
+.tabs-trigger.active {
+  background: var(--accent-primary);
+  color: var(--text-white);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 15%);
+}
+
+.tabs-trigger:focus-visible {
+  outline: 3px solid color-mix(
+    in srgb,
+    var(--accent-secondary) 70%,
+    transparent
+  );
+  outline-offset: 2px;
+}
+
+.tabs-trigger:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.tabs-panel {
+  min-width: 0;
+  animation: tabs-panel-in 180ms ease;
+}
+
+.tabs-panel:focus-visible {
+  outline: 3px solid color-mix(
+    in srgb,
+    var(--accent-secondary) 60%,
+    transparent
+  );
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+.before-after-content img,
+.before-after-content video {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 12px;
+}
+
+@keyframes tabs-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tabs-trigger,
+  .tabs-panel {
+    transition: none;
+    animation: none;
+  }
 }
 
 /* ==========================================================
