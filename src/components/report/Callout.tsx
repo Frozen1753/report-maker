@@ -1,6 +1,20 @@
-import type { ReactNode } from "react";
+import {
+    InfoIcon,
+    Lightbulb,
+    MessageCircleWarning,
+    SquareExclamationPoint,
+    StickyNote,
+    TriangleAlert,
+} from "lucide-react";
+import type { ComponentType, ReactNode } from "react";
 
-type CalloutType = "info" | "warning" | "note";
+type CalloutType =
+    | "info"
+    | "tip"
+    | "note"
+    | "warning"
+    | "caution"
+    | "important";
 
 type CalloutProps = {
     type?: CalloutType;
@@ -8,17 +22,69 @@ type CalloutProps = {
     children: ReactNode;
 };
 
-const DEFAULT_TITLES: Record<CalloutType, string> = {
-    info: "Info",
-    warning: "Attention",
-    note: "Note",
+type CalloutConfig = {
+    title: string;
+    Icon: ComponentType<{
+        size?: number;
+        strokeWidth?: number;
+        "aria-hidden"?: boolean;
+    }>;
 };
 
-export function Callout({ type = "info", title, children }: CalloutProps) {
-    return (
-        <div className={`callout callout-${type}`}>
-            <div className="callout-title">{title ?? DEFAULT_TITLES[type]}</div>
-            <div className="callout-body">{children}</div>
-        </div>
-    );
+const CALLOUT_CONFIG: Record<CalloutType, CalloutConfig> = {
+    info: {
+        title: "Info",
+        Icon: InfoIcon,
+    },
+    tip: {
+        title: "Tip",
+        Icon: Lightbulb,
+    },
+    note: {
+        title: "Note",
+        Icon: StickyNote,
+    },
+    warning: {
+        title: "Warning",
+        Icon: TriangleAlert,
+    },
+    caution: {
+        title: "Caution",
+        Icon: SquareExclamationPoint,
+    },
+    important: {
+        title: "Important",
+        Icon: MessageCircleWarning,
+    },
 };
+
+export function Callout({
+    type = "info",
+    title,
+    children,
+}: CalloutProps) {
+    const { title: defaultTitle, Icon } = CALLOUT_CONFIG[type];
+
+    const isAlert = type === "warning" || type === "caution";
+
+    return (
+        <aside
+            className={`callout callout-${type}`}
+            role={isAlert ? "alert" : undefined}
+        >
+            <div className="callout-heading">
+                <Icon
+                    size={22}
+                    strokeWidth={2.25}
+                    aria-hidden
+                />
+
+                <div className="callout-title">
+                    {title ?? defaultTitle}
+                </div>
+            </div>
+
+            <div className="callout-body">{children}</div>
+        </aside>
+    );
+}
