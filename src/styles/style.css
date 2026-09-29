@@ -908,6 +908,36 @@ figure.figure figcaption {
    CODE BLOC (highlight.js)
    ========================================================== */
 
+.code-wrapper {
+  position: relative;
+}
+
+.copy-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 1;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #555;
+  border-radius: 0.35rem;
+  background: #222;
+  color: white;
+  cursor: pointer;
+}
+
+.copied-button {
+  color: rgb(74, 221, 16);
+}
+
+.code-bloc {
+  overflow-x: auto;
+}
+
 pre.code-bloc {
   background: #0d1117;
   border-radius: 16px;

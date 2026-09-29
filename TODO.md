@@ -9,6 +9,13 @@
 - [x] Endpoint dev `/api/export` prêt à être appelé par un bouton (build déclenché en arrière-plan)
 
 ## Composants
+- [ ] Project (ReportMaker)
+  - [ ] Logo
+  - [ ] Colors
+  - [ ] Sort style.css
+    - [ ] Remove unused style
+    - [ ] Rename styles for more coherant names
+  - [ ] A report that explains how to use report-maker, made by the very same tool XD
 - [ ] `<Header">` (revisite)
 - [ ] `<CoverPage>` (revisite)
 - [ ] `<Separator/>` (revisite)
@@ -26,6 +33,8 @@
   - [ ] hybrid
     - [ ] Détection "image 4K" actuellement basée sur la largeur en px (`maxImageWidth` dans `report.assets.config.json`) — ajuster le seuil si besoin
     - [ ] Décider si `useRecommendedBuildConfig: false` en mode hybride a des effets de bord à corriger au cas par cas (voir commentaires dans `vite.config.ts`)
+- [X] Top link
+- [X] Easy copy code
 - [ ] Light mode / dark mode
 - [ ] `<ThemePanel>` : to change colors and other simple stuff
 - [ ] Custom Fonts
