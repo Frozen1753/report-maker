@@ -1,7 +1,7 @@
 .report-export-fab {
   position: fixed;
   right: 1.5rem;
-  bottom: 1.5rem;
+  bottom: 9.5rem;
   z-index: 1000;
   width: 3rem;
   height: 3rem;
@@ -10,8 +10,8 @@
   cursor: pointer;
   font-size: 1.25rem;
   line-height: 1;
-  color: var(--report-fab-color, #fff);
-  background: var(--color-accent, #4f46e5);
+  color: var(--text-white);
+  background: var(--accent-primary);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
   transition: transform 0.15s ease;
 }

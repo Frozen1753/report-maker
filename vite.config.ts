@@ -5,6 +5,7 @@ import { defineConfig, type PluginOption } from 'vite'
 import { viteSingleFile } from 'vite-plugin-singlefile'
 import { loadAssetConfig, shouldInlineAsset } from './scripts/asset-rules.ts'
 import { exportServerPlugin } from './scripts/export-server-plugin.ts'
+import { themeServerPlugin } from './scripts/theme-server-plugin.ts'
 import remarkHeadingNumbers from './src/utils/mdx-plugins/remark-heading-numbers.ts'
 
 // Set by scripts/build-report.mjs (see package.json "build:*" scripts):
@@ -26,6 +27,7 @@ export default defineConfig({
     react({ include: /\.(jsx|js|mdx|md|tsx|ts)$/ }),
 
     exportServerPlugin(),
+    themeServerPlugin(),
 
     // Full single-file mode: let the plugin apply its recommended config
     // (it force-inlines every JS/CSS/asset into one HTML — see its source).

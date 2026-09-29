@@ -1,3 +1,4 @@
+import { Download } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import './ExportPanel.css'
 
@@ -74,7 +75,7 @@ export function ExportPanel() {
         aria-label="Open export panel"
         title="Export report"
       >
-        ⬇
+        <Download />
       </button>
 
       {isOpen && (

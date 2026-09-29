@@ -28,6 +28,7 @@
 - [X] `<Callout type="info|warning|note|...">`
 - [X] `<Code type="inline|bloc">`
 - [X] `<ExportPanel>` : toggle folder/singlefile/hybrid + checkboxes (exclure gifs, vidéos, images > X px)
+  - [ ] Pannel style
   - [x] folder
   - [x] singlefile
   - [ ] hybrid
@@ -36,5 +37,10 @@
 - [X] Top link
 - [X] Easy copy code
 - [ ] Light mode / dark mode
+  - [ ] Second option for hljs
 - [ ] `<ThemePanel>` : to change colors and other simple stuff
-- [ ] Custom Fonts
+  - [X] CSS var edition
+  - [X] preview
+  - [ ] Fonts import 
+  - [ ] Pannel style
+  - [ ] Select highlight js

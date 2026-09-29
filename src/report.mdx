@@ -170,7 +170,11 @@ import { BeforeAfter } from './components/report/BeforeAfter'
 
 ## Code blocks
 
-Highlighted at runtime via highlight.js, themed with `github-dark`:
+Can make 2 differente types of code :
+- inline, mostly used for file name, short commands, etc.
+- bloc, larger code, with the option to make them copiable
+
+Highlighted at runtime via highlight.js.
 
 <Code type="bloc" lang="typescript">
 {`interface Report {
@@ -181,6 +185,10 @@ Highlighted at runtime via highlight.js, themed with `github-dark`:
 function buildToc(report: Report): TocEntry[] {
   return report.sections.map(toEntry)
 }`}
+</Code>
+
+<Code type="bloc" lang="bash" copy>
+{`cat command_2_copy.txt`}
 </Code>
 
 <Separator label="Section break" />

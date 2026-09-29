@@ -4,6 +4,7 @@ import { CoverPage } from './components/cover-page/CoverPage';
 import { ExportPanel } from "./components/export-panel/ExportPanel";
 import { Header } from './components/header/Header';
 import { Mermaid } from "./components/report/Mermaid";
+import { ThemePanel } from "./components/theme-panel/ThemePanel";
 import { TableOfContent } from "./components/toc/TableOfContent";
 import { TopButton } from "./components/top-button/TopButton";
 import Report, { toc } from './report.mdx';
@@ -51,6 +52,7 @@ export default function App() {
 
       <TopButton />
       {import.meta.env.DEV && <ExportPanel />}
+      {import.meta.env.DEV && <ThemePanel />}
     </div>
   )
 }

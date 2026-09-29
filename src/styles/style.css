@@ -23,6 +23,16 @@
   --body-font-size: 1.2rem;
 }
 
+:root[data-theme="dark"] {
+  --text-black: #d6d6d6;
+  --text-white: #333333;
+  --accent-primary: #2e86fe;
+  --accent-secondary: #006ac1;
+  --bg-white: #2c2c2c;
+  --bg-grey: #4f4f4f;
+  --accent-tertiary: #606060;
+}
+
 html {
   scroll-behavior: smooth;
   background: var(--bg-grey);
@@ -39,7 +49,7 @@ body {
 main {
   max-width: 1200px;
   margin: auto;
-  padding: 0 60px 60px 60px;
+  padding: 20px 60px 60px 60px;
   line-height: 1.8;
   color: var(--text-black);
   background: var(--bg-white);
@@ -540,12 +550,12 @@ th {
 
 /* Style inline pour `code` */
 .c {
-  background: #ececec;
-  color: #0149ad !important;
+  background: var(--bg-grey);
+  color: var(--accent-primary);
   padding: 1px 3px;
   border-radius: 6px;
   font-size: 16px !important;
-  border: 1px solid #d0d0d0;
+  border: 1px solid var(--accent-tertiary);
 }
 
 /* ==========================================================
@@ -875,33 +885,33 @@ figure.figure figcaption {
 }
 
 .callout-info {
-  --callout-color: var(--accent-primary);
-  --callout-background: #eef6ff;
+  --callout-color: #006eff;
+  --callout-background: #d2e6ff99;
 }
 
 .callout-tip {
   --callout-color: #15803d;
-  --callout-background: #f0fdf4;
+  --callout-background: #d4ffe299;
 }
 
 .callout-note {
   --callout-color: #4b5563;
-  --callout-background: #f3f4f6;
+  --callout-background: #f3f4f699;
 }
 
 .callout-warning {
   --callout-color: #b45309;
-  --callout-background: #fffbeb;
+  --callout-background: #ffeed499;
 }
 
 .callout-caution {
   --callout-color: #b91c1c;
-  --callout-background: #fef2f2;
+  --callout-background: #ffd7d799;
 }
 
 .callout-important {
   --callout-color: #7e22ce;
-  --callout-background: #faf5ff;
+  --callout-background: #efdeff99;
 }
 
 /* ==========================================================
