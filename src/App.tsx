@@ -5,6 +5,7 @@ import { ExportPanel } from "./components/export-panel/ExportPanel";
 import { Header } from './components/header/Header';
 import { Mermaid } from "./components/report/Mermaid";
 import { TableOfContent } from "./components/toc/TableOfContent";
+import { TopButton } from "./components/top-button/TopButton";
 import Report, { toc } from './report.mdx';
 
 // MDX compiles a ```mermaid fence to <pre><code className="language-mermaid">...
@@ -48,6 +49,7 @@ export default function App() {
         </div>
       </main>
 
+      <TopButton />
       {import.meta.env.DEV && <ExportPanel />}
     </div>
   )
