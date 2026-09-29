@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 import remarkGfm from 'remark-gfm'
 import { defineConfig, type PluginOption } from 'vite'
 import { viteSingleFile } from 'vite-plugin-singlefile'
+import svgr from 'vite-plugin-svgr'
 import { loadAssetConfig, shouldInlineAsset } from './scripts/asset-rules.ts'
 import { exportServerPlugin } from './scripts/export-server-plugin.ts'
 import { themeServerPlugin } from './scripts/theme-server-plugin.ts'
@@ -26,6 +27,8 @@ export default defineConfig({
     { enforce: 'pre', ...mdx({ remarkPlugins: [remarkGfm, remarkHeadingNumbers] }) },
     react({ include: /\.(jsx|js|mdx|md|tsx|ts)$/ }),
 
+
+    svgr(),
     exportServerPlugin(),
     themeServerPlugin(),
 

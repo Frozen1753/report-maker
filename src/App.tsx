@@ -22,7 +22,6 @@ export default function App() {
   return (
     <div className="page">
       <Header title="My report" logoAlt="logo here" />
-
       <main>
         <CoverPage
           title="Rapport SAÉ 4.01 - Qualité"
