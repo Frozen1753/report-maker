@@ -6,8 +6,6 @@ function topFunction() {
 }
 
 export function TopButton() {
-    document.documentElement.scrollTop = 0;
-
     return (
         <>
             <button
