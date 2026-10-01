@@ -137,7 +137,7 @@ h2 {
   border-left: 6px solid var(--accent-primary);
   border-radius: 8px;
   background: var(--accent-tertiary);
-  color: var(--text-black);
+  color: var(--text-lightbg);
   font-size: var(--font-size-h2);
 }
 
