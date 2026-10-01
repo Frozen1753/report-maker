@@ -1,19 +1,30 @@
+import type { ReactNode } from "react";
+import ReportMakerLogo from "../../assets/report-maker_logo.svg?react";
+
 type HeaderProps = {
     title?: string;
-    logoSrc?: string;
+    logo?: ReactNode;
     logoAlt?: string;
 };
 
-import ReportMakerLogo from "../../assets/report-maker_logo.svg?react";
-
-export function Header({ title = "[report title]", logoSrc, logoAlt }: HeaderProps) {
+export function Header({
+    title = "[report title]",
+    logo = <ReportMakerLogo aria-label="Report Maker" />,
+    logoAlt = "Logo",
+}: HeaderProps) {
     return (
         <header className="sticky-header">
             <span className="header-title">
                 {title}
             </span>
-            <ReportMakerLogo fill="white" />
-            {/*<img src={logoSrc} className="header-logo" alt={logoAlt} />*/}
+
+            <div
+                className="header-logo"
+                role={logoAlt ? "img" : undefined}
+                aria-label={logoAlt || undefined}
+            >
+                {logo}
+            </div>
         </header>
     );
-};
+}
