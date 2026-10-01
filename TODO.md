@@ -34,7 +34,6 @@
   - [X] Easy copy
 - [X] `<ExportPanel>` : toggle folder/singlefile/hybrid + checkboxes (exclure gifs, vidéos, images > X px)
   - [ ] Pannel style
-  - [ ] Tab Title editor
   - [x] folder
   - [x] singlefile
   - [ ] hybrid
