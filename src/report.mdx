@@ -1,10 +1,14 @@
 import coverAfter from './assets/after.png'
 import coverBefore from './assets/before.png'
+import videoExemple2 from './assets/coloride.webm'
+import gifExemple from './assets/spinning-kiwi.gif'
+import videoExemple from './assets/spinning_skull_fr.mp4'
+import gifExemple2 from './assets/wet_cat.gif'
+import { Figure } from './components/figure/Figure'
 import { BeforeAfter } from './components/report/BeforeAfter'
 import { Callout } from './components/report/Callout'
 import { Code } from './components/report/Code'
 import { Collapsible } from './components/report/Collapsible'
-import { Figure } from './components/report/Figure'
 import { Mermaid } from './components/report/Mermaid'
 import { Separator } from './components/report/Separator'
 import { Tabs } from './components/report/Tabs'
@@ -101,35 +105,35 @@ The second top-level section — its numbering picks up at 2, not 1.
 
 <BeforeAfter
 before={
-  <Code type="bloc" lang="md">
+<Code type="bloc" lang="md" bar name="old_report_base.MD" copy>
   {`<link rel="stylesheet" href="./src/style.css">
-<link rel="stylesheet" href="./src/hljs.css">
+  <link rel="stylesheet" href="./src/hljs.css">
 
-<header class="sticky-header">
+  <header class="sticky-header">
     <span class="header-title">Rapport SAÉ 4.01 - Qualité</span>
     <img src="src/assets/unlock-it.svg" alt="UnlockIt Logo" class="header-logo">
-</header>
+  </header>
 
-<div class="false-body">
+  <div class="false-body">
 
-<div class="cover-page">
+  <div class="cover-page">
 
-# Sommaire
+  # Sommaire
 
-<div class="toc">
+  <div class="toc">
 
-<ul>
-  [...]
-</ul>
+  <ul>
+    [...]
+  </ul>
 
-</div>
+  </div>
 
-# 1. Introduction
+  # 1. Introduction
 
-## 1.1 Présentation du projet
+  ## 1.1 Présentation du projet
 
 [...]`}
-  </Code>
+</Code>
 }
 after={
   <>
@@ -162,10 +166,76 @@ import { BeforeAfter } from './components/report/BeforeAfter'
 ## A figure with a caption
 
 <Figure
-  src={coverBefore}
-  alt="Example screenshot"
-  caption="Figure 1 — an example screenshot with a caption and lightbox."
-  lightbox
+    media={
+        <img
+            src={coverBefore}
+            alt="An example screenshot with a caption and lightbox"
+        />
+    }
+    lightbox
+    lightboxContent={
+        <img
+            src={coverBefore}
+            alt="An example screenshot with a caption and lightbox"
+        />
+    }
+    caption="An example screenshot with a caption and lightbox"
+/>
+
+<Figure
+    media={
+        <img
+            src={gifExemple}
+            alt="An example gif with a caption and lightbox"
+        />
+    }
+    lightbox
+    lightboxContent={
+        <img
+            src={gifExemple}
+            alt="An example gif with a caption and lightbox"
+        />
+    }
+    caption="An example gif with a caption and lightbox"
+/>
+
+<Figure
+    media={
+        <img
+            src={gifExemple2}
+            alt="A second example gif with a caption and lightbox"
+        />
+    }
+    lightbox
+    lightboxContent={
+        <img
+            src={gifExemple2}
+            alt="A second example gif with a caption and lightbox"
+        />
+    }
+    caption="A second example gif with a caption and lightbox"
+/>
+
+<Figure
+    media={
+        <video
+            src={videoExemple}
+            controls
+            alt="An example video with a caption"
+        />
+    }
+    caption="An example video with a caption"
+/>
+
+<Figure
+    media={
+        <video
+            src={videoExemple2}
+            controls
+            alt="A second example video with a caption"
+        />
+    }
+    caption="A second example video with a caption"
 />
 
 ## Code blocks
@@ -176,15 +246,16 @@ Can make 2 differente types of code :
 
 Highlighted at runtime via highlight.js.
 
-<Code type="bloc" lang="typescript">
+<Code type="bloc" lang="ts">
 {`interface Report {
-  title: string
-  sections: Section[]
-}
+    title: string
+    sections: Section[]
+  }
 
-function buildToc(report: Report): TocEntry[] {
-  return report.sections.map(toEntry)
-}`}
+  function buildToc(report: Report): TocEntry[] {
+    return report.sections.map(toEntry)
+  }
+`}
 </Code>
 
 <Code type="bloc" lang="bash" copy>
@@ -200,10 +271,10 @@ Mermaid renders live SVG in the browser:
 <Mermaid chart={
   `graph TD
 
-    classDef style1 fill:#DE3131,stroke:#940000,stroke-width:2px,color:#000;
+    classDef style1 fill:#EA4335,stroke:#940000,stroke-width:2px,color:#000;
     classDef style2 fill:#ffe9b3,stroke:#d1a84f,stroke-width:2px,color:#000;
-    classDef style3 fill:#61dafb,stroke:#1b7aa6,stroke-width:2px,color:#000;
-    classDef style4 fill:#60B500,stroke:#3F7500,stroke-width:2px,color:#000;
+    classDef style3 fill:#4285F4,stroke:#1b7aa6,stroke-width:2px,color:#000;
+    classDef style4 fill:#34A853,stroke:#3F7500,stroke-width:2px,color:#000;
 
     A:::style1
     B:::style2
@@ -212,37 +283,64 @@ Mermaid renders live SVG in the browser:
 
   A[Start] --> B{Decision}
   B -->|Yes| C[Do thing]
-  B -->|No| D[Do other thing]`} />
+  B -->|No| D[Do other thing]
+`}
+/>
 
-  <Mermaid chart={
-  `pie showData
-    title Browser Market Share
-    "Chrome" : 65
-    "Safari" : 19
-    "Firefox" : 8
-    "Edge" : 5
-    "Other" : 3`} />
+<Mermaid chart={
+  `%%{init: {
+    "theme": "base",
+    "themeVariables": {
+      "pie1": "#4285F4",
+      "pie2": "#34A853",
+      "pie3": "#FBBC05",
+      "pie4": "#EA4335",
+      "pie5": "#9C27B0",
+      "pieStrokeColor": "#ffffff",
+      "pieStrokeWidth": "2px",
+      "pieOuterStrokeWidth": "2px",
+      "pieTitleTextSize": "20px"
+    }
+  }}%%
 
-    <Mermaid chart={
-  `mindmap
-  root((Project Ideas))
-    Marketing
-      Social Media Campaign
-      Email Newsletter
-      Content Strategy
-    Development
-      Mobile App
-        iOS
-        Android
-      Web Platform
-        Frontend
-        Backend
-    Research
-      User Interviews
-      Competitor Analysis
-      Market Trends`} />
+  pie showData
+      title Browser Market Share
+      "Chrome" : 65
+      "Safari" : 19
+      "Firefox" : 8
+      "Edge" : 5
+      "Other" : 3
+`}/>
 
-      <Mermaid chart={
+<Mermaid chart={
+  `%%{init: {
+    "theme": "base",
+    "themeVariables": {
+      "primaryColor": "#8ac8d8",
+      "primaryTextColor": "#ffffff"
+    }
+  }}%%
+
+  mindmap
+    root((Project Ideas))
+      Marketing
+        Social Media Campaign
+        Email Newsletter
+        Content Strategy
+      Development
+        Mobile App
+          iOS
+          Android
+        Web Platform
+          Frontend
+          Backend
+      Research
+        User Interviews
+        Competitor Analysis
+        Market Trends
+`} />
+
+<Mermaid chart={
   `classDiagram
     class Animal {
         +String name
@@ -264,36 +362,71 @@ Mermaid renders live SVG in the browser:
     Dog ..> Toy : plays with
     class Toy {
         +String type
-    }`} />
-
-    <Mermaid chart={
-  `    gitGraph
-       commit
-       commit
-       branch develop
-       commit
-       commit
-       commit
-       checkout main
-       commit
-       commit
+    }
 `} />
 
 <Mermaid chart={
-  `   gantt
+  `%%{init: {
+    "theme": "base",
+    "themeVariables": {
+      "git0": "#4285F4",
+      "git1": "#34A853",
+      "git2": "#FBBC05",
+      "git3": "#EA4335",
+      "git4": "#9C27B0",
+      "git5": "#00ACC1",
+      "git6": "#FF7043",
+      "gitBranchLabel0": "#1A237E",
+      "gitBranchLabel1": "#1B5E20"
+      }
+  }}%%
+
+  gitGraph
+      commit
+      commit
+      branch develop
+      commit
+      commit
+      commit
+      checkout main
+      commit
+      commit
+`} />
+
+<Mermaid chart={
+  `%%{init: {
+    "theme": "base",
+    "themeVariables": {
+      "primaryColor": "#61DAFB",
+      "primaryTextColor": "#000000",
+      "primaryBorderColor": "#1B7AA6",
+      "secondaryColor": "#FFE9B3",
+      "secondaryTextColor": "#000000",
+      "secondaryBorderColor": "#D1A84F",
+      "tertiaryColor": "#B9F6CA",
+      "tertiaryTextColor": "#000000",
+      "tertiaryBorderColor": "#2E7D32",
+      "activeTaskBkgColor": "#FFB6C1",
+      "activeTaskBorderColor": "#C2185B",
+      "gridColor": "#BDBDBD",
+      "todayLineColor": "#DE3131"
+    }
+  }}%%
+
+  gantt
       accTitle: My Gantt Chart Accessibility Title
       accDescr: My Gantt Chart Accessibility Description
 
-    title A Gantt Diagram
-    dateFormat  YYYY-MM-DD
-    section Section
-    A task           :a1, 2014-01-01, 30d
-    Another task     :after a1  , 20d
-    section Another
-    Task in sec      :2014-01-12  , 12d
-    another task      : 24d
+      title A Gantt Diagram
+      dateFormat YYYY-MM-DD
 
+      section Section
+      A task           :active, a1, 2014-01-01, 30d
+      Another task     :done, after a1, 20d
 
+      section Another
+      Task in sec      :crit, 2014-01-12, 12d
+      Another task     :milestone, 24d
 `} />
 
 # Titles
