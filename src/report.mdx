@@ -197,10 +197,14 @@ import { BeforeAfter } from './components/report/BeforeAfter'
     }
     lightbox
     lightboxContent={
-        <img
-            src={rickroll}
-            alt="A second example gif with a caption and lightbox"
-        />
+        <>
+          <img
+              src={rickroll}
+              alt="A second example gif with a caption and lightbox"
+          />
+          <p>Get rick-rolled!</p>
+          <p>More serioulsy, the lightbox content uses the media by default, but you can set it to whatever you want</p>
+        </>
     }
     caption="A second example gif with a caption and lightbox"
 />

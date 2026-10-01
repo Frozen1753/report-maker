@@ -895,6 +895,7 @@ figure.figure figcaption {
     max-width: 90vw;
     max-height: 90vh;
     cursor: default;
+    color: var(--text-darkbg);
 }
 
 /* ----- pan/zoom viewport ----- */
