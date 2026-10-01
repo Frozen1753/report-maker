@@ -963,24 +963,69 @@ figure.figure figcaption {
 
 .code-wrapper {
   position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    margin: 1rem 0;
+}
+
+.code-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    min-height: 42px;
+    padding: 0.45rem 0.65rem 0.45rem 1rem;
+
+    background: #161b22;
+    color: #e6edf3;
+    border-bottom: 1px solid #30363d;
+}
+
+.code-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+.code-name {
+    overflow: hidden;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.code-language {
+    padding: 0.15rem 0.45rem;
+    border: 1px solid #454c56;
+    border-radius: 0.3rem;
+
+    color: #a5d6ff;
+    font-family: monospace;
+    font-size: 0.75rem;
+    text-transform: lowercase;
 }
 
 .copy-button {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  z-index: 1;
-
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
 
+    flex-shrink: 0;
+
   padding: 0.4rem 0.6rem;
   border: 1px solid #555;
   border-radius: 0.35rem;
+
   background: #222;
   color: white;
   cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #333;
 }
 
 .copied-button {
@@ -988,80 +1033,24 @@ figure.figure figcaption {
 }
 
 .code-bloc {
+    margin: 0;
   overflow-x: auto;
 }
 
 pre.code-bloc {
+    padding: 1rem;
+
   background: #0d1117;
-  border-radius: 16px;
-  padding: 18px 20px;
-  overflow-x: auto;
   font-size: 15px;
   line-height: 1.6;
+}
+
+.has-code-bar pre.code-bloc {
+    border-radius: 0;
 }
 
 pre.code-bloc code {
   font-family: "Fira Code", "Consolas", monospace;
   color: #e6edf3;
   background: none;
-}
-
-/* highlight.js token colors, tuned to the report accent palette */
-.hljs-comment,
-.hljs-quote {
-  color: #8b949e;
-  font-style: italic;
-}
-
-.hljs-keyword,
-.hljs-selector-tag,
-.hljs-literal,
-.hljs-title.function_ {
-  color: var(--accent-secondary);
-}
-
-.hljs-string,
-.hljs-attr,
-.hljs-symbol,
-.hljs-bullet {
-  color: #a5d6ff;
-}
-
-.hljs-number,
-.hljs-built_in,
-.hljs-type {
-  color: #79c0ff;
-}
-
-.hljs-title,
-.hljs-title.class_,
-.hljs-name,
-.hljs-selector-id {
-  color: #ffa657;
-}
-
-.hljs-variable,
-.hljs-template-variable,
-.hljs-attribute {
-  color: #ffa198;
-}
-
-.hljs-tag {
-  color: #7ee787;
-}
-
-.hljs-deletion {
-  color: #ffa198;
-}
-
-.hljs-addition {
-  color: #7ee787;
-}
-
-.hljs-emphasis {
-  font-style: italic;
-}
-
-.hljs-strong {
-  font-weight: 700;
 }

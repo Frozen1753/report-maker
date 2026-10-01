@@ -7,9 +7,13 @@ import {
     type ReactNode,
 } from "react";
 
+import "highlight.js/styles/atom-one-dark.css";
+
 type CodeProps = {
     type?: "inline" | "bloc";
     copy?: boolean;
+    bar?: boolean;
+    name?: string;
     lang?: string;
     children: ReactNode;
 };
@@ -39,19 +43,28 @@ async function copyText(text: string) {
             await navigator.clipboard.writeText(text);
             return true;
         } catch {
-            // Fall through to the older fallback.
+            // Use fallback below.
         }
     }
 
     return copyFallback(text);
 }
 
-export function Code({ type = "inline", copy, lang, children }: CodeProps) {
+export function Code({
+    type = "inline",
+    copy = false,
+    bar = false,
+    name,
+    lang,
+    children,
+}: CodeProps) {
     const codeRef = useRef<HTMLElement>(null);
     const [copied, setCopied] = useState(false);
 
-    // Ideally, block-code children should be a string.
-    const code = typeof children === "string" ? children : String(children);
+    const code =
+        typeof children === "string"
+            ? children
+            : String(children);
 
     useEffect(() => {
         if (type === "bloc" && codeRef.current) {
@@ -61,34 +74,91 @@ export function Code({ type = "inline", copy, lang, children }: CodeProps) {
     }, [type, code, lang]);
 
     if (type === "inline") {
-        return <span className="c">{children}</span>;
+        return <code className="code-inline">{children}</code>;
     }
 
     async function handleCopy() {
         const success = await copyText(code);
 
-        if (success) {
-            setCopied(true);
-            window.setTimeout(() => setCopied(false), 1500);
-        }
+        if (!success) return;
+
+        setCopied(true);
+
+        window.setTimeout(() => {
+            setCopied(false);
+        }, 1500);
     }
 
     return (
-        <div className="code-wrapper">
-            {copy &&
+        <div className={`code-wrapper ${bar ? "has-code-bar" : ""}`}>
+            {bar && (
+                <div className="code-bar">
+                    <div className="code-info">
+                        {name && (
+                            <span className="code-name">
+                                {name}
+                            </span>
+                        )}
+
+                        {lang && (
+                            <span className="code-language">
+                                {lang}
+                            </span>
+                        )}
+                    </div>
+
+                    {copy && (
+                        <button
+                            type="button"
+                            className={`copy-button ${copied ? "copied-button" : ""
+                                }`}
+                            onClick={handleCopy}
+                            aria-label={
+                                copied
+                                    ? "Code copied"
+                                    : "Copy code"
+                            }
+                        >
+                            {copied ? (
+                                <CopyCheck size={18} />
+                            ) : (
+                                <Copy size={18} />
+                            )}
+
+                            <span>
+                                {copied ? "Copied" : "Copy"}
+                            </span>
+                        </button>
+                    )}
+                </div>
+            )}
+
+            {!bar && copy && (
                 <button
                     type="button"
-                    className={copied ? "copy-button copied-button" : "copy-button"}
+                    className={`copy-button ${copied ? "copied-button" : ""
+                        }`}
                     onClick={handleCopy}
-                    aria-label={copied ? "Code copied" : "Copy code"}
+                    aria-label={
+                        copied
+                            ? "Code copied"
+                            : "Copy code"
+                    }
                 >
-                    {copied ? <CopyCheck size={18} /> : <Copy size={18} />}
+                    {copied ? (
+                        <CopyCheck size={18} />
+                    ) : (
+                        <Copy size={18} />
+                    )}
                 </button>
-            }
+            )}
+
             <pre className="code-bloc">
                 <code
                     ref={codeRef}
-                    className={lang ? `language-${lang}` : undefined}
+                    className={
+                        lang ? `language-${lang}` : undefined
+                    }
                 >
                     {code}
                 </code>
