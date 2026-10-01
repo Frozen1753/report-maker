@@ -1125,6 +1125,39 @@ figure.figure figcaption {
     cursor: pointer;
 }
 
+.copy-button-no-bar {
+    position: absolute;
+    top: 0.65rem;
+    right: 0.65rem;
+    z-index: 2;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0.4rem;
+    border: 1px solid transparent;
+    border-radius: 0.35rem;
+
+    background: rgba(22, 27, 34, 0.85);
+    color: #e6edf3;
+    cursor: pointer;
+}
+
+.copy-button-no-bar:hover {
+    background: #333;
+    border-color: #555;
+}
+
+.copy-button-no-bar.copied-button {
+    color: rgb(74, 221, 16);
+}
+
+.code-wrapper:not(.has-code-bar) pre.code-bloc {
+    padding-top: 1rem;
+    padding-right: 4rem;
+}
+
 .copy-button:hover {
     background: #333;
 }

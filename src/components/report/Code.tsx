@@ -110,8 +110,7 @@ export function Code({
                     {copy && (
                         <button
                             type="button"
-                            className={`copy-button ${copied ? "copied-button" : ""
-                                }`}
+                            className={`copy-button ${copied ? "copied-button" : ""}`}
                             onClick={handleCopy}
                             aria-label={
                                 copied
@@ -136,8 +135,7 @@ export function Code({
             {!bar && copy && (
                 <button
                     type="button"
-                    className={`copy-button ${copied ? "copied-button" : ""
-                        }`}
+                    className={`copy-button-no-bar ${copied ? "copied-button" : ""}`}
                     onClick={handleCopy}
                     aria-label={
                         copied
