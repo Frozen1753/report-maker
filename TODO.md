@@ -10,35 +10,39 @@
 
 ## Composants
 - [ ] Project (ReportMaker)
-  - [ ] Logo
+  - [X] Logo + Icon
   - [ ] Colors
   - [ ] Sort style.css
+    - [ ] Split component css from global css
     - [ ] Remove unused style
     - [ ] Rename styles for more coherant names
   - [ ] A report that explains how to use report-maker, made by the very same tool XD
-- [ ] `<Header">` (revisite)
-- [ ] `<CoverPage>` (revisite)
-- [ ] `<Separator/>` (revisite)
+- [X] `<Header">`
+- [X] `<CoverPage>`
+- [X] `<Separator/>`
 - [X] Headings styles (h3, h4, h5, etc.)
 - [X] `<TableOfContents items={toc} />`
 - [X] `<Collapsible title="...">`
 - [X] `<Tabs/>`
   - [X] `<BeforeAfter before="..." after="..." />`
 - [ ] `<Figure src="..." caption="..." />` (revisite)
+  - [X] figure numbering
+  - [ ] Zoom
 - [X] `<Callout type="info|warning|note|...">`
-- [X] `<Code type="inline|bloc">`
+- [ ] `<Code type="inline|bloc">`
+  - [X] File name + language indicator 
+  - [ ] Easy copy
 - [X] `<ExportPanel>` : toggle folder/singlefile/hybrid + checkboxes (exclure gifs, vidéos, images > X px)
   - [ ] Pannel style
+  - [ ] Tab Title editor
   - [x] folder
   - [x] singlefile
   - [ ] hybrid
     - [ ] Détection "image 4K" actuellement basée sur la largeur en px (`maxImageWidth` dans `report.assets.config.json`) — ajuster le seuil si besoin
     - [ ] Décider si `useRecommendedBuildConfig: false` en mode hybride a des effets de bord à corriger au cas par cas (voir commentaires dans `vite.config.ts`)
 - [X] Top link
-- [X] Easy copy code
-- [ ] Light mode / dark mode
-  - [ ] Second option for hljs
-- [ ] `<ThemePanel>` : to change colors and other simple stuff
+- [X] Light mode / dark mode
+- [ ] `<ThemePanel>`
   - [X] CSS var edition
   - [X] preview
   - [ ] Fonts import 
