@@ -1,45 +1,96 @@
+import type { ReactNode } from "react";
+
+type CoverMedia = {
+    content: ReactNode;
+    href?: string;
+    ariaLabel?: string;
+};
+
+type Author = {
+    firstName?: string;
+    lastName?: string;
+    alias?: string;
+    href?: string;
+};
 
 type CoverPageProps = {
-    title: string;
-    coverImg?: {
-        coverImgSrc?: string;
-        coverImgAlt?: string;
-        coverImgHref?: string;
-    };
+    title?: string;
+    coverMedia?: CoverMedia;
     date: string;
-    authors?: {
-        firstName?: string;
-        lastName?: string;
-        alias?: string;
-        authorHref?: string;
-    }[];
-    authorAffiliation?: string[];
+    authors?: Author[];
+    affiliations?: string[];
 };
 
-export function CoverPage({ title = "My report", coverImg, date, authors, authorAffiliation }: CoverPageProps) {
+export function CoverPage({
+    title = "My report",
+    coverMedia,
+    date,
+    authors = [],
+    affiliations = [],
+}: CoverPageProps) {
     return (
-        <div className="cover-page">
-            <h1>{title}</h1>
-            {coverImg &&
-                <div>
-                    <a href={coverImg.coverImgHref} target="_blank">
-                        <img src={coverImg.coverImgSrc} className="cover-image" alt={coverImg.coverImgAlt} />
-                    </a>
+        <section className="cover-page" aria-labelledby="cover-title">
+            <h1 id="cover-title">{title}</h1>
+
+            {coverMedia && (
+                <div className="cover-media">
+                    {coverMedia.href ? (
+                        <a
+                            href={coverMedia.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={coverMedia.ariaLabel}
+                        >
+                            {coverMedia.content}
+                        </a>
+                    ) : (
+                        coverMedia.content
+                    )}
                 </div>
-            }
+            )}
+
             <div className="cover-authors">
-                <div className="info-line">{date}</div>
-                {authors && authors.map((author) => (
-                    <div className="info-line authors">
-                        <a href={author.authorHref} target="_blank">{author.firstName} {author.lastName} ({author.alias})</a>
+                <time className="info-line" dateTime={date}>
+                    {date}
+                </time>
+
+                {authors.map((author, index) => {
+                    const fullName = [
+                        author.firstName,
+                        author.lastName,
+                    ]
+                        .filter(Boolean)
+                        .join(" ");
+
+                    const displayName = author.alias
+                        ? `${fullName} (${author.alias})`
+                        : fullName;
+
+                    if (!displayName) return null;
+
+                    return (
+                        <div className="info-line authors" key={author.href ?? index}>
+                            {author.href ? (
+                                <a
+                                    href={author.href}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    {displayName}
+                                </a>
+                            ) : (
+                                displayName
+                            )}
+                        </div>
+                    );
+                })}
+
+                {affiliations.map((affiliation, index) => (
+                    <div className="info-line" key={`${affiliation}-${index}`}>
+                        {affiliation}
                     </div>
                 ))}
-                {authorAffiliation &&
-                    authorAffiliation.map((affiliation) => (
-                        <div className="info-line">{affiliation}</div>
-                    ))
-                }
             </div>
-        </div>
+        </section>
     );
-};
+}
