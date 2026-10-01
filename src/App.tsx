@@ -50,6 +50,7 @@ export default function App() {
       </main>
 
       <TopButton />
+      <ThemeButton />
       {import.meta.env.DEV && <ExportPanel />}
       {import.meta.env.DEV && <ThemePanel />}
     </div>
