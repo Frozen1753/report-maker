@@ -25,9 +25,9 @@
 - [X] `<Collapsible title="...">`
 - [X] `<Tabs/>`
   - [X] `<BeforeAfter before="..." after="..." />`
-- [ ] `<Figure src="..." caption="..." />` (revisite)
+- [X] `<Figure src="..." caption="..." />`
   - [X] figure numbering
-  - [ ] Zoom
+  - [X] Zoom
 - [X] `<Callout type="info|warning|note|...">`
 - [ ] `<Code type="inline|bloc">`
   - [X] File name + language indicator 

@@ -1,3 +1,4 @@
+import { X } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
 import { useFigureNumber } from "./FigureProvider";
 import { ZoomPan } from "./ZoomPan";
@@ -20,10 +21,8 @@ export function Figure({
     const figureNumber = useFigureNumber();
     const [open, setOpen] = useState(false);
 
-    const clickable = lightbox && Boolean(lightboxContent);
-
     function openLightbox() {
-        if (clickable) {
+        if (lightbox) {
             setOpen(true);
         }
     }
@@ -51,7 +50,7 @@ export function Figure({
     return (
         <>
             <figure
-                className={`figure ${clickable ? "clickable" : ""} ${className}`}
+                className={`figure ${lightbox ? "clickable" : ""} ${className}`}
                 onClick={openLightbox}
             >
                 <div className="figure-media">
@@ -86,7 +85,7 @@ export function Figure({
                     >
                         {/* Remounted fresh each time the lightbox opens, so zoom/pan
                             always starts reset — no leftover state from last time. */}
-                        <ZoomPan>{lightboxContent}</ZoomPan>
+                        <ZoomPan>{lightboxContent ?? media}</ZoomPan>
 
                         <button
                             type="button"
@@ -94,7 +93,7 @@ export function Figure({
                             onClick={closeLightbox}
                             aria-label="Close figure"
                         >
-                            ×
+                            <X />
                         </button>
                     </div>
                 </div>

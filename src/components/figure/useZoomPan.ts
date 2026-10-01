@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type PointerEvent, type WheelEvent, type MouseEvent } from 'react'
+import { useCallback, useEffect, useRef, useState, type MouseEvent, type PointerEvent } from 'react'
 
 const MIN_SCALE = 1
 const MAX_SCALE = 5
@@ -104,16 +104,25 @@ export function useZoomPan() {
     [center, zoomAt],
   )
 
-  const onWheel = useCallback(
-    (e: WheelEvent<HTMLDivElement>) => {
+  // React attaches onWheel as a *passive* listener by default (for scroll
+  // perf), which means event.preventDefault() inside a JSX onWheel handler
+  // is silently ignored — the page keeps scrolling underneath. Binding the
+  // listener ourselves with { passive: false } is the only reliable fix.
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+
+    const handleWheel = (e: globalThis.WheelEvent) => {
       e.preventDefault()
       zoomAt(e.clientX, e.clientY, e.deltaY < 0 ? 1.2 : 1 / 1.2)
-    },
-    [zoomAt],
-  )
+    }
+
+    el.addEventListener('wheel', handleWheel, { passive: false })
+    return () => el.removeEventListener('wheel', handleWheel)
+  }, [zoomAt])
 
   const onPointerDown = useCallback((e: PointerEvent<HTMLDivElement>) => {
-    ;(e.target as Element).setPointerCapture(e.pointerId)
+    ; (e.target as Element).setPointerCapture(e.pointerId)
     pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY })
 
     if (pointers.current.size === 1 && stateRef.current.scale > 1) {
@@ -171,7 +180,6 @@ export function useZoomPan() {
     isZoomed: state.scale > 1,
     reset: center,
     handlers: {
-      onWheel,
       onPointerDown,
       onPointerMove,
       onPointerUp: endPointer,
