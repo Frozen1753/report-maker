@@ -461,14 +461,6 @@ h6 {
 }
 
 /* ==========================================================
-   CODE
-   ========================================================== */
-
-pre {
-  border-radius: 16px;
-}
-
-/* ==========================================================
    TABLEAUX
    ========================================================== */
 
@@ -588,10 +580,9 @@ th {
 }
 
 /* ==========================================================
-   CODE
+   CODE INLINE
    ========================================================== */
 
-/* Style inline pour `code` */
 .c {
   background: var(--bg-secondary);
   color: var(--accent-primary);
@@ -1120,9 +1111,14 @@ figure.figure figcaption {
     border: 1px solid #555;
     border-radius: 0.35rem;
 
-    background: #222;
-    color: white;
+    background: rgba(22, 27, 34, 0.85);
+    color: #e6edf3;
     cursor: pointer;
+}
+
+.copy-button:hover {
+    background: #333;
+    border-color: #555;
 }
 
 .copy-button-no-bar {
@@ -1158,33 +1154,33 @@ figure.figure figcaption {
     padding-right: 4rem;
 }
 
-.copy-button:hover {
-    background: #333;
-}
-
 .copied-button {
     color: rgb(74, 221, 16);
 }
 
-.code-bloc {
-    margin: 0;
+.code-shiki {
     overflow-x: auto;
 }
 
-pre.code-bloc {
+.code-shiki pre {
+    margin: 0;
     padding: 1rem;
+
+    overflow-x: auto;
 
     background: #0d1117;
     font-size: 15px;
     line-height: 1.6;
 }
 
-.has-code-bar pre.code-bloc {
+.code-shiki code {
+    font-family: "Fira Code", "Consolas", monospace;
+}
+
+.has-code-bar .code-shiki pre {
     border-radius: 0;
 }
 
-pre.code-bloc code {
-    font-family: "Fira Code", "Consolas", monospace;
-    color: #e6edf3;
-    background: none;
+.code-wrapper:not(.has-code-bar) .code-shiki pre {
+    padding-right: 4rem;
 }

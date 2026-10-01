@@ -1,13 +1,10 @@
-import hljs from "highlight.js";
 import { Copy, CopyCheck } from "lucide-react";
 import {
     useEffect,
-    useRef,
     useState,
-    type ReactNode,
+    type ReactNode
 } from "react";
-
-import "highlight.js/styles/atom-one-dark.css";
+import { codeToHtml } from "shiki";
 
 type CodeProps = {
     type?: "inline" | "bloc";
@@ -58,8 +55,8 @@ export function Code({
     lang,
     children,
 }: CodeProps) {
-    const codeRef = useRef<HTMLElement>(null);
     const [copied, setCopied] = useState(false);
+    const [highlightedCode, setHighlightedCode] = useState("");
 
     const code =
         typeof children === "string"
@@ -67,10 +64,32 @@ export function Code({
             : String(children);
 
     useEffect(() => {
-        if (type === "bloc" && codeRef.current) {
-            delete codeRef.current.dataset.highlighted;
-            hljs.highlightElement(codeRef.current);
+        if (type !== "bloc") return;
+
+        let cancelled = false;
+
+        async function highlightCode() {
+            const html = await codeToHtml(code, {
+                lang: lang || "text",
+                themes
+                    : {
+                    light
+                        : "catppuccin-latte",
+                    dark
+                        : 'github-dark',
+                }
+            });
+
+            if (!cancelled) {
+                setHighlightedCode(html);
+            }
         }
+
+        void highlightCode();
+
+        return () => {
+            cancelled = true;
+        };
     }, [type, code, lang]);
 
     if (type === "inline") {
@@ -110,7 +129,8 @@ export function Code({
                     {copy && (
                         <button
                             type="button"
-                            className={`copy-button ${copied ? "copied-button" : ""}`}
+                            className={`copy-button ${copied ? "copied-button" : ""
+                                }`}
                             onClick={handleCopy}
                             aria-label={
                                 copied
@@ -135,7 +155,8 @@ export function Code({
             {!bar && copy && (
                 <button
                     type="button"
-                    className={`copy-button-no-bar ${copied ? "copied-button" : ""}`}
+                    className={`copy-button-no-bar ${copied ? "copied-button" : ""
+                        }`}
                     onClick={handleCopy}
                     aria-label={
                         copied
@@ -151,16 +172,18 @@ export function Code({
                 </button>
             )}
 
-            <pre className="code-bloc">
-                <code
-                    ref={codeRef}
-                    className={
-                        lang ? `language-${lang}` : undefined
-                    }
-                >
-                    {code}
-                </code>
-            </pre>
+            {highlightedCode ? (
+                <div
+                    className="code-shiki"
+                    dangerouslySetInnerHTML={{
+                        __html: highlightedCode,
+                    }}
+                />
+            ) : (
+                <pre className="code-bloc">
+                    <code>{code}</code>
+                </pre>
+            )}
         </div>
     );
 }

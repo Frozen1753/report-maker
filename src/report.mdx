@@ -106,7 +106,7 @@ The second top-level section — its numbering picks up at 2, not 1.
 
 <BeforeAfter
 before={
-<Code type="bloc" lang="md" bar name="old_report_base.MD" copy>
+<Code type="bloc" lang="html" bar name="old_report_base.MD" copy>
   {`<link rel="stylesheet" href="./src/style.css">
   <link rel="stylesheet" href="./src/hljs.css">
 
@@ -138,7 +138,7 @@ before={
 }
 after={
   <>
-  <Code type="bloc" lang="html">
+  <Code type="bloc" lang="tsx">
 {`<div className="page">
     <Header title="My report" logoAlt="logo here" />
 
@@ -153,7 +153,7 @@ after={
     </main>
   </div>`}
   </Code>
-  <Code type="bloc" lang="typescript">
+  <Code type="bloc" lang="tsx">
 {`import coverAfter from './assets/after.png'
 import coverBefore from './assets/before.png'
 import { BeforeAfter } from './components/report/BeforeAfter'

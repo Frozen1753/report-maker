@@ -44,6 +44,5 @@
 - [ ] `<ThemePanel>`
   - [X] CSS var edition
   - [X] preview
-  - [ ] Fonts import 
   - [ ] Pannel style
-  - [ ] Select highlight js
+  - [ ] Select shiki theme
