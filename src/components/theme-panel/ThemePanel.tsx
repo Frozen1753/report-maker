@@ -1,6 +1,25 @@
 import { PaintRoller } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
+import { bundledThemesInfo } from 'shiki'
+import {
+  DEFAULT_SHIKI_DARK,
+  DEFAULT_SHIKI_LIGHT,
+  previewShikiThemes,
+  SHIKI_DARK_VAR,
+  SHIKI_LIGHT_VAR,
+} from '../code/shiki-theme-vars'
+import { formatColor, isColor, parseColor, toHex, type RGBA } from './theme-color'
 import './ThemePanel.css'
+
+const MANAGED_SHIKI_VARS = new Set([SHIKI_LIGHT_VAR, SHIKI_DARK_VAR])
+
+const SHIKI_THEMES_BY_TYPE = bundledThemesInfo.reduce<Record<'light' | 'dark', { id: string; displayName: string }[]>>(
+  (groups, t) => {
+    groups[t.type].push({ id: t.id, displayName: t.displayName })
+    return groups
+  },
+  { light: [], dark: [] },
+)
 
 type Vars = Record<string, string>
 type PreviewMode = 'light' | 'dark'
@@ -9,15 +28,6 @@ interface ThemeApiResponse {
   light: Vars
   dark: Vars
 }
-
-const HEX_RE = /^#([0-9a-f]{3,4}|[0-9a-f]{6}|[0-9a-f]{8})$/i
-const isHexColor = (v: string) => HEX_RE.test(v.trim())
-
-const FALLBACK_STACKS = [
-  { label: 'System UI', value: 'system-ui, sans-serif' },
-  { label: 'Serif', value: 'Georgia, "Times New Roman", serif' },
-  { label: 'Monospace', value: '"SFMono-Regular", Consolas, monospace' },
-]
 
 /**
  * Applies (or clears) a set of CSS custom properties as inline styles on
@@ -39,10 +49,6 @@ export function ThemePanel() {
   const [light, setLight] = useState<Vars>({})
   const [dark, setDark] = useState<Vars>({})
   const [previewMode, setPreviewMode] = useState<PreviewMode>('light')
-  const [fontVarName, setFontVarName] = useState('--font-body')
-  const [fontFamily, setFontFamily] = useState('')
-  const [fontFallback, setFontFallback] = useState(FALLBACK_STACKS[0].value)
-  const [fontImportUrl, setFontImportUrl] = useState('')
   const [isSaving, setIsSaving] = useState(false)
   const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null)
 
@@ -55,6 +61,10 @@ export function ThemePanel() {
         setLight(data.light)
         setDark(data.dark)
         setLoaded(true)
+        previewShikiThemes({
+          light: data.light[SHIKI_LIGHT_VAR] ?? DEFAULT_SHIKI_LIGHT,
+          dark: data.light[SHIKI_DARK_VAR] ?? DEFAULT_SHIKI_DARK,
+        })
       })
       .catch((err) => setMessage({ ok: false, text: `Could not load theme: ${err.message}` }))
   }, [isOpen, loaded])
@@ -65,9 +75,6 @@ export function ThemePanel() {
     document.documentElement.dataset.theme = previewMode
     applyPreview(light)
     if (previewMode === 'dark') applyPreview(dark)
-    return () => {
-      // Only clean up on unmount (panel closed for good), not on every value change.
-    }
   }, [light, dark, previewMode, loaded])
 
   useEffect(() => {
@@ -81,8 +88,23 @@ export function ThemePanel() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const colorVars = useMemo(() => Object.keys(light).filter((k) => isHexColor(light[k])), [light])
-  const otherVars = useMemo(() => Object.keys(light).filter((k) => !isHexColor(light[k])), [light])
+  const colorVars = useMemo(
+    () => Object.keys(light).filter((k) => isColor(light[k]) && !MANAGED_SHIKI_VARS.has(k)),
+    [light],
+  )
+  const otherVars = useMemo(
+    () => Object.keys(light).filter((k) => !isColor(light[k]) && !MANAGED_SHIKI_VARS.has(k)),
+    [light],
+  )
+
+  const shikiLight = light[SHIKI_LIGHT_VAR] ?? DEFAULT_SHIKI_LIGHT
+  const shikiDark = light[SHIKI_DARK_VAR] ?? DEFAULT_SHIKI_DARK
+
+  function setShikiTheme(which: 'light' | 'dark', value: string) {
+    const next = { light: which === 'light' ? value : shikiLight, dark: which === 'dark' ? value : shikiDark }
+    setLightVar(which === 'light' ? SHIKI_LIGHT_VAR : SHIKI_DARK_VAR, value)
+    previewShikiThemes(next)
+  }
 
   function setLightVar(key: string, value: string) {
     setLight((prev) => ({ ...prev, [key]: value }))
@@ -98,20 +120,6 @@ export function ThemePanel() {
     })
   }
 
-  function buildFontsBlock(): string {
-    if (!fontImportUrl.trim()) return ''
-    return [
-      '/* theme-panel:fonts:start */',
-      `@import url("${fontImportUrl.trim()}");`,
-      '/* theme-panel:fonts:end */',
-    ].join('\n')
-  }
-
-  function applyFontVar() {
-    if (!fontFamily.trim()) return
-    setLightVar(fontVarName, `"${fontFamily.trim()}", ${fontFallback}`)
-  }
-
   async function handleSave() {
     setIsSaving(true)
     setMessage(null)
@@ -119,7 +127,7 @@ export function ThemePanel() {
       const res = await fetch('/api/theme', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ light, dark, fontsBlock: buildFontsBlock() }),
+        body: JSON.stringify({ light, dark }),
       })
       const data = await res.json()
       setMessage(
@@ -195,23 +203,35 @@ export function ThemePanel() {
                   {colorVars.map((key) => {
                     const value = previewMode === 'dark' ? (dark[key] ?? light[key]) : light[key]
                     const overridden = previewMode === 'dark' && key in dark
+                    const parsed: RGBA = parseColor(value) ?? { r: 0, g: 0, b: 0, a: 1 }
+                    const setVar = previewMode === 'dark' ? setDarkVar : setLightVar
+
+                    function updateHue(hex: string) {
+                      const next = parseColor(hex)
+                      if (next) setVar(key, formatColor({ ...next, a: parsed.a }))
+                    }
+                    function updateAlpha(percent: number) {
+                      setVar(key, formatColor({ ...parsed, a: percent / 100 }))
+                    }
+
                     return (
                       <label key={key} className="theme-panel-row">
                         <span className="theme-panel-var-name">{key}</span>
+                        <input type="color" value={toHex(parsed)} onChange={(e) => updateHue(e.target.value)} />
                         <input
-                          type="color"
-                          value={isHexColor(value) ? value : '#000000'}
-                          onChange={(e) =>
-                            previewMode === 'dark' ? setDarkVar(key, e.target.value) : setLightVar(key, e.target.value)
-                          }
+                          type="range"
+                          className="theme-panel-alpha"
+                          min={0}
+                          max={100}
+                          value={Math.round(parsed.a * 100)}
+                          onChange={(e) => updateAlpha(Number(e.target.value))}
+                          title={`Opacity: ${Math.round(parsed.a * 100)}%`}
                         />
                         <input
                           type="text"
                           className="theme-panel-value-text"
                           value={value}
-                          onChange={(e) =>
-                            previewMode === 'dark' ? setDarkVar(key, e.target.value) : setLightVar(key, e.target.value)
-                          }
+                          onChange={(e) => setVar(key, e.target.value)}
                         />
                         {previewMode === 'dark' && (
                           <button
@@ -234,6 +254,7 @@ export function ThemePanel() {
                   {otherVars.map((key) => {
                     const value = previewMode === 'dark' ? (dark[key] ?? light[key]) : light[key]
                     const overridden = previewMode === 'dark' && key in dark
+                    const setVar = previewMode === 'dark' ? setDarkVar : setLightVar
                     return (
                       <label key={key} className="theme-panel-row">
                         <span className="theme-panel-var-name">{key}</span>
@@ -241,9 +262,7 @@ export function ThemePanel() {
                           type="text"
                           className="theme-panel-value-text theme-panel-value-wide"
                           value={value}
-                          onChange={(e) =>
-                            previewMode === 'dark' ? setDarkVar(key, e.target.value) : setLightVar(key, e.target.value)
-                          }
+                          onChange={(e) => setVar(key, e.target.value)}
                         />
                         {previewMode === 'dark' && (
                           <button
@@ -262,51 +281,56 @@ export function ThemePanel() {
                 </fieldset>
 
                 <fieldset>
-                  <legend>Add a font</legend>
+                  <legend>Code syntax theme (Shiki)</legend>
                   <label className="theme-panel-row">
-                    <span className="theme-panel-var-name">Import URL</span>
-                    <input
-                      type="text"
+                    <span className="theme-panel-var-name">Light theme</span>
+                    <select
                       className="theme-panel-value-text theme-panel-value-wide"
-                      placeholder="https://fonts.googleapis.com/css2?family=..."
-                      value={fontImportUrl}
-                      onChange={(e) => setFontImportUrl(e.target.value)}
-                    />
-                  </label>
-                  <label className="theme-panel-row">
-                    <span className="theme-panel-var-name">Family name</span>
-                    <input
-                      type="text"
-                      className="theme-panel-value-text"
-                      placeholder="Inter"
-                      value={fontFamily}
-                      onChange={(e) => setFontFamily(e.target.value)}
-                    />
-                  </label>
-                  <label className="theme-panel-row">
-                    <span className="theme-panel-var-name">Fallback</span>
-                    <select value={fontFallback} onChange={(e) => setFontFallback(e.target.value)}>
-                      {FALLBACK_STACKS.map((f) => (
-                        <option key={f.value} value={f.value}>
-                          {f.label}
-                        </option>
-                      ))}
+                      value={shikiLight}
+                      onChange={(e) => setShikiTheme('light', e.target.value)}
+                    >
+                      <optgroup label="Light themes">
+                        {SHIKI_THEMES_BY_TYPE.light.map((t) => (
+                          <option key={t.id} value={t.id}>
+                            {t.displayName}
+                          </option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="Dark themes">
+                        {SHIKI_THEMES_BY_TYPE.dark.map((t) => (
+                          <option key={t.id} value={t.id}>
+                            {t.displayName}
+                          </option>
+                        ))}
+                      </optgroup>
                     </select>
                   </label>
                   <label className="theme-panel-row">
-                    <span className="theme-panel-var-name">CSS variable</span>
-                    <input
-                      type="text"
-                      className="theme-panel-value-text"
-                      value={fontVarName}
-                      onChange={(e) => setFontVarName(e.target.value)}
-                    />
-                    <button type="button" className="theme-panel-apply-font" onClick={applyFontVar}>
-                      Set
-                    </button>
+                    <span className="theme-panel-var-name">Dark theme</span>
+                    <select
+                      className="theme-panel-value-text theme-panel-value-wide"
+                      value={shikiDark}
+                      onChange={(e) => setShikiTheme('dark', e.target.value)}
+                    >
+                      <optgroup label="Dark themes">
+                        {SHIKI_THEMES_BY_TYPE.dark.map((t) => (
+                          <option key={t.id} value={t.id}>
+                            {t.displayName}
+                          </option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="Light themes">
+                        {SHIKI_THEMES_BY_TYPE.light.map((t) => (
+                          <option key={t.id} value={t.id}>
+                            {t.displayName}
+                          </option>
+                        ))}
+                      </optgroup>
+                    </select>
                   </label>
-                  <p className="theme-panel-hint">
-                    The import stays a network font — offline/singlefile builds fall back to the stack above.
+                  <p className="theme-panel-shiki-note">
+                    Applies live to any <code>Code</code> block on the page. Requires a one-time CSS rule in
+                    style.css — see README.
                   </p>
                 </fieldset>
 
