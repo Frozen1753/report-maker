@@ -23,7 +23,7 @@ function PreOrMermaid({ children, ...props }: { children?: ReactElement<{ classN
 export default function App() {
   return (
     <div className="page">
-      <Header title="How to use Report Maker ?" />
+      <Header title="Note de cadrage - SimuLABle" />
       <main>
         <CoverPage
           title="How to use Report Maker ?"
