@@ -1,3 +1,5 @@
+@import "./fonts.css";
+
 /* ==========================================================
    TOKENS / VARIABLES
    ========================================================== */
@@ -53,8 +55,9 @@
   --space-12: 48px;
 
   /* Typographie */
-  --font-body: "Segoe UI", sans-serif;
-  --font-code: "Fira Code", "Consolas", monospace;
+  --font-title: "Sora", sans-serif;
+  --font-body: "Syne", sans-serif;
+  --font-code: "Fira Code", monospace;
 
   --font-size-body: 1.2rem;
   --font-size-h1: 1.8rem;
@@ -235,6 +238,7 @@ h6 {
   margin-bottom: 0.8em;
 
   font-weight: 700;
+  font-family: var(--font-title);
   line-height: var(--line-height-heading);
 }
 
@@ -467,7 +471,7 @@ h5 {
   gap: var(--space-2);
 
   color: var(--color-primary);
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.4;
   text-decoration: none;
   transition: color var(--transition-normal);
