@@ -312,6 +312,7 @@ h5 {
   color: var(--color-text);
 }
 
+.report-export-fab,
 .theme-button {
   right: 1.5rem;
 
@@ -319,6 +320,7 @@ h5 {
   color: var(--color-text-on-accent);
 }
 
+.report-export-fab:hover,
 .top-button:hover,
 .theme-button:hover {
   transform: scale(1.06);
@@ -328,6 +330,7 @@ h5 {
   background: var(--color-bg-soft);
 }
 
+.report-export-fab:hover,
 .theme-button:hover {
   background: var(--color-primary-hover);
 }
