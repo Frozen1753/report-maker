@@ -11,7 +11,7 @@
 ## Composants
 - [ ] Project (ReportMaker)
   - [X] Logo + Icon
-  - [ ] Colors
+  - [X] Colors
   - [ ] Sort style.css
     - [ ] Split component css from global css
     - [ ] Remove unused style
