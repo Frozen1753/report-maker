@@ -72,8 +72,13 @@ export interface UpdateThemeInput {
   dark: ThemeVars
   /** Variables to delete from :root (and from the dark block) */
   remove?: string[]
-  /** Raw CSS for the managed fonts block (@import / @font-face). Empty string removes it. */
-  fontsBlock: string
+  /**
+   * Raw CSS for the managed fonts block (@import / @font-face). Optional —
+   * the panel UI no longer sends this (dropped in favor of hand-writing
+   * fonts directly in style.css), but the engine still supports it if you
+   * want to drive it some other way later. Omitted/empty removes the block.
+   */
+  fontsBlock?: string
 }
 
 export function updateTheme(css: string, input: UpdateThemeInput): string {
@@ -125,8 +130,8 @@ export function updateTheme(css: string, input: UpdateThemeInput): string {
   }
   for (const rule of darkRules) if (rule.nodes.length === 0) rule.remove()
 
-  // ---------- managed fonts block ----------
-  applyFontsBlock(root, input.fontsBlock)
+  // ---------- managed fonts block (optional, see UpdateThemeInput) ----------
+  applyFontsBlock(root, input.fontsBlock ?? '')
 
   return root.toString()
 }

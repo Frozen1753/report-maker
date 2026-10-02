@@ -4,7 +4,13 @@ import {
     useState,
     type ReactNode
 } from "react";
-import { codeToHtml } from "shiki";
+import { codeToHtml, type BundledTheme } from "shiki";
+import { useCurrentTheme } from "../../utils/theme/useCurrentTheme";
+import {
+    SHIKI_PREVIEW_EVENT,
+    getPersistedShikiThemes,
+    type ShikiThemePair,
+} from "./shiki-theme-vars";
 
 type CodeProps = {
     type?: "inline" | "bloc";
@@ -55,8 +61,16 @@ export function Code({
     lang,
     children,
 }: CodeProps) {
+    const currentTheme = useCurrentTheme();
     const [copied, setCopied] = useState(false);
-    const [highlightedCode, setHighlightedCode] = useState("");
+    const [highlighted, setHighlighted] = useState<{ light: string; dark: string }>({ light: "", dark: "" });
+    // Initial value = whatever is persisted in style.css. Updated live while
+    // ThemePanel (dev-only) is open and the reader changes a combobox.
+    const [themePair, setThemePair] = useState<ShikiThemePair>(() =>
+        typeof window === "undefined"
+            ? { light: "github-light", dark: "github-dark" }
+            : getPersistedShikiThemes(),
+    );
 
     const code =
         typeof children === "string"
@@ -64,24 +78,33 @@ export function Code({
             : String(children);
 
     useEffect(() => {
+        function handlePreview(e: Event) {
+            setThemePair((e as CustomEvent<ShikiThemePair>).detail);
+        }
+        window.addEventListener(SHIKI_PREVIEW_EVENT, handlePreview);
+        return () => window.removeEventListener(SHIKI_PREVIEW_EVENT, handlePreview);
+    }, []);
+
+    useEffect(() => {
         if (type !== "bloc") return;
 
         let cancelled = false;
 
         async function highlightCode() {
-            const html = await codeToHtml(code, {
-                lang: lang || "text",
-                themes
-                    : {
-                    light
-                        : "catppuccin-latte",
-                    dark
-                        : 'github-dark',
-                }
-            });
+            // Two separate single-theme passes rather than Shiki's built-in
+            // themes:{light,dark} CSS-variable mechanism: that approach sets
+            // the default theme's color inline on each span, which then needs
+            // `!important` in the override rule to ever actually switch —
+            // easy to get stuck on one theme. Duplicating the render sidesteps
+            // that entirely: each variant is plain, self-contained HTML, and
+            // CSS just shows/hides the one matching the current data-theme.
+            const [light, dark] = await Promise.all([
+                codeToHtml(code, { lang: lang || "text", theme: themePair.light as BundledTheme }),
+                codeToHtml(code, { lang: lang || "text", theme: themePair.dark as BundledTheme }),
+            ]);
 
             if (!cancelled) {
-                setHighlightedCode(html);
+                setHighlighted({ light, dark });
             }
         }
 
@@ -90,7 +113,7 @@ export function Code({
         return () => {
             cancelled = true;
         };
-    }, [type, code, lang]);
+    }, [type, code, lang, themePair]);
 
     if (type === "inline") {
         return <code className="code-inline">{children}</code>;
@@ -172,11 +195,11 @@ export function Code({
                 </button>
             )}
 
-            {highlightedCode ? (
+            {highlighted.light && highlighted.dark ? (
                 <div
                     className="code-shiki"
                     dangerouslySetInnerHTML={{
-                        __html: highlightedCode,
+                        __html: currentTheme === "dark" ? highlighted.dark : highlighted.light,
                     }}
                 />
             ) : (
