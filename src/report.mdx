@@ -1,0 +1,147 @@
+# Contexte et besoin
+
+Cette année, notre SAÉ ne répond pas à un besoin fictif : nous répondons à une commande réelle formulée par notre professeur d'algorithmique et d'optimisation. Plutôt que de proposer un site web classique supplémentaire, il nous a été demandé de concevoir un outil pédagogique itérable, destiné à être réellement utilisé dans le cadre de son cours sur les automates.
+
+L'idée directrice est de fournir un outil permettant de créer et de faire tourner des simulations d'automates. Un utilisateur écrit un script qui définit l'initialisation et le comportement (l'«update») de chaque entité de la simulation. Par la suite, il peut visualiser cette simulation s'exécuter, puis publier son script pour le partager avec la communauté à l'aide d'un compte.
+
+Ce projet se distingue des SAÉ habituelles du cursus par son ambition : il ne s'agit pas de livrer un produit fini et figé en fin de semestre, mais une base solide et évolutive, pensée pour être enrichie par les prochaines promotions bien après notre diplomation. Ce cahier des charges reflète cette logique itérative : les fonctionnalités sont volontairement réparties sur plusieurs itérations de complexité croissante plutôt que livrées en un seul bloc.
+
+# Veille concurrentielle
+
+Notre positionnement — un script utilisateur qui pilote une simulation, publié et comparé au sein d'une communauté, sur des environnements eux-mêmes configurables — est original dans son ensemble. Plusieurs projets existants partagent néanmoins une partie de cette mécanique et nous permettent de nous situer dans l'écosystème existant.
+
+## Panorama des solutions existantes
+
+- Screeps : un «MMO de programmation» où chaque joueur écrit du JavaScript pour piloter des unités dans un monde persistant partagé, avec un classement global. C'est le concurrent le plus proche en termes de mécanique (script -> simulation -> classement) ;
+
+- CodinGame / CodeCombat : des plateformes de défis de programmation avec classement, mais sans véritable notion de simulation persistante ou d'entités autonomes évoluant dans le temps ;
+
+- NetLogo : un outil académique de référence pour la simulation multi-agents, très utilisé en enseignement, mais peu orienté vers la compétition ou la publication communautaire de scripts ;
+
+- RoboCode : des combats de robots programmés en Java avec classement, mais sur un unique environnement fixe défini par l'éditeur, sans notion d'environnements multiples ou personnalisables.
+
+## Fonctionnalités communes et éléments différenciants
+
+L'ensemble de ces solutions partage un même socle : un langage de script pour piloter des entités, une boucle de simulation, et pour la plupart un système de classement. Ce qui distingue certains acteurs les uns des autres est la richesse de l'environnement proposé (fixe ou configurable) et l'existence, ou non, d'une dimension communautaire autour des scripts publiés.
+
+Notre positionnement se distingue par la combinaison de trois éléments rarement réunis chez un même acteur : un moteur téléchargeable pour un usage hors-ligne, des environnements de simulation définis comme des jeux de règles interprétables plutôt que codés en dur, et à terme la possibilité pour la communauté de publier ses propres environnements en plus de ses scripts — alors que la plupart des solutions existantes (Screeps, RoboCode) n'offrent qu'un seul environnement fixe défini par l'éditeur.
+
+# Description des fonctionnalités
+
+La solution permettra à un utilisateur de créer un compte, d'écrire un script définissant le comportement d'entités au sein d'un environnement de simulation, de faire tourner cette simulation et de la visualiser, puis de publier son script pour le comparer aux autres au sein d'un classement. Le développement est organisé en quatre itérations de complexité croissante.
+
+## Itération 1 — MVP
+
+Cette itération sécurise la base du projet : un site fonctionnel avec un unique environnement, mais l'ensemble de la chaîne script → simulation → publication opérationnelle de bout en bout.
+
+- Site web avec système de compte (inscription / connexion) ;
+- Simulation d'un automate cellulaire imposé et codé en dur (auto-organisation d'une nuée de robots) ;
+- Les scripts écrits pour cet environnement sont publiables et consultables publiquement.
+
+## Itération 2 — Généralisation des environnements
+
+Cette itération fait sortir l'environnement du moteur codé en dur : il devient un ensemble de règles interprétées par le moteur, ouvrant la voie à plusieurs environnements distincts.
+
+- L'environnement n'est plus codé en dur dans le moteur : il devient un jeu de «super-règles» interprétables (règles sur l'espace, limitations, comportements mis à disposition des entités, etc.) ;
+- Création de 3 à 4 environnements imposés, développés par l'équipe ;
+- Les scripts sont désormais rattachés à un environnement précis.
+
+## Itération 3 — Classement & Analytics
+
+Cette itération ajoute la dimension compétitive et communautaire, ainsi qu'un usage détaché du site web.
+Analyse de données et scoreboard par environnement : pour un environnement donné, un objectif est défini et les scripts sont classés selon leurs performances (temps, records, etc.).
+
+## Itération 4 — Publication des environnements
+
+Dernière itération, elle ouvre la création d'environnements à la communauté elle-même.
+Les environnements deviennent publiables par les utilisateurs, au même titre que les scripts.
+
+## Itération 5 — Usage hors-ligne
+
+Cette itération ajoute un usage détaché du site web.
+
+- Le moteur devient téléchargeable et utilisable en local, pour permettre l'écriture et le test de scripts hors-ligne. Cet usage local ne fait pas progresser le classement ;
+- La création d’un standalone simplifié afin de pouvoir faire les visualiser les exécutions faites via le moteur téléchargé.
+
+## Cibles utilisateurs et personas
+
+Trois profils d'utilisateurs principaux ont été identifiés.
+
+### Persona 1 — L'enseignant créateur d'environnement
+
+Enseignant-chercheur en automates
+Objectifs : Disposer d'un support interactif pour illustrer des notions d'automates en cours ; proposer des exercices notés à ses étudiants sous forme de défis de script.
+Besoins : Pouvoir définir un environnement avec des règles et un objectif précis, consulter les scripts soumis par ses étudiants et suivre un classement de classe.
+Frustrations actuelles : Les outils académiques existants (type NetLogo) sont peu engageants pour des étudiants et ne permettent pas de dimension compétitive ou de publication communautaire.
+Citation : «Je veux que mes étudiants aient envie d'optimiser leur script, pas seulement de le faire fonctionner.»
+
+### Persona 2 — L'étudiant scripteur
+
+Rôle : Étudiante en BUT Informatique
+Objectifs : Réussir les défis proposés par son enseignant, progresser dans le classement, expérimenter différentes stratégies.
+Besoins : Un moyen simple d'écrire et de tester rapidement son script, idéalement aussi hors-ligne pour itérer sans dépendre d'une connexion ; comprendre pourquoi son script échoue.
+Frustrations actuelles : Les plateformes de type CodinGame ne permettent pas de manipuler de vraies simulations avec des entités autonomes qui interagissent dans la durée.
+Citation : «Je veux pouvoir bidouiller mon script tranquillement chez moi avant de le soumettre pour de vrai.»
+
+### Persona 3 — Le visiteur curieux
+
+Rôle : Étudiant d'une autre filière, curieux de programmation
+Objectifs : Découvrir des scripts et environnements publiés sans forcément savoir coder ; s'inspirer de scripts existants pour progresser.
+Besoins : Un accès en lecture simple, sans création de compte obligatoire, avec une visualisation claire des simulations.
+Frustrations actuelles : La plupart des plateformes de programmation compétitive nécessitent un compte pour tout consulter, ce qui freine la découverte.
+Citation : «J'aimerais juste regarder comment les autres s'y sont pris avant de me lancer.»
+
+# Contraintes
+
+## Performances attendues
+
+La limitation native du nombre d'opérations exécutables par le moteur de script permet de borner à l'avance le coût CPU d'une exécution, facilitant le dimensionnement du serveur hébergeant le Backend-Engine.
+
+- Précompilation des scripts en arbre syntaxique lors de leur soumission, afin de ne pas payer le coût d'interprétation à chaque frame de simulation ;
+- Parallélisation des simulations indépendantes sur les cœurs disponibles du serveur, nécessaire dès que plusieurs utilisateurs testent des scripts simultanément ;
+- Transmission au frontend des seules différences entre deux frames successives («ce qui a changé depuis la dernière frame»), afin de limiter la bande passante et le travail d'interprétation côté affichage.
+
+## Sécurité
+
+Le point d'attention principal du projet est l'exécution de scripts écrits par des utilisateurs non fiables. Le modèle retenu repose sur l'isolation par conception plutôt que sur une liste d'interdictions ajoutées après coup.
+
+- Les scripts sont exécutés dans un langage de script embarqué et sandboxé nativement : aucun accès disque, réseau ou système d'exploitation n'est disponible par construction. Seules les fonctions explicitement mises à disposition par l'environnement (les «super-règles») sont accessibles au script ;
+- Un nombre maximal d'opérations, une taille maximale de structures de données et une profondeur maximale d'appel sont imposés à chaque exécution, empêchant boucles infinies et épuisement mémoire ;
+- Anti-triche : un utilisateur ne soumet jamais un résultat de simulation, seulement un script. Le classement n'est alimenté qu'à partir d'une exécution réalisée et vérifiée par le Backend-Engine ; la version téléchargeable de l'engine, bien qu'identique en comportement, n'écrit jamais directement dans la base de scores ;
+- Le Backend-Engine n'expose qu'une API restreinte au Backend-Website et n'a aucun accès direct à la base de données ; toute persistance transite par le Backend-Website ;
+- Les mots de passe des comptes utilisateurs sont hashés (Argon2 ou bcrypt) et jamais stockés en clair ; le nombre de tentatives de connexion est limité pour prévenir les attaques par force brute.
+
+## Intégration dans un système existant
+
+L'outil est conçu comme un set d’applications autonomes, sans dépendance à un système d'information existant de l'établissement. Selon les modalités d'hébergement retenues avec l'enseignant client, une intégration légère avec l'environnement numérique de l'école pourra être envisagée en évolution future, mais n'est pas requise pour les itérations 1 à 4.
+
+## Conformité réglementaire
+
+Le site collectant des données personnelles via les comptes utilisateurs (email, pseudonyme, mot de passe), le projet respectera les principes du RGPD : minimisation des données collectées, informations sensibles chiffrées, et possibilité pour tout utilisateur de supprimer son compte ainsi que les données associées.
+
+# Structure et stack technique
+
+L'architecture repose sur quatre grands composants : une base de données, un backend orienté site web, un backend orienté exécution de simulations, et un frontend.
+
+## Base de données et Backend-Website
+
+- Base de données : PostgreSQL ;
+- Backend-Website en Rust (Axum), en charge des comptes utilisateurs, de la publication des scripts et environnements, des scoreboards, et de toute la persistance en base ;
+- Frontend en Angular; l'affichage des simulations est assuré par PixiJS, à partir d'un flux d'instructions décrivant les changements entre deux frames.
+
+## Engine et Backend-Engine
+
+L'Engine est écrit intégralement en Rust, sous la forme d'une bibliothèque unique, partagée par deux usages distincts :
+Le Backend-Engine : cette même crate exposé comme service derrière Axum, sollicité par le Backend-Website pour exécuter les simulations et alimenter les scoreboards.
+La version téléchargeable : ce même crate compilé en exécutable en ligne de commande pour chaque système d'exploitation cible (Windows / macOS / Linux), via une matrice de compilation croisée.
+Le fait de partager un unique crate entre les deux usages garantit un comportement strictement identique entre l'exécution en ligne et l'exécution locale (pour une même version, un même environnement et un même script), sans double implémentation ni version spécifique par système d'exploitation.
+
+## Langage de script et super-règles
+
+Les scripts utilisateurs sont écrits en Rust au travers de RHAI, afin d’avoir langage de script conçu pour être embarqué et sandboxé nativement dans le RHAI Evaluation Engine (en court, REE). Le REE n'a par défaut accès à aucune ressource système ; seules les fonctions explicitement enregistrées par l'Engine lui sont accessibles.
+Une «super-règle» d'environnement correspond concrètement à l'ensemble des fonctions et types Rust enregistrés dans l'instance du REE pour cet environnement précis. Par exemple, l'environnement «nuée de robots» expose des fonctions telles que move(), sense_neighbors() ou emit_signal(), tandis qu'un autre environnement exposerait un tout autre ensemble de fonctions. C'est ce mécanisme qui permet de définir, à partir de l'itération 2, des environnements comme des jeux de règles interprétables plutôt que d’être un comportement figé dans le code du moteur.
+
+# Volet financier
+
+Le projet est un projet étudiant à but non lucratif, mené dans un cadre interne à l'établissement. Il n'y a donc pas de modèle de rentabilité à proprement parler ni de seuil de rentabilité à définir.
+Le seul coût identifié est celui de l'hébergement du site et du Backend-Engine (coût de «run»). Le coût de «build» correspond au temps de développement de l'équipe, déjà cadré par le calendrier de la SAÉ. Si le projet aboutit dans de bonnes conditions, l'établissement se chargera de la maintenance et de l'hébergement de l'outil pour un usage pérenne au sein de la sphère étudiante.
