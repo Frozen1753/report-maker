@@ -23,10 +23,10 @@ function PreOrMermaid({ children, ...props }: { children?: ReactElement<{ classN
 export default function App() {
   return (
     <div className="page">
-      <Header title="Note de cadrage - SimuLABle" />
+      <Header title="Note de cadrage" />
       <main>
         <CoverPage
-          title="SimuLABle"
+          title="Note de cadrage - SimuLABle"
           date="Sep. - Oct. 2026"
           coverMedia={{
             content: <SimuLABleIcon width={256} height={256} />,
