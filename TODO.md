@@ -37,12 +37,12 @@
   - [x] folder
   - [x] singlefile
   - [ ] hybrid
-    - [ ] Détection "image 4K" actuellement basée sur la largeur en px (`maxImageWidth` dans `report.assets.config.json`) — ajuster le seuil si besoin
-    - [ ] Décider si `useRecommendedBuildConfig: false` en mode hybride a des effets de bord à corriger au cas par cas (voir commentaires dans `vite.config.ts`)
+    - [ ] Détection poids des assets, filtre par taille, qualité, etc.
+    - [ ] exclusion individuelle de fichiers
 - [X] Top link
 - [X] Light mode / dark mode
 - [ ] `<ThemePanel>`
   - [X] CSS var edition
   - [X] preview
   - [ ] Pannel style
-  - [ ] Select shiki theme
+  - [X] Select shiki theme
