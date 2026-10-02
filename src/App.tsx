@@ -26,7 +26,7 @@ export default function App() {
       <Header title="Note de cadrage" />
       <main>
         <CoverPage
-          title="Note de cadrage - SimuLABle"
+          title="SimuLABle - Note de cadrage"
           date="Sep. - Oct. 2026"
           coverMedia={{
             content: <SimuLABleIcon width={256} height={256} />,
