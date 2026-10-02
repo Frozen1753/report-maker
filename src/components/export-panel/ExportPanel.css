@@ -10,14 +10,15 @@
   cursor: pointer;
   font-size: 1.25rem;
   line-height: 1;
-  color: var(--text-darkbg);
-  background: var(--accent-primary);
+  color: var(--color-text-on-accent);
+  background: var(--color-primary);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
   transition: transform 0.15s ease;
 }
 
 .report-export-fab:hover {
   transform: scale(1.06);
+  background: var(--color-primary-hover);
 }
 
 .report-export-backdrop {
