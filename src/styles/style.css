@@ -7,20 +7,20 @@
 :root {
   /* Texte */
   --color-text: #0b1020;
-  --color-text-muted: #5a7094;
+  --color-text-muted: #202F54;
   --color-text-on-accent: #ffffff;
 
   /* Fonds */
   --color-bg-page: #e8f0ff;
   --color-bg-surface: #ffffff;
-  --color-bg-soft: #d9c7ff;
+  --color-bg-soft: #fbf9ff;
   --color-bg-muted: #cbd8ed;
 
   /* Couleurs principales */
   --color-primary: #9b6cff;
   --color-primary-hover: #8052e6;
-  --color-secondary: #5a7094;
-  --color-secondary-hover: #465d80;
+  --color-secondary: #d9c7ff;
+  --color-secondary-hover: #d9c7ff;
   --color-accent-soft: #d9c7ff;
 
   /* États */
@@ -30,8 +30,8 @@
   --color-success: #287a55;
 
   /* Bordures et ombres */
-  --color-border: #b9c9e2;
-  --color-border-strong: #91a4c4;
+  --color-border: #91A4C4;
+  --color-border-strong: #5A7094;
 
   --shadow-color: rgb(11 16 32 / 16%);
   --shadow-soft: 0 4px 14px var(--shadow-color);
@@ -81,7 +81,6 @@
   /* Texte */
   --color-text: #e8f0ff;
   --color-text-muted: #91a4c4;
-  --color-text-on-accent: #ffffff;
 
   /* Fonds */
   --color-bg-page: #0b1020;
@@ -90,7 +89,6 @@
   --color-bg-muted: #202f54;
 
   /* Couleurs principales */
-  --color-primary: #9b6cff;
   --color-primary-hover: #b394ff;
 
   --color-secondary: #91a4c4;
@@ -109,8 +107,8 @@
   --color-border-strong: #5a7094;
 
   --shadow-color: rgb(0 0 0 / 40%);
-  --shadow-soft: 0 4px 14px var(--shadow-color);
   --shadow-medium: 0 10px 40px rgb(0 0 0 / 50%);
+  --color-text-on-accent: #1fa6cd;
 }
 
 /* ==========================================================
