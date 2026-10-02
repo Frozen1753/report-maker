@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import ReportMakerIcon from "./assets/report-maker_icon.svg?react";
+import SimuLABleIcon from "./assets/SimuLABle_icon_dark.svg?react";
 import { CoverPage } from './components/cover-page/CoverPage';
 import { ExportPanel } from "./components/export-panel/ExportPanel";
 import { FigureProvider } from "./components/figure/FigureProvider";
@@ -29,8 +29,7 @@ export default function App() {
           title="SimuLABle"
           date="Sep. - Oct. 2026"
           coverMedia={{
-            // Replace with SimuLABle icon
-            content: <ReportMakerIcon width={256} height={256} />,
+            content: <SimuLABleIcon width={256} height={256} />,
             href: "https://github.com/ElPotatoCorp/SimuLABle",
             ariaLabel: "Icon de SimuLABle",
           }}

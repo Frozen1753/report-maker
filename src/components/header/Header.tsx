@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import ReportMakerLogo from "../../assets/report-maker_logo.svg?react";
+import SimuLABleLogo from "../../assets/SimuLABle_logo_dark.svg?react";
 
 type HeaderProps = {
     title?: string;
@@ -9,7 +9,7 @@ type HeaderProps = {
 
 export function Header({
     title = "[report title]",
-    logo = <ReportMakerLogo aria-label="Report Maker" />,
+    logo = <SimuLABleLogo aria-label="SimuLABle" />,
     logoAlt = "Logo",
 }: HeaderProps) {
     return (
