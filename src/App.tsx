@@ -29,11 +29,10 @@ export default function App() {
           title="SimuLABle"
           date="Sep. - Oct. 2026"
           coverMedia={{
-            content: (
-              <ReportMakerIcon width={256} height={256} />
-            ),
-            href: "https://github.com/Frozen1753/report-maker",
-            ariaLabel: "Icon de Report Maker",
+            // Replace with SimuLABle icon
+            content: <ReportMakerIcon width={256} height={256} />,
+            href: "https://github.com/ElPotatoCorp/SimuLABle",
+            ariaLabel: "Icon de SimuLABle",
           }}
           authors={[
             {
