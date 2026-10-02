@@ -26,8 +26,8 @@ export default function App() {
       <Header title="Note de cadrage - SimuLABle" />
       <main>
         <CoverPage
-          title="How to use Report Maker ?"
-          date="Septembre 2026"
+          title="SimuLABle"
+          date="Sep. - Oct. 2026"
           coverMedia={{
             content: (
               <ReportMakerIcon width={256} height={256} />
