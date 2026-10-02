@@ -36,8 +36,22 @@ export default function App() {
           }}
           authors={[
             {
-              firstName: "Frozen1753",
+              firstName: "Eliot",
+              lastName: "NADOUCE BOUROTTE",
+              alias: "Frozen1753",
               href: "https://github.com/Frozen1753",
+            },
+            {
+              firstName: "Noah",
+              lastName: "GAUCHE PEREIRA",
+              alias: "ElPotatoCorp",
+              href: "https://github.com/ElPotatoCorp",
+            },
+            {
+              firstName: "Grigor",
+              lastName: "GASPARYAN",
+              alias: "GG-003",
+              href: "https://github.com/GG-003",
             },
           ]}
           affiliations={["IUT de Nevers, BUT Informatique"]}
