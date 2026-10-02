@@ -1,3 +1,5 @@
+import { Code } from "./components/code/Code";
+
 # Contexte et besoin
 
 Cette année, notre SAÉ ne répond pas à un besoin fictif : nous répondons à une commande réelle formulée par notre professeur d'algorithmique et d'optimisation. Plutôt que de proposer un site web classique supplémentaire, il nous a été demandé de concevoir un outil pédagogique itérable, destiné à être réellement utilisé dans le cadre de son cours sur les automates.
@@ -139,7 +141,7 @@ Le fait de partager un unique crate entre les deux usages garantit un comporteme
 ## Langage de script et super-règles
 
 Les scripts utilisateurs sont écrits en Rust au travers de RHAI, afin d’avoir langage de script conçu pour être embarqué et sandboxé nativement dans le RHAI Evaluation Engine (en court, REE). Le REE n'a par défaut accès à aucune ressource système ; seules les fonctions explicitement enregistrées par l'Engine lui sont accessibles.
-Une «super-règle» d'environnement correspond concrètement à l'ensemble des fonctions et types Rust enregistrés dans l'instance du REE pour cet environnement précis. Par exemple, l'environnement «nuée de robots» expose des fonctions telles que move(), sense_neighbors() ou emit_signal(), tandis qu'un autre environnement exposerait un tout autre ensemble de fonctions. C'est ce mécanisme qui permet de définir, à partir de l'itération 2, des environnements comme des jeux de règles interprétables plutôt que d’être un comportement figé dans le code du moteur.
+Une «super-règle» d'environnement correspond concrètement à l'ensemble des fonctions et types Rust enregistrés dans l'instance du REE pour cet environnement précis. Par exemple, l'environnement «nuée de robots» expose des fonctions telles que <Code>move()</Code>, <Code>sense_neighbors()</Code> ou <Code>emit_signal()</Code>, tandis qu'un autre environnement exposerait un tout autre ensemble de fonctions. C'est ce mécanisme qui permet de définir, à partir de l'itération 2, des environnements comme des jeux de règles interprétables plutôt que d’être un comportement figé dans le code du moteur.
 
 # Volet financier
 
