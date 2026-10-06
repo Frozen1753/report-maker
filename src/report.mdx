@@ -660,7 +660,7 @@ Diagrams render client-side via the <Code>mermaid</Code> package directly, rathe
 
 ## CSS Variables
 
-Everything visual is driven by CSS custom properties in `src/styles/style.css`:
+Everything visual is driven by CSS custom properties in <Code>src/styles/style.css</Code>:
 
 <Code type="bloc" lang="css">
 {`:root {
@@ -676,32 +676,34 @@ Everything visual is driven by CSS custom properties in `src/styles/style.css`:
 }`}
 </Code>
 
-Light values live in `:root`; dark values only need to list what actually changes — anything not overridden falls through to the light value.
+Light values live in <Code>:root</Code>; dark values only need to list what actually changes — anything not overridden falls through to the light value.
 
 ## Light / Dark Mode
 
-A theme button (sun/moon icon) ships in the published report itself — it's not a dev tool. It follows the reader's system preference until they click it once, then remembers their choice for next time.
+A theme button ships in the published report itself — it's not a dev tool, it's the one in the corner of this very page:
+
+It follows the reader's system preference until they click it once, then remembers their choice for next time.
 
 <Callout type="note">
-  The very first paint is handled by a small inline script in `index.html`, before React even runs — without it, readers would see a flash of the wrong theme for a split second on every load.
+  The very first paint is handled by a small inline script in <Code>index.html</Code>, before React even runs — without it, readers would see a flash of the wrong theme for a split second on every load.
 </Callout>
 
 ## Live Theme Editor
 
 <Callout type="important" title="Development only">
-  Everything in this section is a dev tool — it appears while running `npm run dev` and is never included in a build. If you're reading a published report, you won't see it.
+  Everything in this section is a dev tool — it appears while running <Code>npm run dev</Code> and is never included in a build. If you're reading a published report, you won't see it.
 </Callout>
 
-A floating button opens a panel that edits `src/styles/style.css` directly, for both light and dark at once:
+A floating button opens a panel that edits <Code>src/styles/style.css</Code> directly, for both light and dark at once:
 
-- **Colors** get a real color picker (hex, `rgb()`, `rgba()`, `hsl()` are all recognized) plus a separate opacity slider, since colors with transparency need one.
+- **Colors** get a real color picker (hex, <Code>rgb()</Code>, <Code>rgba()</Code>, <Code>hsl()</Code> are all recognized) plus a separate opacity slider, since colors with transparency need one.
 - **Everything else** (sizes, generic values) gets a plain text field.
 - Switching the panel's own Light/Dark toggle lets you edit dark-mode overrides specifically — a reset button per row reverts a value back to "same as light."
 - Changes preview instantly in the page behind the panel; nothing is written to disk until you click **Save**.
 
 ## Code Syntax Theme
 
-Still inside the live theme editor: two comboboxes pick which Shiki theme highlights `<Code type="bloc">` blocks, one for light mode and one for dark mode — independently, so you're not stuck pairing a light code theme with a light report theme.
+Still inside the live theme editor: two comboboxes pick which Shiki theme highlights <Code>{`<Code type="bloc">`}</Code> blocks, one for light mode and one for dark mode — independently, so you're not stuck pairing a light code theme with a light report theme.
 
 <Separator label="Building" />
 
@@ -711,9 +713,9 @@ A report compiles to one of three shapes, chosen with an npm script:
 
 | Mode | Output | Best for |
 |---|---|---|
-| `folder` | `index.html` + a separate `assets/` folder | hosting on a server, largest reports |
-| `singlefile` | one `index.html`, everything inlined (JS, CSS, every image/gif/video) | emailing, sharing a single file |
-| `hybrid` | one `index.html`, but large assets stay external | single-file convenience without bloating it with a 40 MB video |
+| <Code>folder</Code> | <Code>index.html</Code> + a separate <Code>assets/</Code> folder | hosting on a server, largest reports |
+| <Code>singlefile</Code> | one <Code>index.html</Code>, everything inlined (JS, CSS, every image/gif/video) | emailing, sharing a single file |
+| <Code>hybrid</Code> | one <Code>index.html</Code>, but large assets stay external | single-file convenience without bloating it with a 40 MB video |
 
 <Code type="bloc" lang="bash" bar name="terminal" copy>
 {`npm run build:folder
@@ -723,7 +725,7 @@ npm run build:hybrid`}
 
 ## Choosing What Stays External
 
-In `hybrid` mode, `report.assets.config.json` decides what gets excluded from the single file:
+In <Code>hybrid</Code> mode, <Code>report.assets.config.json</Code> decides what gets excluded from the single file:
 
 <Code type="bloc" lang="json" name="report.assets.config.json">
 {`{
@@ -733,7 +735,7 @@ In `hybrid` mode, `report.assets.config.json` decides what gets excluded from th
 }`}
 </Code>
 
-Anything matching an excluded extension, or an image wider than `maxImageWidth`, is written to `dist/hybrid/assets/` instead of being base64-encoded into the HTML.
+Anything matching an excluded extension, or an image wider than <Code>maxImageWidth</Code>, is written to <Code>dist/hybrid/assets/</Code> instead of being base64-encoded into the HTML.
 
 ## The Export Panel
 
@@ -741,10 +743,20 @@ Anything matching an excluded extension, or an image wider than `maxImageWidth`,
   Like the theme editor, this panel is a dev tool — it never ships in a build.
 </Callout>
 
-A second floating button runs an actual build without leaving the browser: pick a mode, check off any extensions or oversized images to keep external in `hybrid` mode, and it writes `report.assets.config.json` and runs the matching build script for you — the result lands in `dist/<mode>/` either way.
+A second floating button runs an actual build without leaving the browser: pick a mode, check off any extensions or oversized images to keep external in <Code>hybrid</Code> mode, and it writes <Code>report.assets.config.json</Code> and runs the matching build script for you — the result lands in <Code>dist/&lt;mode&gt;/</Code> either way.
+
+<Separator label="Conclusion" />
 
 # Conclusion
 
 <Callout type="note" title="Wrap-up">
-  Clone, `npm install`, `npm run dev`, write `report.mdx` with the components above, pick a build mode when you're done. That's the whole workflow — everything else is detail you can come back to from this guide when you need it.
+  Clone, <Code>npm install</Code>, <Code>npm run dev</Code>, write <Code>report.mdx</Code> with the components above, pick a build mode when you're done. That's the whole workflow — everything else is detail you can come back to from this guide when you need it.
 </Callout>
+
+## A Note From the Author
+
+I built Report Maker after a friend and I wrote a report by hand last year, in raw HTML and Markdown glued together — the result was genuinely great, but getting there was not an experience I'd wish on anyone. This project is the "never again" version of that.
+
+If you ended up here because someone pointed you at the repo, or because you just stumbled onto it: use it, fork it, strip out whatever you don't need, build your own components on top of it. It's licensed under <Code>MIT</Code> — do basically anything with it, including in things you sell, just keep the license notice around.
+
+If you build something with it, improve on it, or find something I got wrong, I'd like to hear about it — open an issue or a PR on <a href="https://github.com/Frozen1753/report-maker" target="_blank" rel="noopener noreferrer">the repo</a>.
