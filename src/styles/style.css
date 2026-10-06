@@ -1112,7 +1112,7 @@ figure.figure figcaption {
   border-radius: var(--radius-lg);
 
   background: var(--callout-background);
-  color: black;
+  color: var(--color-text);
 }
 
 .callout-heading {
@@ -1145,33 +1145,33 @@ figure.figure figcaption {
 
 /* Variantes */
 .callout-info {
-  --callout-color: #2c68a0;
-  --callout-background: #d4e8f8;
+  --callout-color: #278ae7;
+  --callout-background: #9cd0fa55;
 }
 
 .callout-tip {
-  --callout-color: #4f7f3f;
-  --callout-background: #e1efd9;
+  --callout-color: #69bb4e;
+  --callout-background: #c5f7a955;
 }
 
 .callout-note {
-  --callout-color: #76675e;
-  --callout-background: #eee7e1;
+  --callout-color: #999999;
+  --callout-background: #c9c8c855;
 }
 
 .callout-warning {
-  --callout-color: #a15c00;
-  --callout-background: #fae8c7;
+  --callout-color: #e67519;
+  --callout-background: #f7bf7e55;
 }
 
 .callout-caution {
-  --callout-color: #b42318;
-  --callout-background: #f8d9d2;
+  --callout-color: #d4291d;
+  --callout-background: #e6877b55;
 }
 
 .callout-important {
-  --callout-color: #8b477d;
-  --callout-background: #f0deeb;
+  --callout-color: #c23ece;
+  --callout-background: #f49cf755;
 }
 
 /* ==========================================================
