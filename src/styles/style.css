@@ -75,12 +75,15 @@
 
   --code-theme-light: catppuccin-latte !important;
   --code-theme-dark: github-dark !important;
+
+  --logo-outline: #111;
 }
 
 :root[data-theme="dark"] {
   /* Texte */
   --color-text: #e8f0ff;
   --color-text-muted: #91a4c4;
+  --color-text-on-accent: #121a2e;
 
   /* Fonds */
   --color-bg-page: #0b1020;
@@ -90,9 +93,6 @@
 
   /* Couleurs principales */
   --color-primary-hover: #b394ff;
-
-  --color-secondary: #91a4c4;
-  --color-secondary-hover: #b2c1dc;
 
   --color-accent-soft: #302557;
 
@@ -106,9 +106,9 @@
   --color-border: #2d416b;
   --color-border-strong: #5a7094;
 
-  --shadow-color: rgb(0 0 0 / 40%);
-  --shadow-medium: 0 10px 40px rgb(0 0 0 / 50%);
-  --color-text-on-accent: #1fa6cd;
+  --shadow-medium: 0 10px 40px rgb(255 255 255 / 50%);
+
+  --logo-outline: #fff;
 }
 
 /* ==========================================================
@@ -151,6 +151,21 @@ main {
   height: auto;
   margin: var(--space-5) auto;
 }
+
+/* ==========================================================
+   SVG LOGO - cannot use var
+   ========================================================== */
+
+.svg-shadow {
+  filter:
+    drop-shadow(0 0 1px var(--logo-outline))
+    drop-shadow(0 0 1px color-mix(
+      in srgb,
+      var(--logo-outline) 45%,
+      transparent
+    ));
+}
+
 
 /* ==========================================================
    ÉLÉMENTS COMMUNS
@@ -220,6 +235,7 @@ a:focus-visible {
 .header-logo {
   height: 40px;
   object-fit: contain;
+  align-content: center;
 }
 
 /* ==========================================================
@@ -1238,9 +1254,9 @@ figure.figure figcaption {
 
   border: 1px solid #6b5145;
   border-radius: var(--radius-sm);
-  background-color: var(--color-bg-soft);
 
-  color: var(--color-secondary);
+  background: var(--color-bg-soft);
+  color: var(--color-primary);
   font-family: var(--font-code);
   font-size: 0.75rem;
   text-transform: lowercase;

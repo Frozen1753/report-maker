@@ -1,5 +1,6 @@
 import type { ReactElement } from "react";
 import SimuLABleIcon from "./assets/SimuLABle_icon_dark.svg?react";
+import SimuLABleLogo from "./assets/SimuLABle_logo.svg?react";
 import { CoverPage } from './components/cover-page/CoverPage';
 import { ExportPanel } from "./components/export-panel/ExportPanel";
 import { FigureProvider } from "./components/figure/FigureProvider";
@@ -23,8 +24,16 @@ function PreOrMermaid({ children, ...props }: { children?: ReactElement<{ classN
 export default function App() {
   return (
     <div className="page">
-      <Header title="Note de cadrage" />
+
+      <Header
+        title="Note de cadrage"
+        logo={<SimuLABleLogo className="svg-shadow" />}
+        aria-label="SimuLABle"
+        logoAlt=""
+      />
+
       <main>
+
         <CoverPage
           title="SimuLABle - Note de cadrage"
           date="Sep. - Oct. 2026"
@@ -63,6 +72,7 @@ export default function App() {
             <Report components={{ pre: PreOrMermaid }} />
           </FigureProvider>
         </div>
+
       </main>
 
       <TopButton />
