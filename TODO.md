@@ -22,16 +22,18 @@
 - [X] `<Separator/>`
 - [X] Headings styles (h3, h4, h5, etc.)
 - [X] `<TableOfContents items={toc} />`
-- [X] `<Collapsible title="...">`
+- [ ] `<Collapsible title="...">`
+  - [ ] Fix inner collapsible arrow animation not working
 - [X] `<Tabs/>`
   - [X] `<BeforeAfter before="..." after="..." />`
 - [X] `<Figure src="..." caption="..." />`
   - [X] figure numbering
   - [X] Zoom
 - [X] `<Callout type="info|warning|note|...">`
-- [X] `<Code type="inline|bloc">`
+- [ ] `<Code type="inline|bloc">`
   - [X] File name + language indicator 
   - [X] Easy copy
+  - [ ] Fix Shiki embedding every themes or languages on build (making it past 15MB for something as simple as text)
 - [X] `<ExportPanel>` : toggle folder/singlefile/hybrid + checkboxes (exclure gifs, vidéos, images > X px)
   - [ ] Pannel style
   - [x] folder
