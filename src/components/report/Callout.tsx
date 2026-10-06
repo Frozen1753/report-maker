@@ -59,7 +59,7 @@ const CALLOUT_CONFIG: Record<CalloutType, CalloutConfig> = {
 };
 
 export function Callout({
-    type = "info",
+    type = "note",
     title,
     children,
 }: CalloutProps) {
