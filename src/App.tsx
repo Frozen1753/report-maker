@@ -27,7 +27,7 @@ export default function App() {
       <main>
         <CoverPage
           title="How to use Report Maker ?"
-          date="Septembre 2026"
+          date="September 2026"
           coverMedia={{
             content: (
               <ReportMakerIcon width={256} height={256} />
@@ -41,7 +41,7 @@ export default function App() {
               href: "https://github.com/Frozen1753",
             },
           ]}
-          affiliations={["IUT de Nevers, BUT Informatique"]}
+          affiliations={["Programmer, procrastinator and cat-lover"]}
         />
 
         <TableOfContent items={toc} />
