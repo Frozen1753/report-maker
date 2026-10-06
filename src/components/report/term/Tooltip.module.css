@@ -1,0 +1,33 @@
+.tooltip {
+  z-index: var(--tooltip-z-index, 500);
+  box-sizing: border-box;
+  max-width: min(20rem, calc(100vw - 1rem));
+  padding: 0.5rem 0.75rem;
+  border: 3px solid var(--color-border);
+  border-radius: 0.375rem;
+  background: var(--tooltip-bg, var(--color-bg-surface));
+  color: var(--tooltip-fg, var(--color-text));
+  font-size: 0.875rem;
+  line-height: 1.4;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.25);
+
+  /* Opacity only: Floating UI positions this element with `transform`. */
+  animation: fade-in 120ms ease-out;
+}
+
+/* Set by a middle-click, or by opening a nested tooltip. */
+.tooltip[data-pinned] {
+  border-color: var(--color-border-strong);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tooltip {
+    animation: none;
+  }
+}
