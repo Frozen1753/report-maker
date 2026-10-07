@@ -2,9 +2,17 @@ import guideAfter from './assets/guide-placeholder-after.png'
 import guideBefore from './assets/guide-placeholder-before.png'
 import guideFigure from './assets/guide-placeholder-figure.png'
 import kiwiGif from './assets/spinning-kiwi.gif'
-import { Code } from './components/code/Code'
-import { Figure } from './components/figure'
-import { BeforeAfter, Callout, Collapsible, Mermaid, Separator, Tabs, Term } from './components/report'
+import {
+    BeforeAfter,
+    Callout,
+    Collapsible,
+    Mermaid,
+    Separator,
+    Tabs,
+    Term,
+    Code,
+    Figure
+} from './components/mdx'
 
 # Introduction
 
@@ -272,7 +280,7 @@ Admonition-style boxes, heavily inspired by Markdown notes — six variants, an 
 
 <Collapsible title="En savoir plus">
 <Code type="bloc" bar name="report.mdx" lang="mdx">
-{`import { Callout } from './components/report'`}
+{`import { Callout } from './components/mdx'`}
 </Code>
 
 <Code lang="tsx" type="bloc" name="Callout.tsx" bar>
@@ -355,7 +363,7 @@ Keeps optional detail out of the main reading flow — you've likely clicked a f
 
 <Collapsible title="En savoir plus">
 <Code type="bloc" bar name="report.mdx" lang="mdx">
-{`import { Collapsible } from './components/report'`}
+{`import { Collapsible } from './components/mdx'`}
 </Code>
 
 <Code lang="tsx" type="bloc" name="Collapsible.tsx" bar>
@@ -426,7 +434,7 @@ A plain rule (equivalent to <Code>---</Code> in Markdown), or a labeled break be
 
 <Collapsible title="En savoir plus">
 <Code type="bloc" bar name="report.mdx" lang="mdx">
-{`import { Separator } from './components/report'`}
+{`import { Separator } from './components/mdx'`}
 </Code>
 
 <Code type="bloc" name="Separator.tsx" bar lang="tsx">
@@ -475,7 +483,7 @@ Groups mutually-exclusive content — alternative commands, alternative approach
 
 <Collapsible title="En savoir plus">
 <Code type="bloc" bar name="report.mdx" lang="mdx">
-{`import { Tabs } from './components/report'`}
+{`import { Tabs } from './components/mdx'`}
 </Code>
 
 <Code bar type="bloc" lang="tsx" name="Tabs.tsx">
@@ -508,7 +516,7 @@ A toggle between two states — screenshots, code, anything comparable. It's lit
 
 <Collapsible title="En savoir plus">
 <Code type="bloc" bar name="report.mdx" lang="mdx">
-{`import { BeforeAfter } from './components/report'`}
+{`import { BeforeAfter } from './components/mdx'`}
 </Code>
 
 <Code lang="tsx" type="bloc" name="BeforeAfter.tsx" bar>
@@ -628,7 +636,7 @@ Diagrams rendered live as SVG — flowcharts, class diagrams, Gantt charts, git 
 
 <Collapsible title="En savoir plus">
 <Code type="bloc" bar name="report.mdx" lang="mdx">
-{`import { Mermaid } from './components/report'`}
+{`import { Mermaid } from './components/mdx'`}
 </Code>
 
 <Code lang="tsx" type="bloc" name="Mermaid.tsx" bar>
@@ -661,7 +669,7 @@ An inline word with a tooltip attached — for definitions, jargon, or anything 
 
 <Collapsible title="En savoir plus">
 <Code type="bloc" bar name="report.mdx" lang="mdx">
-{`import { Term } from './components/report'`}
+{`import { Term } from './components/mdx'`}
 </Code>
 
 <Code lang="tsx" type="bloc" name="Term.tsx" bar>
