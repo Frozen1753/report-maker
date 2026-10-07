@@ -13,6 +13,7 @@ import {
     Code,
     Figure
 } from './components/mdx'
+import { easyTerm } from './helpers/easy-term'
 
 # Introduction
 
@@ -661,7 +662,7 @@ Diagrams render client-side via the <Code>mermaid</Code> package directly, rathe
 
 ## Term
 
-An inline word with a tooltip attached — for definitions, jargon, or anything a reader might want explained without leaving the sentence. It's drawn with a dotted underline: hover <Term tooltip={<>Time between a request and its response.</>}>latency</Term> (or Tab to it) and the tooltip appears after a short delay.
+An inline word with a tooltip attached — for definitions, jargon, or anything a reader might want explained without leaving the sentence. It's drawn with a dotted underline: hover { easyTerm('latency') } (or Tab to it) and the tooltip appears after a short delay.
 
 <Callout type="tip" title="Pin a tooltip">
   Hover a term, then **middle-click** it or its tooltip to pin it open — its border gets stronger to show it. Click anywhere else to close it.
@@ -764,6 +765,128 @@ Any number of tooltips can be pinned at the same time, including from different 
 <Callout type="warning" title="Keep tooltips light">
   Pinning is mouse-only, so keyboard and touch readers can't pin a tooltip. A tooltip also closes as soon as keyboard focus leaves its term, which means links or buttons inside one are out of keyboard reach. Put anything essential in the page itself, and use tooltips for supporting detail only. Also avoid placing a <Code>Term</Code> inside a link or a button: it is focusable itself.
 </Callout>
+</Collapsible>
+
+<Separator label="Helpers" />
+
+# Helpers
+
+Components render from JSX tags. Helpers are plain functions you call from an MDX expression, like <Code>{`{ easyTerm('latency') }`}</Code>. Most read definitions you write once in <Code>src/custom/</Code>, so the report file stays about content. They ship with Report Maker, so there's nothing to install.
+
+<Separator />
+
+## Easy Terms
+
+Writing <Code>{`<Term tooltip={...}>`}</Code> every time gets heavy once the same word shows up in several places. <Code>easyTerm</Code> lets you define a term once, then use it anywhere with a single call: hover { easyTerm('latency') } (or Tab to it) and its tooltip appears, exactly like a regular <Code>Term</Code>.
+
+<Callout type="tip" title="Case and accents don't matter">
+  { easyTerm('Latency') } and { easyTerm('LATENCY') } both find the same definition. The term is displayed exactly as you typed it, so it fits the sentence around it.
+</Callout>
+
+<Collapsible title="En savoir plus">
+Add the import at the top of <Code>report.mdx</Code>, next to the others:
+
+<Code type="bloc" bar name="report.mdx" lang="mdx">
+{`import { easyTerm } from './helpers/easy-term'`}
+</Code>
+
+<Code lang="tsx" type="bloc" name="easy-term.tsx" bar>
+{`function addTerm(word: string, tooltip: ReactNode): void;                  // register a term
+function easyTerm(keyOrWord: string, displayWord?: string): ReactNode;     // render it`}
+</Code>
+
+### Defining a term
+
+Definitions live in <Code>src/custom/variables/term.tsx</Code>, away from the report content. The tooltip is regular JSX, so anything that works in a <Code>Term</Code> works here — import what you need at the top of the file.
+
+<Code type="bloc" bar name="src/custom/variables/term.tsx" lang="tsx">
+{`import { addTerm } from "../../helpers/easy-term";
+
+addTerm('latency', <>Time between a request and its response.</>);`}
+</Code>
+
+<Callout type="note">
+  The registry is filled when <Code>src/custom/variables</Code> is loaded. If a term you defined shows up as <Code>UNKNOWN_TERM</Code>, check that its file is actually imported.
+</Callout>
+
+### Using a term
+
+Call <Code>easyTerm</Code> in any MDX expression:
+
+<Tabs
+  tabs={[
+    {
+      label: "Exemple",
+      content: (
+        <p>
+          Hover { easyTerm('latency') } to read its definition.
+        </p>
+      ),
+    },
+    {
+      label: "Code",
+      content: (
+        <Code type="bloc" lang="mdx">
+{`Hover { easyTerm('latency') } to read its definition.`}
+        </Code>
+      ),
+    },
+  ]}
+/>
+
+### Matching
+
+- **Case** is ignored: <Code>easyTerm('Latency')</Code> and <Code>easyTerm('LATENCY')</Code> are the same term.
+- **Accents and ligatures** are ignored: a term defined as <Code>événement</Code> is found by <Code>Evenement</Code>, and <Code>cœur</Code> by <Code>coeur</Code>.
+- **Extra spaces** are ignored: <Code>{`easyTerm('  Time   out ')`}</Code> finds the term <Code>time out</Code>. Typographic apostrophes (<Code>’</Code>) match plain ones.
+- **The word you pass is the text shown**, unless you give a second argument. Other forms of a word (a plural, say) aren't matched automatically: pass the term to look up first, and the text to display second.
+
+<Tabs
+  tabs={[
+    {
+      label: "Exemple",
+      content: (
+        <p>
+          Many { easyTerm('latency', 'latencies') } add up.
+        </p>
+      ),
+    },
+    {
+      label: "Code",
+      content: (
+        <Code type="bloc" lang="mdx">
+{`Many { easyTerm('latency', 'latencies') } add up.`}
+        </Code>
+      ),
+    },
+  ]}
+/>
+
+### Nesting
+
+A definition can use other terms, just like nested <Code>Term</Code> components:
+
+<Code type="bloc" bar name="src/custom/variables/term.tsx" lang="tsx">
+{`addTerm('network', "Computers talking to each other.");
+addTerm('request', "A request is a {easyTerm('network')} thing.");
+addTerm('latency', "Time between a {easyTerm('request')} and its response.");`}
+</Code>
+
+<Callout type="note" title="Order doesn't matter">
+  Terms are looked up when a tooltip opens, not when it is defined. You can define <Code>latency</Code> before <Code>request</Code>, and two terms can even refer to each other.
+</Callout>
+
+<Callout type="caution" title="Unknown terms">
+  Asking for a term that was never defined renders a bold <Code>UNKNOWN_TERM</Code> in the report and logs <Code>unknown term: ...</Code> as an error in the browser console.
+</Callout>
+
+<Callout type="warning" title="Redefining a word">
+  Defining a word that already exists replaces the previous definition: the last one wins, and the browser console logs <Code>be careful as you are redefining the term</Code>. Words that only differ by case, accents or spacing count as the same word, so <Code>Événement</Code> and <Code>evenement</Code> collide. In dev mode, the warning also appears each time you save the definitions file; that's expected.
+</Callout>
+
+<Collapsible title="Why not defining everything at the top of the MDX?">
+  You could define each tooltip at the start of <Code>report.mdx</Code> and use it with <Code>easyTerm</Code>. It works, but it mixes logic with content: the report gets longer before the first sentence, and the definitions can't be shared with another report. A separate registry keeps <Code>report.mdx</Code> readable and keeps every definition in one place.
+</Collapsible>
 </Collapsible>
 
 <Separator label="Theming" />
