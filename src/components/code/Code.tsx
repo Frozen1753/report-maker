@@ -10,6 +10,7 @@ import {
     getPersistedShikiThemes,
     type ShikiThemePair,
 } from "./shiki-theme-vars";
+import type { HighlighterCore } from "shiki";
 
 type CodeProps = {
     type?: "inline" | "bloc";
@@ -49,10 +50,17 @@ async function highlightBothThemes(
         return { light, dark };
     }
 
-    const { highlighterPromise } = await import("../../generated/shiki-bundle.generated");
-    const h = await highlighterPromise;
+    const modules = import.meta.glob("./generated/highlighter.ts");
+
+    const loadHighlighter = modules["./generated/highlighter.ts"];
+    const highlighterPromise = loadHighlighter
+      ? loadHighlighter()
+      : Promise.resolve(undefined);
+    const h = await highlighterPromise as HighlighterCore | undefined;
 
     const safeHighlight = (theme: string) => {
+        if (!h) return theme;
+
         try {
             return h.codeToHtml(code, { lang: requestedLang, theme });
         } catch {
