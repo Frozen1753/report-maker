@@ -1,5 +1,5 @@
 import { Download } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import './ExportPanel.css'
 
 type ReportBuildMode = 'folder' | 'singlefile' | 'hybrid'
@@ -18,11 +18,6 @@ const MODE_INFO: { value: ReportBuildMode; label: string; description: string }[
 
 const KNOWN_EXTENSIONS = ['.gif', '.mp4', '.mov', '.webm'] as const
 
-// Vite requires string-literal globs, so this can't be made fully dynamic —
-// widen/duplicate this line if your assets live somewhere other than src/assets/.
-const assetModules = import.meta.glob('/src/assets/**/*.{png,jpg,jpeg,webp,gif,mp4,mov,webm}')
-const detectedAssets = Object.keys(assetModules).map((p) => p.replace(/^\/src\/assets\//, ''))
-
 export function ExportPanel() {
   const [isOpen, setIsOpen] = useState(false)
   const [mode, setMode] = useState<ReportBuildMode>('hybrid')
@@ -32,9 +27,20 @@ export function ExportPanel() {
   const [isExporting, setIsExporting] = useState(false)
   const [result, setResult] = useState<ExportResult | null>(null)
 
+  const [detectedAssets, setDetectedAssets] = useState<string[]>([])
+
+  useEffect(() => {
+    fetch('/api/assets')
+      .then((r) => r.json())
+      .then((d) => setDetectedAssets(d.files))
+  }, [])
+
+  // Must depend on detectedAssets: it now arrives asynchronously from the
+  // fetch above, not synchronously from import.meta.glob like before — an
+  // empty dependency array would freeze this at the first render's "[]".
   const largeAssets = useMemo(
     () => detectedAssets.filter((f) => KNOWN_EXTENSIONS.some((ext) => f.toLowerCase().endsWith(ext))),
-    [],
+    [detectedAssets],
   )
 
   function toggleSet(set: Set<string>, setSet: (s: Set<string>) => void, value: string) {

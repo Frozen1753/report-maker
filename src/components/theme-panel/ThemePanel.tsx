@@ -1,6 +1,5 @@
 import { PaintRoller } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
-import { bundledThemesInfo } from 'shiki'
 import {
   DEFAULT_SHIKI_DARK,
   DEFAULT_SHIKI_LIGHT,
@@ -13,13 +12,15 @@ import './ThemePanel.css'
 
 const MANAGED_SHIKI_VARS = new Set([SHIKI_LIGHT_VAR, SHIKI_DARK_VAR])
 
-const SHIKI_THEMES_BY_TYPE = bundledThemesInfo.reduce<Record<'light' | 'dark', { id: string; displayName: string }[]>>(
-  (groups, t) => {
-    groups[t.type].push({ id: t.id, displayName: t.displayName })
-    return groups
-  },
-  { light: [], dark: [] },
-)
+interface ShikiThemeMeta {
+  id: string
+  displayName: string
+  type: 'light' | 'dark'
+}
+
+type ShikiThemesByType = Record<'light' | 'dark', { id: string; displayName: string }[]>
+
+const EMPTY_SHIKI_THEMES: ShikiThemesByType = { light: [], dark: [] }
 
 type Vars = Record<string, string>
 type PreviewMode = 'light' | 'dark'
@@ -51,6 +52,22 @@ export function ThemePanel() {
   const [previewMode, setPreviewMode] = useState<PreviewMode>('light')
   const [isSaving, setIsSaving] = useState(false)
   const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null)
+  const [shikiThemesByType, setShikiThemesByType] = useState<ShikiThemesByType>(EMPTY_SHIKI_THEMES)
+
+  // Theme catalog comes from the dev server (see shiki-themes-server-plugin.ts)
+  // rather than importing 'shiki' here — keeps the package out of client source.
+  useEffect(() => {
+    fetch('/api/shiki-themes')
+      .then((r) => r.json())
+      .then((list: ShikiThemeMeta[]) => {
+        const grouped: ShikiThemesByType = { light: [], dark: [] }
+        for (const t of list) grouped[t.type].push({ id: t.id, displayName: t.displayName })
+        setShikiThemesByType(grouped)
+      })
+      .catch(() => {
+        // Non-fatal: the comboboxes just stay empty until the server is reachable.
+      })
+  }, [])
 
   // Load current values once, on first open.
   useEffect(() => {
@@ -290,14 +307,14 @@ export function ThemePanel() {
                       onChange={(e) => setShikiTheme('light', e.target.value)}
                     >
                       <optgroup label="Light themes">
-                        {SHIKI_THEMES_BY_TYPE.light.map((t) => (
+                        {shikiThemesByType.light.map((t) => (
                           <option key={t.id} value={t.id}>
                             {t.displayName}
                           </option>
                         ))}
                       </optgroup>
                       <optgroup label="Dark themes">
-                        {SHIKI_THEMES_BY_TYPE.dark.map((t) => (
+                        {shikiThemesByType.dark.map((t) => (
                           <option key={t.id} value={t.id}>
                             {t.displayName}
                           </option>
@@ -313,14 +330,14 @@ export function ThemePanel() {
                       onChange={(e) => setShikiTheme('dark', e.target.value)}
                     >
                       <optgroup label="Dark themes">
-                        {SHIKI_THEMES_BY_TYPE.dark.map((t) => (
+                        {shikiThemesByType.dark.map((t) => (
                           <option key={t.id} value={t.id}>
                             {t.displayName}
                           </option>
                         ))}
                       </optgroup>
                       <optgroup label="Light themes">
-                        {SHIKI_THEMES_BY_TYPE.light.map((t) => (
+                        {shikiThemesByType.light.map((t) => (
                           <option key={t.id} value={t.id}>
                             {t.displayName}
                           </option>

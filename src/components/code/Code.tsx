@@ -4,7 +4,6 @@ import {
     useState,
     type ReactNode
 } from "react";
-import { codeToHtml, type BundledTheme } from "shiki";
 import { useCurrentTheme } from "../../utils/theme/useCurrentTheme";
 import {
     SHIKI_PREVIEW_EVENT,
@@ -20,6 +19,52 @@ type CodeProps = {
     lang?: string;
     children: ReactNode;
 };
+
+/**
+ * Highlights the same code in both the light and dark theme.
+ *
+ * Dev: uses the full `shiki` package directly — any of its ~65 bundled themes
+ * and ~180 languages can be requested, since `vite dev` never produces one
+ * shipped bundle; nothing here is downloaded by a reader.
+ *
+ * Prod: uses `src/generated/shiki-bundle.generated.ts`, written at build time
+ * by scripts/shiki-codegen.ts from exactly the languages found in report.mdx
+ * and the two themes chosen in style.css — nothing else is bundled. Because
+ * the two branches live behind `import.meta.env.DEV` (a compile-time
+ * constant), Rollup fully removes whichever one doesn't apply.
+ */
+async function highlightBothThemes(
+    code: string,
+    lang: string,
+    themePair: ShikiThemePair,
+): Promise<{ light: string; dark: string }> {
+    const requestedLang = lang || "text";
+
+    if (import.meta.env.DEV) {
+        const { codeToHtml } = await import("shiki");
+        const [light, dark] = await Promise.all([
+            codeToHtml(code, { lang: requestedLang, theme: themePair.light }),
+            codeToHtml(code, { lang: requestedLang, theme: themePair.dark }),
+        ]);
+        return { light, dark };
+    }
+
+    const { highlighterPromise } = await import("../../generated/shiki-bundle.generated");
+    const h = await highlighterPromise;
+
+    const safeHighlight = (theme: string) => {
+        try {
+            return h.codeToHtml(code, { lang: requestedLang, theme });
+        } catch {
+            // A language the build-time scan didn't catch (e.g. a dynamic
+            // lang={expr} instead of a literal string) — fall back to
+            // unhighlighted rather than crash the whole report.
+            return h.codeToHtml(code, { lang: "text", theme });
+        }
+    };
+
+    return { light: safeHighlight(themePair.light), dark: safeHighlight(themePair.dark) };
+}
 
 function copyFallback(text: string) {
     const textarea = document.createElement("textarea");
@@ -64,8 +109,6 @@ export function Code({
     const currentTheme = useCurrentTheme();
     const [copied, setCopied] = useState(false);
     const [highlighted, setHighlighted] = useState<{ light: string; dark: string }>({ light: "", dark: "" });
-    // Initial value = whatever is persisted in style.css. Updated live while
-    // ThemePanel (dev-only) is open and the reader changes a combobox.
     const [themePair, setThemePair] = useState<ShikiThemePair>(() =>
         typeof window === "undefined"
             ? { light: "github-light", dark: "github-dark" }
@@ -78,6 +121,8 @@ export function Code({
             : String(children);
 
     useEffect(() => {
+        // Only fires in dev — ThemePanel (the only thing that dispatches this
+        // event) never renders in production.
         function handlePreview(e: Event) {
             setThemePair((e as CustomEvent<ShikiThemePair>).detail);
         }
@@ -90,25 +135,9 @@ export function Code({
 
         let cancelled = false;
 
-        async function highlightCode() {
-            // Two separate single-theme passes rather than Shiki's built-in
-            // themes:{light,dark} CSS-variable mechanism: that approach sets
-            // the default theme's color inline on each span, which then needs
-            // `!important` in the override rule to ever actually switch —
-            // easy to get stuck on one theme. Duplicating the render sidesteps
-            // that entirely: each variant is plain, self-contained HTML, and
-            // CSS just shows/hides the one matching the current data-theme.
-            const [light, dark] = await Promise.all([
-                codeToHtml(code, { lang: lang || "text", theme: themePair.light as BundledTheme }),
-                codeToHtml(code, { lang: lang || "text", theme: themePair.dark as BundledTheme }),
-            ]);
-
-            if (!cancelled) {
-                setHighlighted({ light, dark });
-            }
-        }
-
-        void highlightCode();
+        highlightBothThemes(code, lang || "", themePair).then((result) => {
+            if (!cancelled) setHighlighted(result);
+        });
 
         return () => {
             cancelled = true;

@@ -5,7 +5,10 @@ import { defineConfig, type PluginOption } from 'vite'
 import { viteSingleFile } from 'vite-plugin-singlefile'
 import svgr from 'vite-plugin-svgr'
 import { loadAssetConfig, shouldInlineAsset } from './scripts/asset-rules.ts'
+import { assetsServerPlugin } from './scripts/assets-server-plugin.ts'
 import { exportServerPlugin } from './scripts/export-server-plugin.ts'
+import { shikiCodegenPlugin } from './scripts/shiki-codegen-plugin.ts'
+import { shikiThemesServerPlugin } from './scripts/shiki-themes-server-plugin.ts'
 import { themeServerPlugin } from './scripts/theme-server-plugin.ts'
 import remarkHeadingNumbers from './src/utils/mdx-plugins/remark-heading-numbers.ts'
 
@@ -27,10 +30,13 @@ export default defineConfig({
     { enforce: 'pre', ...mdx({ remarkPlugins: [remarkGfm, remarkHeadingNumbers] }) },
     react({ include: /\.(jsx|js|mdx|md|tsx|ts)$/ }),
 
-
     svgr(),
     exportServerPlugin(),
     themeServerPlugin(),
+    assetsServerPlugin(),
+    shikiThemesServerPlugin(),
+
+    shikiCodegenPlugin(),
 
     // Full single-file mode: let the plugin apply its recommended config
     // (it force-inlines every JS/CSS/asset into one HTML — see its source).
