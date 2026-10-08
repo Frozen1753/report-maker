@@ -28,7 +28,6 @@ export default function App() {
       <main>
         <CoverPage
           title="How to use Report Maker ?"
-          date="September 2026"
           coverMedia={{
             content: (
               <ReportMakerIcon width={256} height={256} />

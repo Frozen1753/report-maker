@@ -16,7 +16,7 @@ type Author = {
 type CoverPageProps = {
     title?: string;
     coverMedia?: CoverMedia;
-    date: string;
+    date?: string;
     authors?: Author[];
     affiliations?: string[];
 };
@@ -24,7 +24,7 @@ type CoverPageProps = {
 export function CoverPage({
     title = "My report",
     coverMedia,
-    date,
+    date = new Date().toLocaleDateString(navigator.languages, { dateStyle: 'long' }),
     authors = [],
     affiliations = [],
 }: CoverPageProps) {
