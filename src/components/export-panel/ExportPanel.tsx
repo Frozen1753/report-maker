@@ -1,5 +1,6 @@
 import { Download } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
+import { Panel } from '../panel/Panel';
 import './ExportPanel.css';
 
 type ReportBuildMode = 'folder' | 'singlefile' | 'hybrid';
@@ -99,129 +100,107 @@ export function ExportPanel() {
         <Download />
       </button>
 
-      {isOpen && (
-        <div
-          className="report-export-backdrop"
-          onClick={(e) => e.target === e.currentTarget && setIsOpen(false)}
-          onKeyDown={(e) => e.key === 'Escape' && setIsOpen(false)}
-        >
-          <div
-            className="report-export-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Export report"
-          >
-            <header className="report-export-header">
-              <h2>Export report</h2>
-              <button
-                type="button"
-                className="report-export-close"
-                onClick={() => setIsOpen(false)}
-                aria-label="Close"
-              >
-                ✕
-              </button>
-            </header>
+      <Panel
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="Export report"
+        footer={
+          <>
+            <button
+              type="button"
+              className="panel-btn panel-btn--secondary"
+              onClick={() => setIsOpen(false)}
+            >
+              Close
+            </button>
+            <button
+              type="button"
+              className="panel-btn panel-btn--primary"
+              onClick={handleExport}
+              disabled={isExporting}
+            >
+              {isExporting ? 'Building…' : 'Export'}
+            </button>
+          </>
+        }
+      >
+        <fieldset className="panel-section">
+          <legend>Build mode</legend>
+          {MODE_INFO.map((m) => (
+            <label key={m.value} className="report-export-mode-option">
+              <input
+                type="radio"
+                name="report-export-mode"
+                value={m.value}
+                checked={mode === m.value}
+                onChange={() => setMode(m.value)}
+              />
+              <span>
+                <strong>{m.label}</strong>
+                <small>{m.description}</small>
+              </span>
+            </label>
+          ))}
+        </fieldset>
 
-            <div className="report-export-body">
-              <fieldset className="report-export-modes">
-                <legend>Build mode</legend>
-                {MODE_INFO.map((m) => (
-                  <label key={m.value} className="report-export-mode-option">
-                    <input
-                      type="radio"
-                      name="report-export-mode"
-                      value={m.value}
-                      checked={mode === m.value}
-                      onChange={() => setMode(m.value)}
-                    />
-                    <span>
-                      <strong>{m.label}</strong>
-                      <small>{m.description}</small>
-                    </span>
-                  </label>
-                ))}
-              </fieldset>
+        {mode === 'hybrid' && (
+          <fieldset className="panel-section">
+            <legend>Keep external (don't inline)</legend>
 
-              {mode === 'hybrid' && (
-                <fieldset className="report-export-hybrid-options">
-                  <legend>Keep external (don't inline)</legend>
-
-                  <div className="report-export-checkbox-group">
-                    {KNOWN_EXTENSIONS.map((ext) => (
-                      <label key={ext} className="report-export-checkbox">
-                        <input
-                          type="checkbox"
-                          checked={excludedExt.has(ext)}
-                          onChange={() => toggleSet(excludedExt, setExcludedExt, ext)}
-                        />
-                        all {ext} files
-                      </label>
-                    ))}
-                  </div>
-
-                  <label className="report-export-width">
-                    Exclude images wider than
-                    <input
-                      type="number"
-                      min={0}
-                      step={100}
-                      value={maxImageWidth}
-                      onChange={(e) => setMaxImageWidth(Number(e.target.value))}
-                    />
-                    px
-                  </label>
-
-                  {largeAssets.length > 0 && (
-                    <>
-                      <p className="report-export-detected-label">
-                        Detected gif/video assets — exclude individually:
-                      </p>
-                      <div className="report-export-checkbox-group report-export-file-list">
-                        {largeAssets.map((f) => (
-                          <label key={f} className="report-export-checkbox">
-                            <input
-                              type="checkbox"
-                              checked={excludedFiles.has(f)}
-                              onChange={() => toggleSet(excludedFiles, setExcludedFiles, f)}
-                            />
-                            {f}
-                          </label>
-                        ))}
-                      </div>
-                    </>
-                  )}
-                </fieldset>
-              )}
-
-              {result && (
-                <div className={`report-export-result ${result.ok ? 'is-success' : 'is-error'}`}>
-                  <p>{result.ok ? `✓ Built to ${result.outDir}/` : '✗ Build failed'}</p>
-                  {result.log && <pre>{result.log}</pre>}
-                </div>
-              )}
+            <div className="report-export-checkbox-group">
+              {KNOWN_EXTENSIONS.map((ext) => (
+                <label key={ext} className="report-export-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={excludedExt.has(ext)}
+                    onChange={() => toggleSet(excludedExt, setExcludedExt, ext)}
+                  />
+                  all {ext} files
+                </label>
+              ))}
             </div>
 
-            <footer className="report-export-footer">
-              <button
-                type="button"
-                className="report-export-cancel"
-                onClick={() => setIsOpen(false)}
-              >
-                Close
-              </button>
-              <button
-                type="button"
-                className="report-export-submit"
-                onClick={handleExport}
-                disabled={isExporting}
-              >
-                {isExporting ? 'Building…' : 'Export'}
-              </button>
-            </footer>
+            <label className="report-export-width">
+              Exclude images wider than
+              <input
+                type="number"
+                min={0}
+                step={100}
+                value={maxImageWidth}
+                onChange={(e) => setMaxImageWidth(Number(e.target.value))}
+              />
+              px
+            </label>
+
+            {largeAssets.length > 0 && (
+              <>
+                <p className="report-export-detected-label">
+                  Detected gif/video assets — exclude individually:
+                </p>
+                <div className="report-export-checkbox-group report-export-file-list">
+                  {largeAssets.map((f) => (
+                    <label key={f} className="report-export-checkbox">
+                      <input
+                        type="checkbox"
+                        checked={excludedFiles.has(f)}
+                        onChange={() => toggleSet(excludedFiles, setExcludedFiles, f)}
+                      />
+                      {f}
+                    </label>
+                  ))}
+                </div>
+              </>
+            )}
+          </fieldset>
+        )}
+
+        {result && (
+          <div className={`report-export-result ${result.ok ? 'is-success' : 'is-error'}`}>
+            <p>{result.ok ? `✓ Built to ${result.outDir}/` : '✗ Build failed'}</p>
+            {result.log && <pre>{result.log}</pre>}
           </div>
-        </div>
-      )}
+        )}
+      </Panel>
     </>
   );
 }
