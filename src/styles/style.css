@@ -96,6 +96,36 @@
   --shadow-color: rgb(0 0 0 / 35%);
 }
 
+@theme {
+  /* Text */
+  --color-text: #3b2924;
+  --color-text-muted: #795f55;
+  --color-text-on-accent: #fffaf5;
+
+  /* Backgrounds */
+  --color-bg-page: #e8ddd3;
+  --color-bg-surface: #fffaf5;
+  --color-bg-soft: #f4e9df;
+  --color-bg-muted: #eadbd0;
+
+  /* Main colors */
+  --color-primary: #b65336;
+  --color-primary-hover: #98432c;
+  --color-secondary: #d98b45;
+  --color-secondary-hover: #bc7135;
+  --color-accent-soft: #f1d6bf;
+
+  /* Status */
+  --color-error: #b42318;
+  --color-warning: #a15c00;
+  --color-info: #8a5a2b;
+  --color-success: #3f7d3a;
+
+  /* Borders */
+  --color-border: #dec9ba;
+  --color-border-strong: #cda995;
+}
+
 /* ==========================================================
    BASE
    ========================================================== */
