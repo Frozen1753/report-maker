@@ -1,5 +1,6 @@
 import mdx from '@mdx-js/rollup';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite'
 import remarkGfm from 'remark-gfm';
 import { defineConfig, type PluginOption } from 'vite';
 import { viteSingleFile } from 'vite-plugin-singlefile';
@@ -29,6 +30,7 @@ export default defineConfig({
     // Must run before @vitejs/plugin-react transforms the JSX MDX compiles down to.
     { enforce: 'pre', ...mdx({ remarkPlugins: [remarkGfm, remarkHeadingNumbers] }) },
     react({ include: /\.(jsx|js|mdx|md|tsx|ts)$/ }),
+    tailwindcss(),
 
     svgr(),
     exportServerPlugin(),
