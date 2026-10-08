@@ -28,8 +28,6 @@ import {
   type ReactNode,
 } from 'react';
 
-import styles from './Tooltip.module.css';
-
 const DEFAULT_OPEN_DELAY_MS = 300;
 const DEFAULT_CLOSE_DELAY_MS = 100;
 const TRIGGER_GAP_PX = 8;
