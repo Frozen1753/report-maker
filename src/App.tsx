@@ -11,7 +11,6 @@ import { TableOfContent } from './components/toc/TableOfContent';
 import { TopButton } from './components/top-button/TopButton';
 import Report, { toc } from './report.mdx';
 import './custom/variables';
-import { EditPanel } from './components/edit-panel/EditPanel';
 
 // MDX compiles a ```mermaid fence to <pre><code className="language-mermaid">...
 // Intercepting `pre` lets every report.mdx just write plain ```mermaid blocks,
