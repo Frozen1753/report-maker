@@ -7,6 +7,7 @@ import {
   SHIKI_DARK_VAR,
   SHIKI_LIGHT_VAR,
 } from '../code/shiki-theme-vars';
+import { Panel } from '../panel/Panel';
 import { formatColor, isColor, parseColor, toHex, type RGBA } from './theme-color';
 import './ThemePanel.css';
 
@@ -180,218 +181,201 @@ export function ThemePanel() {
         <PaintRoller />
       </button>
 
-      {isOpen && (
-        <div
-          className="theme-panel-backdrop"
-          onClick={(e) => e.target === e.currentTarget && setIsOpen(false)}
-          onKeyDown={(e) => e.key === 'Escape' && setIsOpen(false)}
-        >
-          <div
-            className="theme-panel-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Theme editor"
-          >
-            <header className="theme-panel-header">
-              <h2>Theme</h2>
-              <div className="theme-panel-mode-toggle" role="tablist">
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={previewMode === 'light'}
-                  className={previewMode === 'light' ? 'active' : ''}
-                  onClick={() => setPreviewMode('light')}
-                >
-                  ☀ Light
-                </button>
-                <button
-                  type="button"
-                  role="tab"
-                  aria-selected={previewMode === 'dark'}
-                  className={previewMode === 'dark' ? 'active' : ''}
-                  onClick={() => setPreviewMode('dark')}
-                >
-                  🌙 Dark
-                </button>
-              </div>
-              <button
-                type="button"
-                className="theme-panel-close"
-                onClick={() => setIsOpen(false)}
-                aria-label="Close"
-              >
-                ✕
-              </button>
-            </header>
-
-            {!loaded ? (
-              <p className="theme-panel-loading">Loading current theme…</p>
-            ) : (
-              <div className="theme-panel-body">
-                <fieldset>
-                  <legend>Colors</legend>
-                  {colorVars.map((key) => {
-                    const value = previewMode === 'dark' ? (dark[key] ?? light[key]) : light[key];
-                    const overridden = previewMode === 'dark' && key in dark;
-                    const parsed: RGBA = parseColor(value) ?? { r: 0, g: 0, b: 0, a: 1 };
-                    const setVar = previewMode === 'dark' ? setDarkVar : setLightVar;
-
-                    function updateHue(hex: string) {
-                      const next = parseColor(hex);
-                      if (next) setVar(key, formatColor({ ...next, a: parsed.a }));
-                    }
-                    function updateAlpha(percent: number) {
-                      setVar(key, formatColor({ ...parsed, a: percent / 100 }));
-                    }
-
-                    return (
-                      <label key={key} className="theme-panel-row">
-                        <span className="theme-panel-var-name">{key}</span>
-                        <input
-                          type="color"
-                          value={toHex(parsed)}
-                          onChange={(e) => updateHue(e.target.value)}
-                        />
-                        <input
-                          type="range"
-                          className="theme-panel-alpha"
-                          min={0}
-                          max={100}
-                          value={Math.round(parsed.a * 100)}
-                          onChange={(e) => updateAlpha(Number(e.target.value))}
-                          title={`Opacity: ${Math.round(parsed.a * 100)}%`}
-                        />
-                        <input
-                          type="text"
-                          className="theme-panel-value-text"
-                          value={value}
-                          onChange={(e) => setVar(key, e.target.value)}
-                        />
-                        {previewMode === 'dark' && (
-                          <button
-                            type="button"
-                            className="theme-panel-clear-override"
-                            title="Use the same value as light mode"
-                            disabled={!overridden}
-                            onClick={() => clearDarkOverride(key)}
-                          >
-                            ↺
-                          </button>
-                        )}
-                      </label>
-                    );
-                  })}
-                </fieldset>
-
-                <fieldset>
-                  <legend>Typography &amp; sizes</legend>
-                  {otherVars.map((key) => {
-                    const value = previewMode === 'dark' ? (dark[key] ?? light[key]) : light[key];
-                    const overridden = previewMode === 'dark' && key in dark;
-                    const setVar = previewMode === 'dark' ? setDarkVar : setLightVar;
-                    return (
-                      <label key={key} className="theme-panel-row">
-                        <span className="theme-panel-var-name">{key}</span>
-                        <input
-                          type="text"
-                          className="theme-panel-value-text theme-panel-value-wide"
-                          value={value}
-                          onChange={(e) => setVar(key, e.target.value)}
-                        />
-                        {previewMode === 'dark' && (
-                          <button
-                            type="button"
-                            className="theme-panel-clear-override"
-                            title="Use the same value as light mode"
-                            disabled={!overridden}
-                            onClick={() => clearDarkOverride(key)}
-                          >
-                            ↺
-                          </button>
-                        )}
-                      </label>
-                    );
-                  })}
-                </fieldset>
-
-                <fieldset>
-                  <legend>Code syntax theme (Shiki)</legend>
-                  <label className="theme-panel-row">
-                    <span className="theme-panel-var-name">Light theme</span>
-                    <select
-                      className="theme-panel-value-text theme-panel-value-wide"
-                      value={shikiLight}
-                      onChange={(e) => setShikiTheme('light', e.target.value)}
-                    >
-                      <optgroup label="Light themes">
-                        {shikiThemesByType.light.map((t) => (
-                          <option key={t.id} value={t.id}>
-                            {t.displayName}
-                          </option>
-                        ))}
-                      </optgroup>
-                      <optgroup label="Dark themes">
-                        {shikiThemesByType.dark.map((t) => (
-                          <option key={t.id} value={t.id}>
-                            {t.displayName}
-                          </option>
-                        ))}
-                      </optgroup>
-                    </select>
-                  </label>
-                  <label className="theme-panel-row">
-                    <span className="theme-panel-var-name">Dark theme</span>
-                    <select
-                      className="theme-panel-value-text theme-panel-value-wide"
-                      value={shikiDark}
-                      onChange={(e) => setShikiTheme('dark', e.target.value)}
-                    >
-                      <optgroup label="Dark themes">
-                        {shikiThemesByType.dark.map((t) => (
-                          <option key={t.id} value={t.id}>
-                            {t.displayName}
-                          </option>
-                        ))}
-                      </optgroup>
-                      <optgroup label="Light themes">
-                        {shikiThemesByType.light.map((t) => (
-                          <option key={t.id} value={t.id}>
-                            {t.displayName}
-                          </option>
-                        ))}
-                      </optgroup>
-                    </select>
-                  </label>
-                  <p className="theme-panel-shiki-note">
-                    Applies live to any <code>Code</code> block on the page. Requires a one-time CSS
-                    rule in style.css — see README.
-                  </p>
-                </fieldset>
-
-                {message && (
-                  <p className={`theme-panel-message ${message.ok ? 'is-success' : 'is-error'}`}>
-                    {message.text}
-                  </p>
-                )}
-              </div>
-            )}
-
-            <footer className="theme-panel-footer">
-              <button type="button" className="theme-panel-reset" onClick={handleReset}>
-                Reset
-              </button>
-              <button
-                type="button"
-                className="theme-panel-save"
-                onClick={handleSave}
-                disabled={isSaving || !loaded}
-              >
-                {isSaving ? 'Saving…' : 'Save to style.css'}
-              </button>
-            </footer>
+      <Panel
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        title="Theme"
+        maxWidth="34rem"
+        headerActions={
+          <div className="theme-panel-mode-toggle" role="tablist">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={previewMode === 'light'}
+              className={previewMode === 'light' ? 'active' : ''}
+              onClick={() => setPreviewMode('light')}
+            >
+              ☀ Light
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={previewMode === 'dark'}
+              className={previewMode === 'dark' ? 'active' : ''}
+              onClick={() => setPreviewMode('dark')}
+            >
+              🌙 Dark
+            </button>
           </div>
-        </div>
-      )}
+        }
+        footer={
+          <>
+            <button type="button" className="panel-btn panel-btn--secondary" onClick={handleReset}>
+              Reset
+            </button>
+            <button
+              type="button"
+              className="panel-btn panel-btn--primary"
+              onClick={handleSave}
+              disabled={isSaving || !loaded}
+            >
+              {isSaving ? 'Saving…' : 'Save to style.css'}
+            </button>
+          </>
+        }
+      >
+        {!loaded ? (
+          <p className="theme-panel-loading">Loading current theme…</p>
+        ) : (
+          <>
+            <fieldset className="panel-section">
+              <legend>Colors</legend>
+              {colorVars.map((key) => {
+                const value = previewMode === 'dark' ? (dark[key] ?? light[key]) : light[key];
+                const overridden = previewMode === 'dark' && key in dark;
+                const parsed: RGBA = parseColor(value) ?? { r: 0, g: 0, b: 0, a: 1 };
+                const setVar = previewMode === 'dark' ? setDarkVar : setLightVar;
+
+                function updateHue(hex: string) {
+                  const next = parseColor(hex);
+                  if (next) setVar(key, formatColor({ ...next, a: parsed.a }));
+                }
+                function updateAlpha(percent: number) {
+                  setVar(key, formatColor({ ...parsed, a: percent / 100 }));
+                }
+
+                return (
+                  <label key={key} className="theme-panel-row">
+                    <span className="theme-panel-var-name">{key}</span>
+                    <input
+                      type="color"
+                      value={toHex(parsed)}
+                      onChange={(e) => updateHue(e.target.value)}
+                    />
+                    <input
+                      type="range"
+                      className="theme-panel-alpha"
+                      min={0}
+                      max={100}
+                      value={Math.round(parsed.a * 100)}
+                      onChange={(e) => updateAlpha(Number(e.target.value))}
+                      title={`Opacity: ${Math.round(parsed.a * 100)}%`}
+                    />
+                    <input
+                      type="text"
+                      className="theme-panel-value-text"
+                      value={value}
+                      onChange={(e) => setVar(key, e.target.value)}
+                    />
+                    {previewMode === 'dark' && (
+                      <button
+                        type="button"
+                        className="theme-panel-clear-override"
+                        title="Use the same value as light mode"
+                        disabled={!overridden}
+                        onClick={() => clearDarkOverride(key)}
+                      >
+                        ↺
+                      </button>
+                    )}
+                  </label>
+                );
+              })}
+            </fieldset>
+
+            <fieldset className="panel-section">
+              <legend>Typography &amp; sizes</legend>
+              {otherVars.map((key) => {
+                const value = previewMode === 'dark' ? (dark[key] ?? light[key]) : light[key];
+                const overridden = previewMode === 'dark' && key in dark;
+                const setVar = previewMode === 'dark' ? setDarkVar : setLightVar;
+                return (
+                  <label key={key} className="theme-panel-row">
+                    <span className="theme-panel-var-name">{key}</span>
+                    <input
+                      type="text"
+                      className="theme-panel-value-text theme-panel-value-wide"
+                      value={value}
+                      onChange={(e) => setVar(key, e.target.value)}
+                    />
+                    {previewMode === 'dark' && (
+                      <button
+                        type="button"
+                        className="theme-panel-clear-override"
+                        title="Use the same value as light mode"
+                        disabled={!overridden}
+                        onClick={() => clearDarkOverride(key)}
+                      >
+                        ↺
+                      </button>
+                    )}
+                  </label>
+                );
+              })}
+            </fieldset>
+
+            <fieldset className="panel-section">
+              <legend>Code syntax theme (Shiki)</legend>
+              <label className="theme-panel-row">
+                <span className="theme-panel-var-name">Light theme</span>
+                <select
+                  className="theme-panel-value-text theme-panel-value-wide"
+                  value={shikiLight}
+                  onChange={(e) => setShikiTheme('light', e.target.value)}
+                >
+                  <optgroup label="Light themes">
+                    {shikiThemesByType.light.map((t) => (
+                      <option key={t.id} value={t.id}>
+                        {t.displayName}
+                      </option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="Dark themes">
+                    {shikiThemesByType.dark.map((t) => (
+                      <option key={t.id} value={t.id}>
+                        {t.displayName}
+                      </option>
+                    ))}
+                  </optgroup>
+                </select>
+              </label>
+              <label className="theme-panel-row">
+                <span className="theme-panel-var-name">Dark theme</span>
+                <select
+                  className="theme-panel-value-text theme-panel-value-wide"
+                  value={shikiDark}
+                  onChange={(e) => setShikiTheme('dark', e.target.value)}
+                >
+                  <optgroup label="Dark themes">
+                    {shikiThemesByType.dark.map((t) => (
+                      <option key={t.id} value={t.id}>
+                        {t.displayName}
+                      </option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="Light themes">
+                    {shikiThemesByType.light.map((t) => (
+                      <option key={t.id} value={t.id}>
+                        {t.displayName}
+                      </option>
+                    ))}
+                  </optgroup>
+                </select>
+              </label>
+              <p className="theme-panel-shiki-note">
+                Applies live to any <code>Code</code> block on the page. Requires a one-time CSS
+                rule in style.css — see README.
+              </p>
+            </fieldset>
+
+            {message && (
+              <p className={`theme-panel-message ${message.ok ? 'is-success' : 'is-error'}`}>
+                {message.text}
+              </p>
+            )}
+          </>
+        )}
+      </Panel>
     </>
   );
 }

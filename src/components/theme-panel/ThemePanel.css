@@ -35,42 +35,6 @@
   transform: scale(1.06);
 }
 
-.theme-panel-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 1001;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.45);
-  padding: 1rem;
-}
-
-.theme-panel-modal {
-  width: 100%;
-  max-width: 34rem;
-  max-height: 85vh;
-  overflow-y: auto;
-  border-radius: 0.75rem;
-  background: var(--color-bg-surface, #ffffff);
-  color: var(--color-text, #1a1a1a);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-}
-
-.theme-panel-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid var(--color-border, #e5e5e5);
-}
-
-.theme-panel-header h2 {
-  margin: 0;
-  font-size: 1.1rem;
-  flex: 1;
-}
-
 .theme-panel-mode-toggle {
   display: flex;
   border: 1px solid var(--color-border, #e5e5e5);
@@ -94,44 +58,10 @@
   color: var(--report-fab-color, #fff);
 }
 
-.theme-panel-close {
-  border: none;
-  background: none;
-  font-size: 1rem;
-  cursor: pointer;
-  color: inherit;
-  opacity: 0.6;
-}
-
-.theme-panel-close:hover {
-  opacity: 1;
-}
-
 .theme-panel-loading {
-  padding: 1.5rem 1.25rem;
+  margin: 0;
   opacity: 0.7;
   font-size: 0.9rem;
-}
-
-.theme-panel-body {
-  padding: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-.theme-panel-body fieldset {
-  border: 1px solid var(--color-border, #e5e5e5);
-  border-radius: 0.5rem;
-  padding: 0.75rem 1rem 1rem;
-}
-
-.theme-panel-body legend {
-  padding: 0 0.4rem;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  opacity: 0.65;
 }
 
 .theme-panel-row {
@@ -213,36 +143,4 @@
 .theme-panel-message.is-error {
   background: rgba(239, 68, 68, 0.12);
   color: #b91c1c;
-}
-
-.theme-panel-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.6rem;
-  padding: 1rem 1.25rem;
-  border-top: 1px solid var(--color-border, #e5e5e5);
-}
-
-.theme-panel-footer button {
-  padding: 0.5rem 1rem;
-  border-radius: 0.4rem;
-  border: 1px solid transparent;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
-.theme-panel-reset {
-  background: none;
-  border-color: var(--color-border, #e5e5e5);
-  color: inherit;
-}
-
-.theme-panel-save {
-  background: var(--color-accent, #4f46e5);
-  color: var(--report-fab-color, #fff);
-}
-
-.theme-panel-save:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
