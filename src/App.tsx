@@ -40,6 +40,10 @@ export default function App() {
               firstName: "Frozen1753",
               href: "https://github.com/Frozen1753",
             },
+            {
+              firstName: "ElPotatoCorp",
+              href: "https://github.com/ElPotatoCorp",
+            },
           ]}
           affiliations={["Programmer, procrastinator and cat-lover"]}
         />
