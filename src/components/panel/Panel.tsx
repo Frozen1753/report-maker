@@ -1,4 +1,5 @@
 import { useEffect, useId, type CSSProperties, type ReactNode } from 'react';
+import { X } from 'lucide-react';
 import './Panel.css';
 
 interface PanelProps {
@@ -69,7 +70,7 @@ export function Panel({
           </h2>
           {headerActions}
           <button type="button" className="panel-close" onClick={onClose} aria-label="Close">
-            ✕
+            <X/>
           </button>
         </header>
 
