@@ -39,7 +39,7 @@ export function ThemeButton() {
   return (
     <button
       type="button"
-      className="theme-button"
+      className="floating-button"
       onClick={toggle}
       aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
       title={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}

@@ -8,7 +8,7 @@ function topFunction() {
 export function TopButton() {
   return (
     <>
-      <button className="top-button" onClick={() => topFunction()}>
+      <button className="floating-button floating-button--surface top-button" onClick={() => topFunction()}>
         <ArrowUp />
       </button>
     </>

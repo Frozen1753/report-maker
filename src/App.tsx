@@ -11,6 +11,7 @@ import { TableOfContent } from './components/toc/TableOfContent';
 import { TopButton } from './components/top-button/TopButton';
 import Report, { toc } from './report.mdx';
 import './custom/variables';
+import { EditPanel } from './components/edit-panel/EditPanel';
 
 // MDX compiles a ```mermaid fence to <pre><code className="language-mermaid">...
 // Intercepting `pre` lets every report.mdx just write plain ```mermaid blocks,
@@ -61,9 +62,15 @@ export default function App() {
       </main>
 
       <TopButton />
-      <ThemeButton />
-      {import.meta.env.DEV && <ExportPanel />}
-      {import.meta.env.DEV && <ThemePanel />}
+      <div className="floating-buttons">
+        <ThemeButton />
+        {import.meta.env.DEV && (
+          <>
+            <ExportPanel />
+            <ThemePanel />
+          </>
+        )}
+      </div>
     </div>
   );
 }

@@ -1,15 +1,4 @@
 .theme-panel-fab {
-  position: fixed;
-  right: 1.5rem;
-  bottom: 5.5rem;
-  z-index: 1000;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 999px;
-  border: none;
-  cursor: pointer;
-  font-size: 1.25rem;
-  line-height: 1;
   color: #fff;
   background: conic-gradient(
     from 135deg,
@@ -29,10 +18,6 @@
   );
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
   transition: transform 0.15s ease;
-}
-
-.theme-panel-fab:hover {
-  transform: scale(1.06);
 }
 
 .theme-panel-mode-toggle {

@@ -173,7 +173,7 @@ export function ThemePanel() {
     <>
       <button
         type="button"
-        className="theme-panel-fab"
+        className="floating-button theme-panel-fab"
         onClick={() => setIsOpen(true)}
         aria-label="Open theme panel"
         title="Edit theme"

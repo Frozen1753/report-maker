@@ -92,7 +92,7 @@ export function ExportPanel() {
     <>
       <button
         type="button"
-        className="report-export-fab"
+        className="floating-button"
         onClick={() => setIsOpen(true)}
         aria-label="Open export panel"
         title="Export report"

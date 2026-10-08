@@ -280,17 +280,12 @@ h5 {
    BOUTONS FLOTTANTS
    ========================================================== */
 
-.top-button,
-.theme-button {
-  position: fixed;
-  bottom: 1.5rem;
-  z-index: 1000;
-
+/* Base look shared by every floating button. No positioning here. */
+.floating-button {
   display: grid;
   width: 3rem;
   height: 3rem;
   padding: 0;
-
   place-items: center;
 
   border: 0;
@@ -299,40 +294,46 @@ h5 {
   cursor: pointer;
   line-height: 1;
 
+  background-color: var(--color-primary);
+  color: var(--color-text-on-accent);
   box-shadow: var(--shadow-soft);
   transition:
     transform var(--transition-fast),
     background-color var(--transition-fast);
 }
 
-.top-button {
-  left: 1.5rem;
+.floating-button:hover {
+  transform: scale(1.06);
+  background-color: var(--color-primary-hover);
+}
 
-  background: var(--color-bg-surface);
+/* Variant: neutral surface instead of the primary colour. */
+.floating-button--surface {
+  background-color: var(--color-bg-surface);
   color: var(--color-text);
 }
 
-.report-export-fab,
-.theme-button {
+.floating-button--surface:hover {
+  background-color: var(--color-bg-soft);
+}
+
+/* Placement only. */
+.top-button {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  z-index: 1000;
+}
+
+.floating-buttons {
+  position: fixed;
   right: 1.5rem;
+  bottom: 1.5rem;
+  z-index: 1000;
 
-  background: var(--color-primary);
-  color: var(--color-text-on-accent);
-}
-
-.report-export-fab:hover,
-.top-button:hover,
-.theme-button:hover {
-  transform: scale(1.06);
-}
-
-.top-button:hover {
-  background: var(--color-bg-soft);
-}
-
-.report-export-fab:hover,
-.theme-button:hover {
-  background: var(--color-primary-hover);
+  display: flex;
+  flex-direction: column-reverse; /* first child at the bottom, stack grows upward */
+  gap: 1rem;
 }
 
 /* ==========================================================
