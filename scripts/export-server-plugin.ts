@@ -1,15 +1,15 @@
-import type { Plugin } from 'vite'
-import { spawn } from 'node:child_process'
-import fs from 'node:fs'
-import path from 'node:path'
+import type { Plugin } from 'vite';
+import { spawn } from 'node:child_process';
+import fs from 'node:fs';
+import path from 'node:path';
 
-export type ReportBuildMode = 'folder' | 'singlefile' | 'hybrid'
+export type ReportBuildMode = 'folder' | 'singlefile' | 'hybrid';
 
 export interface ExportRequestBody {
-  mode: ReportBuildMode
-  excludeExtensions?: string[]
-  maxImageWidth?: number
-  excludeFiles?: string[]
+  mode: ReportBuildMode;
+  excludeExtensions?: string[];
+  maxImageWidth?: number;
+  excludeFiles?: string[];
 }
 
 /**
@@ -38,24 +38,24 @@ export function exportServerPlugin(): Plugin {
     configureServer(server) {
       server.middlewares.use('/api/export', (req, res) => {
         if (req.method !== 'POST') {
-          res.statusCode = 405
-          res.end('Method not allowed')
-          return
+          res.statusCode = 405;
+          res.end('Method not allowed');
+          return;
         }
 
-        let body = ''
-        req.on('data', (chunk) => (body += chunk))
+        let body = '';
+        req.on('data', (chunk) => (body += chunk));
         req.on('end', () => {
-          let payload: ExportRequestBody
+          let payload: ExportRequestBody;
           try {
-            payload = JSON.parse(body || '{}')
+            payload = JSON.parse(body || '{}');
           } catch {
-            res.statusCode = 400
-            res.end('Invalid JSON body')
-            return
+            res.statusCode = 400;
+            res.end('Invalid JSON body');
+            return;
           }
 
-          const configPath = path.resolve(process.cwd(), 'report.assets.config.json')
+          const configPath = path.resolve(process.cwd(), 'report.assets.config.json');
           fs.writeFileSync(
             configPath,
             JSON.stringify(
@@ -67,23 +67,23 @@ export function exportServerPlugin(): Plugin {
               null,
               2,
             ),
-          )
+          );
 
-          const mode = payload.mode ?? 'folder'
+          const mode = payload.mode ?? 'folder';
           const child = spawn('node', ['scripts/build-report.mjs', mode], {
             cwd: process.cwd(),
             shell: true,
-          })
+          });
 
-          let log = ''
-          child.stdout.on('data', (d) => (log += d.toString()))
-          child.stderr.on('data', (d) => (log += d.toString()))
+          let log = '';
+          child.stdout.on('data', (d) => (log += d.toString()));
+          child.stderr.on('data', (d) => (log += d.toString()));
           child.on('close', (code) => {
-            res.setHeader('Content-Type', 'application/json')
-            res.end(JSON.stringify({ ok: code === 0, log, outDir: `dist/${mode}` }))
-          })
-        })
-      })
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ ok: code === 0, log, outDir: `dist/${mode}` }));
+          });
+        });
+      });
     },
-  }
+  };
 }

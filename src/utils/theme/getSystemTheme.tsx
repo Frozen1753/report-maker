@@ -1,19 +1,19 @@
-export type Theme = 'light' | 'dark'
+export type Theme = 'light' | 'dark';
 
 export function getSystemTheme(): Theme {
-    return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 
 // Must match the key used in the anti-flash inline script in index.html.
-export const STORAGE_KEY = 'report-theme'
+export const STORAGE_KEY = 'report-theme';
 
 export function getStoredTheme(): Theme | null {
-    try {
-        const v = localStorage.getItem(STORAGE_KEY)
-        return v === 'light' || v === 'dark' ? v : null
-    } catch {
-        return null
-    }
+  try {
+    const v = localStorage.getItem(STORAGE_KEY);
+    return v === 'light' || v === 'dark' ? v : null;
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -23,7 +23,7 @@ export function getStoredTheme(): Theme | null {
  * component used outside index.html's normal load path).
  */
 export function getInitialTheme(): Theme {
-    const current = document.documentElement.dataset.theme
-    if (current === 'light' || current === 'dark') return current
-    return getStoredTheme() ?? getSystemTheme()
+  const current = document.documentElement.dataset.theme;
+  if (current === 'light' || current === 'dark') return current;
+  return getStoredTheme() ?? getSystemTheme();
 }

@@ -11,7 +11,8 @@
   font-size: 1.25rem;
   line-height: 1;
   color: #fff;
-  background: conic-gradient(from 135deg,
+  background: conic-gradient(
+    from 135deg,
     rgb(255, 0, 0, 0.75) 0%,
     rgb(255, 128, 0, 0.75) 8%,
     rgb(255, 255, 0, 0.75) 16%,
@@ -150,7 +151,7 @@
   white-space: nowrap;
 }
 
-.theme-panel-row input[type='color'] {
+.theme-panel-row input[type="color"] {
   width: 2rem;
   height: 2rem;
   padding: 0;

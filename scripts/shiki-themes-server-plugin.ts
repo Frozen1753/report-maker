@@ -1,4 +1,4 @@
-import type { Plugin } from 'vite'
+import type { Plugin } from 'vite';
 
 /**
  * Dev-only endpoint: GET /api/shiki-themes -> the full bundledThemesInfo list.
@@ -19,10 +19,14 @@ export function shikiThemesServerPlugin(): Plugin {
     apply: 'serve',
     configureServer(server) {
       server.middlewares.use('/api/shiki-themes', async (_req, res) => {
-        const { bundledThemesInfo } = await import('shiki')
-        res.setHeader('Content-Type', 'application/json')
-        res.end(JSON.stringify(bundledThemesInfo.map((t) => ({ id: t.id, displayName: t.displayName, type: t.type }))))
-      })
+        const { bundledThemesInfo } = await import('shiki');
+        res.setHeader('Content-Type', 'application/json');
+        res.end(
+          JSON.stringify(
+            bundledThemesInfo.map((t) => ({ id: t.id, displayName: t.displayName, type: t.type })),
+          ),
+        );
+      });
     },
-  }
+  };
 }

@@ -1,12 +1,12 @@
-import type { ReactNode } from 'react'
-import { useZoomPan } from './useZoomPan'
+import type { ReactNode } from 'react';
+import { useZoomPan } from './useZoomPan';
 
 interface ZoomPanProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 export function ZoomPan({ children }: ZoomPanProps) {
-  const { containerRef, contentRef, scale, x, y, isZoomed, handlers } = useZoomPan()
+  const { containerRef, contentRef, scale, x, y, isZoomed, handlers } = useZoomPan();
 
   return (
     <div ref={containerRef} className="figure-zoom-pan" data-zoomed={isZoomed} {...handlers}>
@@ -18,7 +18,9 @@ export function ZoomPan({ children }: ZoomPanProps) {
         {children}
       </div>
 
-      <p className="figure-zoom-hint">Scroll or pinch to zoom · drag to pan · double-click to reset</p>
+      <p className="figure-zoom-hint">
+        Scroll or pinch to zoom · drag to pan · double-click to reset
+      </p>
     </div>
-  )
+  );
 }

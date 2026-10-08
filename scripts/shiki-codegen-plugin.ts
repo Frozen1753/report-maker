@@ -1,6 +1,6 @@
-import type { Plugin } from 'vite'
-import path from 'node:path'
-import { generateShikiBundle } from './shiki-codegen.ts'
+import type { Plugin } from 'vite';
+import path from 'node:path';
+import { generateShikiBundle } from './shiki-codegen.ts';
 
 export function shikiCodegenPlugin(): Plugin {
   return {
@@ -11,7 +11,7 @@ export function shikiCodegenPlugin(): Plugin {
         reportMdxPath: path.resolve(process.cwd(), 'src/report.mdx'),
         styleCssPath: path.resolve(process.cwd(), 'src/styles/style.css'),
         outPath: path.resolve(process.cwd(), 'src/generated/shiki-bundle.generated.ts'),
-      })
+      });
     },
-  }
+  };
 }

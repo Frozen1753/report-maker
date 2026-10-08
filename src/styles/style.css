@@ -579,11 +579,7 @@ th {
    ========================================================== */
 
 .collapsible {
-  --collapsible-border: color-mix(
-    in srgb,
-    var(--color-primary) 35%,
-    var(--color-bg-page)
-  );
+  --collapsible-border: color-mix(in srgb, var(--color-primary) 35%, var(--color-bg-page));
 
   margin: var(--space-5) 0;
   overflow: hidden;
@@ -743,11 +739,7 @@ hr.separator {
    ========================================================== */
 
 .tabs {
-  --tabs-border: color-mix(
-    in srgb,
-    var(--color-primary) 30%,
-    var(--color-bg-page)
-  );
+  --tabs-border: color-mix(in srgb, var(--color-primary) 30%, var(--color-bg-page));
 
   margin: var(--space-10) 0;
 }
@@ -792,11 +784,7 @@ hr.separator {
 }
 
 .tabs-trigger:hover:not(:disabled) {
-  background: color-mix(
-    in srgb,
-    var(--color-secondary) 25%,
-    transparent
-  );
+  background: color-mix(in srgb, var(--color-secondary) 25%, transparent);
 }
 
 .tabs-trigger.active {
@@ -807,11 +795,7 @@ hr.separator {
 
 .tabs-trigger:focus-visible,
 .tabs-panel:focus-visible {
-  outline: 3px solid color-mix(
-    in srgb,
-    var(--color-secondary) 70%,
-    transparent
-  );
+  outline: 3px solid color-mix(in srgb, var(--color-secondary) 70%, transparent);
   outline-offset: 3px;
 }
 
@@ -1103,11 +1087,7 @@ figure.figure figcaption {
   margin: var(--space-5) 0;
   padding: var(--space-4) var(--space-5);
 
-  border: 1px solid color-mix(
-    in srgb,
-    var(--callout-color) 30%,
-    transparent
-  );
+  border: 1px solid color-mix(in srgb, var(--callout-color) 30%, transparent);
   border-left: 6px solid var(--callout-color);
   border-radius: var(--radius-lg);
 

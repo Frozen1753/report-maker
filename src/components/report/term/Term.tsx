@@ -1,10 +1,9 @@
-import type { ReactNode } from "react";
+import type { ReactNode } from 'react';
 
-import { Tooltip, type TooltipProps } from "./Tooltip";
-import styles from "./Term.module.css";
+import { Tooltip, type TooltipProps } from './Tooltip';
+import styles from './Term.module.css';
 
-export interface TermProps
-  extends Omit<TooltipProps, "content" | "className"> {
+export interface TermProps extends Omit<TooltipProps, 'content' | 'className'> {
   tooltip: ReactNode;
 }
 

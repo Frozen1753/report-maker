@@ -1,10 +1,5 @@
 {
-  "excludeExtensions": [
-    ".gif",
-    ".mp4",
-    ".mov",
-    ".webm"
-  ],
+  "excludeExtensions": [".gif", ".mp4", ".mov", ".webm"],
   "maxImageWidth": 3000,
   "excludeFiles": []
 }

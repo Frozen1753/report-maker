@@ -1,1 +1,1 @@
-export { Figure } from "./Figure";
+export { Figure } from './Figure';

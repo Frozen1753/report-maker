@@ -1,33 +1,33 @@
-import { PaintRoller } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { PaintRoller } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   DEFAULT_SHIKI_DARK,
   DEFAULT_SHIKI_LIGHT,
   previewShikiThemes,
   SHIKI_DARK_VAR,
   SHIKI_LIGHT_VAR,
-} from '../code/shiki-theme-vars'
-import { formatColor, isColor, parseColor, toHex, type RGBA } from './theme-color'
-import './ThemePanel.css'
+} from '../code/shiki-theme-vars';
+import { formatColor, isColor, parseColor, toHex, type RGBA } from './theme-color';
+import './ThemePanel.css';
 
-const MANAGED_SHIKI_VARS = new Set([SHIKI_LIGHT_VAR, SHIKI_DARK_VAR])
+const MANAGED_SHIKI_VARS = new Set([SHIKI_LIGHT_VAR, SHIKI_DARK_VAR]);
 
 interface ShikiThemeMeta {
-  id: string
-  displayName: string
-  type: 'light' | 'dark'
+  id: string;
+  displayName: string;
+  type: 'light' | 'dark';
 }
 
-type ShikiThemesByType = Record<'light' | 'dark', { id: string; displayName: string }[]>
+type ShikiThemesByType = Record<'light' | 'dark', { id: string; displayName: string }[]>;
 
-const EMPTY_SHIKI_THEMES: ShikiThemesByType = { light: [], dark: [] }
+const EMPTY_SHIKI_THEMES: ShikiThemesByType = { light: [], dark: [] };
 
-type Vars = Record<string, string>
-type PreviewMode = 'light' | 'dark'
+type Vars = Record<string, string>;
+type PreviewMode = 'light' | 'dark';
 
 interface ThemeApiResponse {
-  light: Vars
-  dark: Vars
+  light: Vars;
+  dark: Vars;
 }
 
 /**
@@ -36,23 +36,23 @@ interface ThemeApiResponse {
  * writing anything to disk — this is the "preview" half of the panel.
  */
 function applyPreview(vars: Vars) {
-  const root = document.documentElement
-  for (const [prop, value] of Object.entries(vars)) root.style.setProperty(prop, value)
+  const root = document.documentElement;
+  for (const [prop, value] of Object.entries(vars)) root.style.setProperty(prop, value);
 }
 function clearPreview(props: string[]) {
-  const root = document.documentElement
-  for (const prop of props) root.style.removeProperty(prop)
+  const root = document.documentElement;
+  for (const prop of props) root.style.removeProperty(prop);
 }
 
 export function ThemePanel() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [loaded, setLoaded] = useState(false)
-  const [light, setLight] = useState<Vars>({})
-  const [dark, setDark] = useState<Vars>({})
-  const [previewMode, setPreviewMode] = useState<PreviewMode>('light')
-  const [isSaving, setIsSaving] = useState(false)
-  const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null)
-  const [shikiThemesByType, setShikiThemesByType] = useState<ShikiThemesByType>(EMPTY_SHIKI_THEMES)
+  const [isOpen, setIsOpen] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const [light, setLight] = useState<Vars>({});
+  const [dark, setDark] = useState<Vars>({});
+  const [previewMode, setPreviewMode] = useState<PreviewMode>('light');
+  const [isSaving, setIsSaving] = useState(false);
+  const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
+  const [shikiThemesByType, setShikiThemesByType] = useState<ShikiThemesByType>(EMPTY_SHIKI_THEMES);
 
   // Theme catalog comes from the dev server (see shiki-themes-server-plugin.ts)
   // rather than importing 'shiki' here — keeps the package out of client source.
@@ -60,109 +60,112 @@ export function ThemePanel() {
     fetch('/api/shiki-themes')
       .then((r) => r.json())
       .then((list: ShikiThemeMeta[]) => {
-        const grouped: ShikiThemesByType = { light: [], dark: [] }
-        for (const t of list) grouped[t.type].push({ id: t.id, displayName: t.displayName })
-        setShikiThemesByType(grouped)
+        const grouped: ShikiThemesByType = { light: [], dark: [] };
+        for (const t of list) grouped[t.type].push({ id: t.id, displayName: t.displayName });
+        setShikiThemesByType(grouped);
       })
       .catch(() => {
         // Non-fatal: the comboboxes just stay empty until the server is reachable.
-      })
-  }, [])
+      });
+  }, []);
 
   // Load current values once, on first open.
   useEffect(() => {
-    if (!isOpen || loaded) return
+    if (!isOpen || loaded) return;
     fetch('/api/theme')
       .then((r) => r.json())
       .then((data: ThemeApiResponse) => {
-        setLight(data.light)
-        setDark(data.dark)
-        setLoaded(true)
+        setLight(data.light);
+        setDark(data.dark);
+        setLoaded(true);
         previewShikiThemes({
           light: data.light[SHIKI_LIGHT_VAR] ?? DEFAULT_SHIKI_LIGHT,
           dark: data.light[SHIKI_DARK_VAR] ?? DEFAULT_SHIKI_DARK,
-        })
+        });
       })
-      .catch((err) => setMessage({ ok: false, text: `Could not load theme: ${err.message}` }))
-  }, [isOpen, loaded])
+      .catch((err) => setMessage({ ok: false, text: `Could not load theme: ${err.message}` }));
+  }, [isOpen, loaded]);
 
   // Live preview whenever a value or the light/dark toggle changes.
   useEffect(() => {
-    if (!loaded) return
-    document.documentElement.dataset.theme = previewMode
-    applyPreview(light)
-    if (previewMode === 'dark') applyPreview(dark)
-  }, [light, dark, previewMode, loaded])
+    if (!loaded) return;
+    document.documentElement.dataset.theme = previewMode;
+    applyPreview(light);
+    if (previewMode === 'dark') applyPreview(dark);
+  }, [light, dark, previewMode, loaded]);
 
   useEffect(() => {
     return () => {
       // Panel unmounted: drop the forced preview, let the page fall back to
       // its own default (e.g. prefers-color-scheme via CSS, if you use that
       // for first-load, or plain :root if you don't).
-      delete document.documentElement.dataset.theme
-      clearPreview([...Object.keys(light), ...Object.keys(dark)])
-    }
+      delete document.documentElement.dataset.theme;
+      clearPreview([...Object.keys(light), ...Object.keys(dark)]);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   const colorVars = useMemo(
     () => Object.keys(light).filter((k) => isColor(light[k]) && !MANAGED_SHIKI_VARS.has(k)),
     [light],
-  )
+  );
   const otherVars = useMemo(
     () => Object.keys(light).filter((k) => !isColor(light[k]) && !MANAGED_SHIKI_VARS.has(k)),
     [light],
-  )
+  );
 
-  const shikiLight = light[SHIKI_LIGHT_VAR] ?? DEFAULT_SHIKI_LIGHT
-  const shikiDark = light[SHIKI_DARK_VAR] ?? DEFAULT_SHIKI_DARK
+  const shikiLight = light[SHIKI_LIGHT_VAR] ?? DEFAULT_SHIKI_LIGHT;
+  const shikiDark = light[SHIKI_DARK_VAR] ?? DEFAULT_SHIKI_DARK;
 
   function setShikiTheme(which: 'light' | 'dark', value: string) {
-    const next = { light: which === 'light' ? value : shikiLight, dark: which === 'dark' ? value : shikiDark }
-    setLightVar(which === 'light' ? SHIKI_LIGHT_VAR : SHIKI_DARK_VAR, value)
-    previewShikiThemes(next)
+    const next = {
+      light: which === 'light' ? value : shikiLight,
+      dark: which === 'dark' ? value : shikiDark,
+    };
+    setLightVar(which === 'light' ? SHIKI_LIGHT_VAR : SHIKI_DARK_VAR, value);
+    previewShikiThemes(next);
   }
 
   function setLightVar(key: string, value: string) {
-    setLight((prev) => ({ ...prev, [key]: value }))
+    setLight((prev) => ({ ...prev, [key]: value }));
   }
   function setDarkVar(key: string, value: string) {
-    setDark((prev) => ({ ...prev, [key]: value }))
+    setDark((prev) => ({ ...prev, [key]: value }));
   }
   function clearDarkOverride(key: string) {
     setDark((prev) => {
-      const next = { ...prev }
-      delete next[key]
-      return next
-    })
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
   }
 
   async function handleSave() {
-    setIsSaving(true)
-    setMessage(null)
+    setIsSaving(true);
+    setMessage(null);
     try {
       const res = await fetch('/api/theme', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ light, dark }),
-      })
-      const data = await res.json()
+      });
+      const data = await res.json();
       setMessage(
         data.ok
           ? { ok: true, text: 'Saved to style.css — Vite will hot-reload it.' }
           : { ok: false, text: data.error ?? 'Save failed.' },
-      )
+      );
     } catch (err) {
-      setMessage({ ok: false, text: err instanceof Error ? err.message : String(err) })
+      setMessage({ ok: false, text: err instanceof Error ? err.message : String(err) });
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
   }
 
   function handleReset() {
-    clearPreview([...Object.keys(light), ...Object.keys(dark)])
-    setLoaded(false) // triggers a fresh GET next render
-    setMessage(null)
+    clearPreview([...Object.keys(light), ...Object.keys(dark)]);
+    setLoaded(false); // triggers a fresh GET next render
+    setMessage(null);
   }
 
   return (
@@ -183,7 +186,12 @@ export function ThemePanel() {
           onClick={(e) => e.target === e.currentTarget && setIsOpen(false)}
           onKeyDown={(e) => e.key === 'Escape' && setIsOpen(false)}
         >
-          <div className="theme-panel-modal" role="dialog" aria-modal="true" aria-label="Theme editor">
+          <div
+            className="theme-panel-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Theme editor"
+          >
             <header className="theme-panel-header">
               <h2>Theme</h2>
               <div className="theme-panel-mode-toggle" role="tablist">
@@ -206,7 +214,12 @@ export function ThemePanel() {
                   🌙 Dark
                 </button>
               </div>
-              <button type="button" className="theme-panel-close" onClick={() => setIsOpen(false)} aria-label="Close">
+              <button
+                type="button"
+                className="theme-panel-close"
+                onClick={() => setIsOpen(false)}
+                aria-label="Close"
+              >
                 ✕
               </button>
             </header>
@@ -218,23 +231,27 @@ export function ThemePanel() {
                 <fieldset>
                   <legend>Colors</legend>
                   {colorVars.map((key) => {
-                    const value = previewMode === 'dark' ? (dark[key] ?? light[key]) : light[key]
-                    const overridden = previewMode === 'dark' && key in dark
-                    const parsed: RGBA = parseColor(value) ?? { r: 0, g: 0, b: 0, a: 1 }
-                    const setVar = previewMode === 'dark' ? setDarkVar : setLightVar
+                    const value = previewMode === 'dark' ? (dark[key] ?? light[key]) : light[key];
+                    const overridden = previewMode === 'dark' && key in dark;
+                    const parsed: RGBA = parseColor(value) ?? { r: 0, g: 0, b: 0, a: 1 };
+                    const setVar = previewMode === 'dark' ? setDarkVar : setLightVar;
 
                     function updateHue(hex: string) {
-                      const next = parseColor(hex)
-                      if (next) setVar(key, formatColor({ ...next, a: parsed.a }))
+                      const next = parseColor(hex);
+                      if (next) setVar(key, formatColor({ ...next, a: parsed.a }));
                     }
                     function updateAlpha(percent: number) {
-                      setVar(key, formatColor({ ...parsed, a: percent / 100 }))
+                      setVar(key, formatColor({ ...parsed, a: percent / 100 }));
                     }
 
                     return (
                       <label key={key} className="theme-panel-row">
                         <span className="theme-panel-var-name">{key}</span>
-                        <input type="color" value={toHex(parsed)} onChange={(e) => updateHue(e.target.value)} />
+                        <input
+                          type="color"
+                          value={toHex(parsed)}
+                          onChange={(e) => updateHue(e.target.value)}
+                        />
                         <input
                           type="range"
                           className="theme-panel-alpha"
@@ -262,16 +279,16 @@ export function ThemePanel() {
                           </button>
                         )}
                       </label>
-                    )
+                    );
                   })}
                 </fieldset>
 
                 <fieldset>
                   <legend>Typography &amp; sizes</legend>
                   {otherVars.map((key) => {
-                    const value = previewMode === 'dark' ? (dark[key] ?? light[key]) : light[key]
-                    const overridden = previewMode === 'dark' && key in dark
-                    const setVar = previewMode === 'dark' ? setDarkVar : setLightVar
+                    const value = previewMode === 'dark' ? (dark[key] ?? light[key]) : light[key];
+                    const overridden = previewMode === 'dark' && key in dark;
+                    const setVar = previewMode === 'dark' ? setDarkVar : setLightVar;
                     return (
                       <label key={key} className="theme-panel-row">
                         <span className="theme-panel-var-name">{key}</span>
@@ -293,7 +310,7 @@ export function ThemePanel() {
                           </button>
                         )}
                       </label>
-                    )
+                    );
                   })}
                 </fieldset>
 
@@ -346,13 +363,15 @@ export function ThemePanel() {
                     </select>
                   </label>
                   <p className="theme-panel-shiki-note">
-                    Applies live to any <code>Code</code> block on the page. Requires a one-time CSS rule in
-                    style.css — see README.
+                    Applies live to any <code>Code</code> block on the page. Requires a one-time CSS
+                    rule in style.css — see README.
                   </p>
                 </fieldset>
 
                 {message && (
-                  <p className={`theme-panel-message ${message.ok ? 'is-success' : 'is-error'}`}>{message.text}</p>
+                  <p className={`theme-panel-message ${message.ok ? 'is-success' : 'is-error'}`}>
+                    {message.text}
+                  </p>
                 )}
               </div>
             )}
@@ -361,7 +380,12 @@ export function ThemePanel() {
               <button type="button" className="theme-panel-reset" onClick={handleReset}>
                 Reset
               </button>
-              <button type="button" className="theme-panel-save" onClick={handleSave} disabled={isSaving || !loaded}>
+              <button
+                type="button"
+                className="theme-panel-save"
+                onClick={handleSave}
+                disabled={isSaving || !loaded}
+              >
                 {isSaving ? 'Saving…' : 'Save to style.css'}
               </button>
             </footer>
@@ -369,5 +393,5 @@ export function ThemePanel() {
         </div>
       )}
     </>
-  )
+  );
 }

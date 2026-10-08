@@ -1,57 +1,72 @@
-import { Download } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
-import './ExportPanel.css'
+import { Download } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import './ExportPanel.css';
 
-type ReportBuildMode = 'folder' | 'singlefile' | 'hybrid'
+type ReportBuildMode = 'folder' | 'singlefile' | 'hybrid';
 
 interface ExportResult {
-  ok: boolean
-  log: string
-  outDir: string
+  ok: boolean;
+  log: string;
+  outDir: string;
 }
 
 const MODE_INFO: { value: ReportBuildMode; label: string; description: string }[] = [
-  { value: 'folder', label: 'Folder', description: 'index.html + a separate assets/ folder (default Vite output).' },
-  { value: 'singlefile', label: 'Single file', description: 'Everything — JS, CSS, every image/gif/video — inlined into one .html.' },
-  { value: 'hybrid', label: 'Hybrid', description: 'One .html for JS/CSS, but the assets you exclude below stay in assets/.' },
-]
+  {
+    value: 'folder',
+    label: 'Folder',
+    description: 'index.html + a separate assets/ folder (default Vite output).',
+  },
+  {
+    value: 'singlefile',
+    label: 'Single file',
+    description: 'Everything — JS, CSS, every image/gif/video — inlined into one .html.',
+  },
+  {
+    value: 'hybrid',
+    label: 'Hybrid',
+    description: 'One .html for JS/CSS, but the assets you exclude below stay in assets/.',
+  },
+];
 
-const KNOWN_EXTENSIONS = ['.gif', '.mp4', '.mov', '.webm'] as const
+const KNOWN_EXTENSIONS = ['.gif', '.mp4', '.mov', '.webm'] as const;
 
 export function ExportPanel() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [mode, setMode] = useState<ReportBuildMode>('hybrid')
-  const [excludedExt, setExcludedExt] = useState<Set<string>>(new Set(['.gif', '.mp4', '.mov', '.webm']))
-  const [maxImageWidth, setMaxImageWidth] = useState(3000)
-  const [excludedFiles, setExcludedFiles] = useState<Set<string>>(new Set())
-  const [isExporting, setIsExporting] = useState(false)
-  const [result, setResult] = useState<ExportResult | null>(null)
+  const [isOpen, setIsOpen] = useState(false);
+  const [mode, setMode] = useState<ReportBuildMode>('hybrid');
+  const [excludedExt, setExcludedExt] = useState<Set<string>>(
+    new Set(['.gif', '.mp4', '.mov', '.webm']),
+  );
+  const [maxImageWidth, setMaxImageWidth] = useState(3000);
+  const [excludedFiles, setExcludedFiles] = useState<Set<string>>(new Set());
+  const [isExporting, setIsExporting] = useState(false);
+  const [result, setResult] = useState<ExportResult | null>(null);
 
-  const [detectedAssets, setDetectedAssets] = useState<string[]>([])
+  const [detectedAssets, setDetectedAssets] = useState<string[]>([]);
 
   useEffect(() => {
     fetch('/api/assets')
       .then((r) => r.json())
-      .then((d) => setDetectedAssets(d.files))
-  }, [])
+      .then((d) => setDetectedAssets(d.files));
+  }, []);
 
   // Must depend on detectedAssets: it now arrives asynchronously from the
   // fetch above, not synchronously from import.meta.glob like before — an
   // empty dependency array would freeze this at the first render's "[]".
   const largeAssets = useMemo(
-    () => detectedAssets.filter((f) => KNOWN_EXTENSIONS.some((ext) => f.toLowerCase().endsWith(ext))),
+    () =>
+      detectedAssets.filter((f) => KNOWN_EXTENSIONS.some((ext) => f.toLowerCase().endsWith(ext))),
     [detectedAssets],
-  )
+  );
 
   function toggleSet(set: Set<string>, setSet: (s: Set<string>) => void, value: string) {
-    const next = new Set(set)
-    next.has(value) ? next.delete(value) : next.add(value)
-    setSet(next)
+    const next = new Set(set);
+    next.has(value) ? next.delete(value) : next.add(value);
+    setSet(next);
   }
 
   async function handleExport() {
-    setIsExporting(true)
-    setResult(null)
+    setIsExporting(true);
+    setResult(null);
     try {
       const res = await fetch('/api/export', {
         method: 'POST',
@@ -62,13 +77,13 @@ export function ExportPanel() {
           maxImageWidth,
           excludeFiles: Array.from(excludedFiles),
         }),
-      })
-      const data: ExportResult = await res.json()
-      setResult(data)
+      });
+      const data: ExportResult = await res.json();
+      setResult(data);
     } catch (err) {
-      setResult({ ok: false, log: err instanceof Error ? err.message : String(err), outDir: '' })
+      setResult({ ok: false, log: err instanceof Error ? err.message : String(err), outDir: '' });
     } finally {
-      setIsExporting(false)
+      setIsExporting(false);
     }
   }
 
@@ -90,10 +105,20 @@ export function ExportPanel() {
           onClick={(e) => e.target === e.currentTarget && setIsOpen(false)}
           onKeyDown={(e) => e.key === 'Escape' && setIsOpen(false)}
         >
-          <div className="report-export-modal" role="dialog" aria-modal="true" aria-label="Export report">
+          <div
+            className="report-export-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Export report"
+          >
             <header className="report-export-header">
               <h2>Export report</h2>
-              <button type="button" className="report-export-close" onClick={() => setIsOpen(false)} aria-label="Close">
+              <button
+                type="button"
+                className="report-export-close"
+                onClick={() => setIsOpen(false)}
+                aria-label="Close"
+              >
                 ✕
               </button>
             </header>
@@ -149,7 +174,9 @@ export function ExportPanel() {
 
                   {largeAssets.length > 0 && (
                     <>
-                      <p className="report-export-detected-label">Detected gif/video assets — exclude individually:</p>
+                      <p className="report-export-detected-label">
+                        Detected gif/video assets — exclude individually:
+                      </p>
                       <div className="report-export-checkbox-group report-export-file-list">
                         {largeAssets.map((f) => (
                           <label key={f} className="report-export-checkbox">
@@ -176,10 +203,19 @@ export function ExportPanel() {
             </div>
 
             <footer className="report-export-footer">
-              <button type="button" className="report-export-cancel" onClick={() => setIsOpen(false)}>
+              <button
+                type="button"
+                className="report-export-cancel"
+                onClick={() => setIsOpen(false)}
+              >
                 Close
               </button>
-              <button type="button" className="report-export-submit" onClick={handleExport} disabled={isExporting}>
+              <button
+                type="button"
+                className="report-export-submit"
+                onClick={handleExport}
+                disabled={isExporting}
+              >
                 {isExporting ? 'Building…' : 'Export'}
               </button>
             </footer>
@@ -187,5 +223,5 @@ export function ExportPanel() {
         </div>
       )}
     </>
-  )
+  );
 }

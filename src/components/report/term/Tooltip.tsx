@@ -17,7 +17,7 @@ import {
   useInteractions,
   useRole,
   type OpenChangeReason,
-} from "@floating-ui/react";
+} from '@floating-ui/react';
 import {
   createContext,
   useCallback,
@@ -26,9 +26,9 @@ import {
   useState,
   type MouseEvent,
   type ReactNode,
-} from "react";
+} from 'react';
 
-import styles from "./Tooltip.module.css";
+import styles from './Tooltip.module.css';
 
 const DEFAULT_OPEN_DELAY_MS = 300;
 const DEFAULT_CLOSE_DELAY_MS = 100;
@@ -92,14 +92,9 @@ function TooltipNode({
     if (open) pinParent?.();
   }, [open, pinParent]);
 
-  const handleOpenChange = (
-    next: boolean,
-    _event?: Event,
-    reason?: OpenChangeReason,
-  ) => {
+  const handleOpenChange = (next: boolean, _event?: Event, reason?: OpenChangeReason) => {
     // Pinned tooltips ignore hover-leave and blur.
-    const isExplicitDismiss =
-      reason === "outside-press" || reason === "escape-key";
+    const isExplicitDismiss = reason === 'outside-press' || reason === 'escape-key';
     if (!next && pinned && !isExplicitDismiss) return;
 
     if (!next) setPinned(false);
@@ -110,7 +105,7 @@ function TooltipNode({
     nodeId,
     open,
     onOpenChange: handleOpenChange,
-    placement: "top",
+    placement: 'top',
     whileElementsMounted: autoUpdate,
     middleware: [
       offset(TRIGGER_GAP_PX),
@@ -140,11 +135,10 @@ function TooltipNode({
       // Primary button only: a middle-click elsewhere must be able to pin
       // another tooltip without dismissing this one.
       outsidePress: (event) =>
-        event.button === PRIMARY_MOUSE_BUTTON &&
-        !isInsideTree(event.target as Node),
+        event.button === PRIMARY_MOUSE_BUTTON && !isInsideTree(event.target as Node),
     }),
     // Wires aria-describedby on the trigger to the floating element's id.
-    useRole(context, { role: "tooltip" }),
+    useRole(context, { role: 'tooltip' }),
   ]);
 
   const pinHandlers = {
@@ -182,9 +176,7 @@ function TooltipNode({
             data-pinned={pinned || undefined}
             {...getFloatingProps(pinHandlers)}
           >
-            <PinParentContext.Provider value={pin}>
-              {content}
-            </PinParentContext.Provider>
+            <PinParentContext.Provider value={pin}>{content}</PinParentContext.Provider>
           </div>
         </FloatingPortal>
       )}
