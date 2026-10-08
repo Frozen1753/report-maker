@@ -70,7 +70,7 @@ export function Panel({
           </h2>
           {headerActions}
           <button type="button" className="panel-close" onClick={onClose} aria-label="Close">
-            <X/>
+            <X />
           </button>
         </header>
 

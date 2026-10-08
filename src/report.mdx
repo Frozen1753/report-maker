@@ -921,7 +921,7 @@ Call <Code>easyTerm</Code> in any MDX expression:
 A definition can use other terms, just like nested <Code>Term</Code> components:
 
 <Code type="bloc" bar name="src/custom/variables/term.tsx" lang="tsx">
-  {`addTerm('network', <>Computers talking to each other through {easyTerm('request', 'requests')}.</>);
+    {`addTerm('network', <>Computers talking to each other through {easyTerm('request', 'requests')}.</>);
   addTerm('request', <>A request is a {easyTerm('network')} thing.</>);
   addTerm('latency', <>Time between a {easyTerm('request')} and its response.</>);`}
 </Code>
