@@ -126,6 +126,20 @@
   --color-border-strong: #cda995;
 }
 
+@layer base {
+  html {
+    @apply bg-bg-page scroll-smooth;
+  }
+
+  body {
+    @apply bg-bg-page text-text m-0 p-0 font-(family-name:--font-body) text-xl;
+  }
+
+  main {
+    @apply bg-bg-surface text-text mx-auto box-border min-h-screen w-[calc(100%-2rem)] max-w-300 px-15 pt-5 pb-15 text-justify leading-relaxed;
+  }
+}
+
 /* ==========================================================
    ANIMATIONS
    ========================================================== */
@@ -139,36 +153,6 @@
 /* ==========================================================
    BASE
    ========================================================== */
-
-html {
-  scroll-behavior: smooth;
-  background: var(--color-bg-page);
-}
-
-body {
-  margin: 0;
-  padding: 0;
-
-  background: var(--color-bg-page);
-  color: var(--color-text);
-
-  font-family: var(--font-body);
-  font-size: var(--font-size-body);
-}
-
-main {
-  box-sizing: border-box;
-  width: min(100% - 2rem, 1200px);
-  min-height: 100vh;
-  margin: 0 auto;
-  padding: var(--space-5) 60px 60px;
-
-  background: var(--color-bg-surface);
-  color: var(--color-text);
-
-  line-height: var(--line-height-body);
-  text-align: justify;
-}
 
 .report-layout img {
   display: block;
