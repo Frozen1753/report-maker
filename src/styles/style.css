@@ -622,7 +622,11 @@ th {
    ========================================================== */
 
 .collapsible {
-  --collapsible-border: color-mix(in srgb, var(--color-primary) 35%, var(--color-bg-page));
+  --collapsible-border: color-mix(
+    in srgb,
+    var(--color-primary) 35%,
+    var(--color-bg-page)
+  );
 
   margin: var(--space-5) 0;
   overflow: hidden;
@@ -782,7 +786,11 @@ hr.separator {
    ========================================================== */
 
 .tabs {
-  --tabs-border: color-mix(in srgb, var(--color-primary) 30%, var(--color-bg-page));
+  --tabs-border: color-mix(
+    in srgb,
+    var(--color-primary) 30%,
+    var(--color-bg-page)
+  );
 
   margin: var(--space-10) 0;
 }
