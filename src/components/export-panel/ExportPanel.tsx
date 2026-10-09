@@ -1,8 +1,8 @@
-import { Download } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
-import { Panel } from '../panel/Panel';
+import { Download } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Panel } from "../panel/Panel";
 
-type ReportBuildMode = 'folder' | 'singlefile' | 'hybrid';
+type ReportBuildMode = "folder" | "singlefile" | "hybrid";
 
 interface ExportResult {
   ok: boolean;
@@ -16,32 +16,32 @@ const MODE_INFO: {
   description: string;
 }[] = [
   {
-    value: 'folder',
-    label: 'Folder',
+    value: "folder",
+    label: "Folder",
     description:
-      'index.html + a separate assets/ folder (default Vite output).',
+      "index.html + a separate assets/ folder (default Vite output).",
   },
   {
-    value: 'singlefile',
-    label: 'Single file',
+    value: "singlefile",
+    label: "Single file",
     description:
-      'Everything — JS, CSS, every image/gif/video — inlined into one .html.',
+      "Everything — JS, CSS, every image/gif/video — inlined into one .html.",
   },
   {
-    value: 'hybrid',
-    label: 'Hybrid',
+    value: "hybrid",
+    label: "Hybrid",
     description:
-      'One .html for JS/CSS, but the assets you exclude below stay in assets/.',
+      "One .html for JS/CSS, but the assets you exclude below stay in assets/.",
   },
 ];
 
-const KNOWN_EXTENSIONS = ['.gif', '.mp4', '.mov', '.webm'] as const;
+const KNOWN_EXTENSIONS = [".gif", ".mp4", ".mov", ".webm"] as const;
 
 export function ExportPanel() {
   const [isOpen, setIsOpen] = useState(false);
-  const [mode, setMode] = useState<ReportBuildMode>('hybrid');
+  const [mode, setMode] = useState<ReportBuildMode>("hybrid");
   const [excludedExt, setExcludedExt] = useState<Set<string>>(
-    new Set(['.gif', '.mp4', '.mov', '.webm']),
+    new Set([".gif", ".mp4", ".mov", ".webm"]),
   );
   const [maxImageWidth, setMaxImageWidth] = useState(3000);
   const [excludedFiles, setExcludedFiles] = useState<Set<string>>(new Set());
@@ -51,7 +51,7 @@ export function ExportPanel() {
   const [detectedAssets, setDetectedAssets] = useState<string[]>([]);
 
   useEffect(() => {
-    fetch('/api/assets')
+    fetch("/api/assets")
       .then((r) => r.json())
       .then((d) => setDetectedAssets(d.files));
   }, []);
@@ -81,9 +81,9 @@ export function ExportPanel() {
     setIsExporting(true);
     setResult(null);
     try {
-      const res = await fetch('/api/export', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/export", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           mode,
           excludeExtensions: Array.from(excludedExt),
@@ -97,7 +97,7 @@ export function ExportPanel() {
       setResult({
         ok: false,
         log: err instanceof Error ? err.message : String(err),
-        outDir: '',
+        outDir: "",
       });
     } finally {
       setIsExporting(false);
@@ -135,7 +135,7 @@ export function ExportPanel() {
               onClick={handleExport}
               disabled={isExporting}
             >
-              {isExporting ? 'Building…' : 'Export'}
+              {isExporting ? "Building…" : "Export"}
             </button>
           </>
         }
@@ -145,7 +145,7 @@ export function ExportPanel() {
           {MODE_INFO.map((m) => (
             <label
               key={m.value}
-              className="flex items-start gap-2.5 py-1.5 cursor-pointer"
+              className="flex cursor-pointer items-start gap-2.5 py-1.5"
             >
               <input
                 className="mt-1.5"
@@ -157,19 +157,22 @@ export function ExportPanel() {
               />
               <span className="flex flex-col">
                 <strong>{m.label}</strong>
-                <small className="opacity-65 text-sm">{m.description}</small>
+                <small className="text-sm opacity-65">{m.description}</small>
               </span>
             </label>
           ))}
         </fieldset>
 
-        {mode === 'hybrid' && (
+        {mode === "hybrid" && (
           <fieldset className="panel-section">
             <legend>Keep external (don't inline)</legend>
 
-            <div className="flex flex-wrap gap-x-5 gap-y-2 my-2">
+            <div className="my-2 flex flex-wrap gap-x-5 gap-y-2">
               {KNOWN_EXTENSIONS.map((ext) => (
-                <label key={ext} className="flex items-center gap-1.5 text-sm cursor-pointer">
+                <label
+                  key={ext}
+                  className="flex cursor-pointer items-center gap-1.5 text-sm"
+                >
                   <input
                     type="checkbox"
                     checked={excludedExt.has(ext)}
@@ -180,7 +183,7 @@ export function ExportPanel() {
               ))}
             </div>
 
-            <label className="flex items-center gap-2 mt-2 text-sm">
+            <label className="mt-2 flex items-center gap-2 text-sm">
               Exclude images wider than
               <input
                 className="w-22 px-1.5 py-1"
@@ -198,9 +201,12 @@ export function ExportPanel() {
                 <p className="mt-3 text-sm opacity-75">
                   Detected gif/video assets — exclude individually:
                 </p>
-                <div className="flex flex-col flex-wrap max-h-32 gap-x-5 gap-y-2 my-2 overflow-y-auto">
+                <div className="my-2 flex max-h-32 flex-col flex-wrap gap-x-5 gap-y-2 overflow-y-auto">
                   {largeAssets.map((f) => (
-                    <label key={f} className="flex items-center gap-1.5 text-sm cursor-pointer">
+                    <label
+                      key={f}
+                      className="flex cursor-pointer items-center gap-1.5 text-sm"
+                    >
                       <input
                         type="checkbox"
                         checked={excludedFiles.has(f)}
@@ -219,12 +225,16 @@ export function ExportPanel() {
 
         {result && (
           <div
-            className={`rounded-lg px-4 py-3 text-sm ${result.ok ? 'bg-success/12 text-success' : 'bg-error/12 text-error'}`}
+            className={`rounded-lg px-4 py-3 text-sm ${result.ok ? "bg-success/12 text-success" : "bg-error/12 text-error"}`}
           >
             <p>
-              {result.ok ? `✓ Built to ${result.outDir}/` : '✗ Build failed'}
+              {result.ok ? `✓ Built to ${result.outDir}/` : "✗ Build failed"}
             </p>
-            {result.log && <pre className="mt-2 max-h-40 overflow-auto whitespace-pre-wrap text-xs">{result.log}</pre>}
+            {result.log && (
+              <pre className="mt-2 max-h-40 overflow-auto text-xs whitespace-pre-wrap">
+                {result.log}
+              </pre>
+            )}
           </div>
         )}
       </Panel>
