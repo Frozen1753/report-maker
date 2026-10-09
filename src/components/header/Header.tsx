@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
-import ReportMakerLogo from '../../assets/report-maker_logo.svg?react';
+import type { ReactNode } from "react";
+import ReportMakerLogo from "../../assets/report-maker_logo.svg?react";
 
 type HeaderProps = {
   title?: string;
@@ -8,9 +8,9 @@ type HeaderProps = {
 };
 
 export function Header({
-  title = '[report title]',
+  title = "[report title]",
   logo = <ReportMakerLogo aria-label="Report Maker" />,
-  logoAlt = 'Logo',
+  logoAlt = "Logo",
 }: HeaderProps) {
   return (
     <header className="gap bg bg-primary sticky top-0 z-1000 flex items-center justify-between gap-4 px-15 py-3 shadow-(--shadow-soft)">
@@ -18,7 +18,7 @@ export function Header({
 
       <div
         className="header-logo"
-        role={logoAlt ? 'img' : undefined}
+        role={logoAlt ? "img" : undefined}
         aria-label={logoAlt || undefined}
       >
         {logo}
