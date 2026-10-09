@@ -1,7 +1,6 @@
 import { Download } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { Panel } from '../panel/Panel';
-import './ExportPanel.css';
 
 type ReportBuildMode = 'folder' | 'singlefile' | 'hybrid';
 
@@ -11,21 +10,28 @@ interface ExportResult {
   outDir: string;
 }
 
-const MODE_INFO: { value: ReportBuildMode; label: string; description: string }[] = [
+const MODE_INFO: {
+  value: ReportBuildMode;
+  label: string;
+  description: string;
+}[] = [
   {
     value: 'folder',
     label: 'Folder',
-    description: 'index.html + a separate assets/ folder (default Vite output).',
+    description:
+      'index.html + a separate assets/ folder (default Vite output).',
   },
   {
     value: 'singlefile',
     label: 'Single file',
-    description: 'Everything — JS, CSS, every image/gif/video — inlined into one .html.',
+    description:
+      'Everything — JS, CSS, every image/gif/video — inlined into one .html.',
   },
   {
     value: 'hybrid',
     label: 'Hybrid',
-    description: 'One .html for JS/CSS, but the assets you exclude below stay in assets/.',
+    description:
+      'One .html for JS/CSS, but the assets you exclude below stay in assets/.',
   },
 ];
 
@@ -55,11 +61,17 @@ export function ExportPanel() {
   // empty dependency array would freeze this at the first render's "[]".
   const largeAssets = useMemo(
     () =>
-      detectedAssets.filter((f) => KNOWN_EXTENSIONS.some((ext) => f.toLowerCase().endsWith(ext))),
+      detectedAssets.filter((f) =>
+        KNOWN_EXTENSIONS.some((ext) => f.toLowerCase().endsWith(ext)),
+      ),
     [detectedAssets],
   );
 
-  function toggleSet(set: Set<string>, setSet: (s: Set<string>) => void, value: string) {
+  function toggleSet(
+    set: Set<string>,
+    setSet: (s: Set<string>) => void,
+    value: string,
+  ) {
     const next = new Set(set);
     next.has(value) ? next.delete(value) : next.add(value);
     setSet(next);
@@ -82,7 +94,11 @@ export function ExportPanel() {
       const data: ExportResult = await res.json();
       setResult(data);
     } catch (err) {
-      setResult({ ok: false, log: err instanceof Error ? err.message : String(err), outDir: '' });
+      setResult({
+        ok: false,
+        log: err instanceof Error ? err.message : String(err),
+        outDir: '',
+      });
     } finally {
       setIsExporting(false);
     }
@@ -127,17 +143,21 @@ export function ExportPanel() {
         <fieldset className="panel-section">
           <legend>Build mode</legend>
           {MODE_INFO.map((m) => (
-            <label key={m.value} className="report-export-mode-option">
+            <label
+              key={m.value}
+              className="flex items-start gap-2.5 py-1.5 cursor-pointer"
+            >
               <input
+                className="mt-1.5"
                 type="radio"
                 name="report-export-mode"
                 value={m.value}
                 checked={mode === m.value}
                 onChange={() => setMode(m.value)}
               />
-              <span>
+              <span className="flex flex-col">
                 <strong>{m.label}</strong>
-                <small>{m.description}</small>
+                <small className="opacity-65 text-sm">{m.description}</small>
               </span>
             </label>
           ))}
@@ -147,9 +167,9 @@ export function ExportPanel() {
           <fieldset className="panel-section">
             <legend>Keep external (don't inline)</legend>
 
-            <div className="report-export-checkbox-group">
+            <div className="flex flex-wrap gap-x-5 gap-y-2 my-2">
               {KNOWN_EXTENSIONS.map((ext) => (
-                <label key={ext} className="report-export-checkbox">
+                <label key={ext} className="flex items-center gap-1.5 text-sm cursor-pointer">
                   <input
                     type="checkbox"
                     checked={excludedExt.has(ext)}
@@ -160,9 +180,10 @@ export function ExportPanel() {
               ))}
             </div>
 
-            <label className="report-export-width">
+            <label className="flex items-center gap-2 mt-2 text-sm">
               Exclude images wider than
               <input
+                className="w-22 px-1.5 py-1"
                 type="number"
                 min={0}
                 step={100}
@@ -174,16 +195,18 @@ export function ExportPanel() {
 
             {largeAssets.length > 0 && (
               <>
-                <p className="report-export-detected-label">
+                <p className="mt-3 text-sm opacity-75">
                   Detected gif/video assets — exclude individually:
                 </p>
-                <div className="report-export-checkbox-group report-export-file-list">
+                <div className="flex flex-col flex-wrap max-h-32 gap-x-5 gap-y-2 my-2 overflow-y-auto">
                   {largeAssets.map((f) => (
-                    <label key={f} className="report-export-checkbox">
+                    <label key={f} className="flex items-center gap-1.5 text-sm cursor-pointer">
                       <input
                         type="checkbox"
                         checked={excludedFiles.has(f)}
-                        onChange={() => toggleSet(excludedFiles, setExcludedFiles, f)}
+                        onChange={() =>
+                          toggleSet(excludedFiles, setExcludedFiles, f)
+                        }
                       />
                       {f}
                     </label>
@@ -195,9 +218,13 @@ export function ExportPanel() {
         )}
 
         {result && (
-          <div className={`report-export-result ${result.ok ? 'is-success' : 'is-error'}`}>
-            <p>{result.ok ? `✓ Built to ${result.outDir}/` : '✗ Build failed'}</p>
-            {result.log && <pre>{result.log}</pre>}
+          <div
+            className={`rounded-lg px-4 py-3 text-sm ${result.ok ? 'bg-success/12 text-success' : 'bg-error/12 text-error'}`}
+          >
+            <p>
+              {result.ok ? `✓ Built to ${result.outDir}/` : '✗ Build failed'}
+            </p>
+            {result.log && <pre className="mt-2 max-h-40 overflow-auto whitespace-pre-wrap text-xs">{result.log}</pre>}
           </div>
         )}
       </Panel>
