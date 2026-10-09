@@ -1,6 +1,6 @@
-import { useEffect, useId, type CSSProperties, type ReactNode } from 'react';
-import { X } from 'lucide-react';
-import './Panel.css';
+import { useEffect, useId, type CSSProperties, type ReactNode } from "react";
+import { X } from "lucide-react";
+import "./Panel.css";
 
 interface PanelProps {
   isOpen: boolean;
@@ -38,15 +38,17 @@ export function Panel({
   useEffect(() => {
     if (!isOpen) return;
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
-  const style = maxWidth ? ({ '--panel-max-width': maxWidth } as CSSProperties) : undefined;
+  const style = maxWidth
+    ? ({ "--panel-max-width": maxWidth } as CSSProperties)
+    : undefined;
 
   return (
     // The backdrop click is a pointer shortcut; keyboard users close via
@@ -69,7 +71,12 @@ export function Panel({
             {title}
           </h2>
           {headerActions}
-          <button type="button" className="panel-close" onClick={onClose} aria-label="Close">
+          <button
+            type="button"
+            className="panel-close"
+            onClick={onClose}
+            aria-label="Close"
+          >
             <X />
           </button>
         </header>
