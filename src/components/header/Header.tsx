@@ -13,7 +13,7 @@ export function Header({
   logoAlt = "Logo",
 }: HeaderProps) {
   return (
-    <header className="gap bg bg-primary sticky top-0 z-1000 flex items-center justify-between gap-4 px-15 py-3 shadow-(--shadow-soft)">
+    <header className="gap bg bg-primary sticky top-0 z-1 flex items-center justify-between gap-4 px-15 py-3 shadow-(--shadow-soft)">
       <span className="header-title">{title}</span>
 
       <div
