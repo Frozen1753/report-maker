@@ -125,6 +125,11 @@
   --color-border: #dec9ba;
   --color-border-strong: #cda995;
 
+  /* Shadows */
+  --shadow-color: rgb(74 42 29 / 18%);
+  --shadow-soft: 0 4px 14px var(--shadow-color);
+  --shadow-medium: 0 10px 40px rgb(74 42 29 / 22%);
+
   /* Typographie */
   --font-body: "Segoe UI", sans-serif;
   --font-code: "Fira Code", "Consolas", monospace;
