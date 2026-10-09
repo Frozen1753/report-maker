@@ -1,108 +1,31 @@
-.panel-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 1001;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.45);
-  padding: 1rem;
-}
+@import "../../styles/style.css";
 
-.panel-modal {
-  width: 100%;
-  max-width: var(--panel-max-width, 30rem);
-  max-height: 85vh;
-  overflow-y: auto;
-  border-radius: 0.75rem;
-  background: var(--color-bg-surface, #ffffff);
-  color: var(--color-text, #1a1a1a);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
-}
+@layer components {
+  .panel-title {
+    @apply m-0! flex-1 text-lg!;
+  }
 
-/* Header */
+  .panel-section {
+    @apply border-border rounded-lg border border-solid px-4 pt-3 pb-4;
+  }
 
-.panel-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid var(--color-border, #e5e5e5);
-}
+  .panel-section > legend {
+    @apply px-1.5 text-sm tracking-wider uppercase opacity-65;
+  }
 
-.panel-title {
-  flex: 1;
-  margin: 0;
-  font-size: 1.1rem;
-}
+  .panel-btn {
+    @apply cursor-pointer rounded-sm border border-solid px-4 py-2 text-sm;
+  }
 
-.panel-close {
-  border: none;
-  background: none;
-  font-size: 1rem;
-  cursor: pointer;
-  color: inherit;
-  opacity: 0.6;
-}
+  .panel-btn:disabled {
+    @apply cursor-not-allowed opacity-60;
+  }
 
-.panel-close:hover {
-  opacity: 1;
-}
+  .panel-btn--primary {
+    @apply bg-primary text-text-on-accent;
+  }
 
-/* Body */
-
-.panel-body {
-  padding: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
-/* A bordered, titled group of controls (<fieldset><legend/>…</fieldset>). */
-.panel-section {
-  border: 1px solid var(--color-border, #e5e5e5);
-  border-radius: 0.5rem;
-  padding: 0.75rem 1rem 1rem;
-}
-
-.panel-section > legend {
-  padding: 0 0.4rem;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  opacity: 0.65;
-}
-
-/* Footer */
-
-.panel-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.6rem;
-  padding: 1rem 1.25rem;
-  border-top: 1px solid var(--color-border, #e5e5e5);
-}
-
-.panel-btn {
-  padding: 0.5rem 1rem;
-  border-radius: 0.4rem;
-  border: 1px solid transparent;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
-.panel-btn--secondary {
-  background: none;
-  border-color: var(--color-border, #e5e5e5);
-  color: inherit;
-}
-
-.panel-btn--primary {
-  background: var(--color-accent, #4f46e5);
-  color: var(--report-fab-color, #fff);
-}
-
-.panel-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+  .panel-btn--secondary {
+    @apply border-border bg-none;
+  }
 }

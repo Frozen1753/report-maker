@@ -1,4 +1,4 @@
-import { useEffect, useId, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useId, type ReactNode } from "react";
 import { X } from "lucide-react";
 import "./Panel.css";
 
@@ -46,34 +46,30 @@ export function Panel({
 
   if (!isOpen) return null;
 
-  const style = maxWidth
-    ? ({ "--panel-max-width": maxWidth } as CSSProperties)
-    : undefined;
-
   return (
     // The backdrop click is a pointer shortcut; keyboard users close via
     // Escape or the close button, hence role="presentation".
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events
     <div
-      className="panel-backdrop"
+      className="fixed inset-0 z-10 flex items-center justify-center bg-black/45 p-4"
       role="presentation"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div
-        className="panel-modal"
+        className="bg-bg-surface text-text max-h-[85vh] w-full overflow-y-auto rounded-xl shadow-2xl"
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        style={style}
+        style={{ maxWidth: maxWidth ?? "30rem" }}
       >
-        <header className="panel-header">
+        <header className="border-b-border flex items-center gap-3 border-b border-solid px-5 py-4">
           <h2 id={titleId} className="panel-title">
             {title}
           </h2>
           {headerActions}
           <button
             type="button"
-            className="panel-close"
+            className="cursor-pointer border-none bg-none text-base opacity-60 hover:opacity-100"
             onClick={onClose}
             aria-label="Close"
           >
@@ -81,9 +77,11 @@ export function Panel({
           </button>
         </header>
 
-        <div className="panel-body">{children}</div>
+        <div className="flex flex-col gap-5 p-5">{children}</div>
 
-        <footer className="panel-footer">{footer}</footer>
+        <footer className="border-border flex justify-end gap-2.5 border-t border-solid px-5 py-4">
+          {footer}
+        </footer>
       </div>
     </div>
   );
