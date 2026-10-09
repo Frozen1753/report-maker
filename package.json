@@ -37,6 +37,8 @@
     "mdast-util-to-string": "^4.0.0",
     "oxlint": "^1.81.0",
     "postcss": "^8.5.29",
+    "prettier": "^3.9.9",
+    "prettier-plugin-tailwindcss": "^0.8.1",
     "remark-gfm": "^4.0.1",
     "shiki": "^4.5.0",
     "tailwindcss": "^4.3.3",
