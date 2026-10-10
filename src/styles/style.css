@@ -5,38 +5,6 @@
    ========================================================== */
 
 :root {
-  /* Texte */
-  --color-text: #3b2924;
-  --color-text-muted: #795f55;
-  --color-text-on-accent: #fffaf5;
-
-  /* Fonds */
-  --color-bg-page: #e8ddd3;
-  --color-bg-surface: #fffaf5;
-  --color-bg-soft: #f4e9df;
-  --color-bg-muted: #eadbd0;
-
-  /* Couleurs principales */
-  --color-primary: #b65336;
-  --color-primary-hover: #98432c;
-  --color-secondary: #d98b45;
-  --color-secondary-hover: #bc7135;
-  --color-accent-soft: #f1d6bf;
-
-  /* États */
-  --color-error: #b42318;
-  --color-warning: #a15c00;
-  --color-info: #8a5a2b;
-  --color-success: #3f7d3a;
-
-  /* Bordures et ombres */
-  --color-border: #dec9ba;
-  --color-border-strong: #cda995;
-
-  --shadow-color: rgb(74 42 29 / 18%);
-  --shadow-soft: 0 4px 14px var(--shadow-color);
-  --shadow-medium: 0 10px 40px rgb(74 42 29 / 22%);
-
   /* Rayons */
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -54,10 +22,6 @@
   --space-10: 40px;
   --space-12: 48px;
 
-  /* Typographie */
-  --font-body: "Segoe UI", sans-serif;
-  --font-code: "Fira Code", "Consolas", monospace;
-
   --font-size-body: 1.2rem;
   --font-size-h1: 1.8rem;
   --font-size-h2: 1.6rem;
@@ -73,27 +37,6 @@
   --transition-normal: 200ms ease;
   --code-theme-light: catppuccin-latte !important;
   --code-theme-dark: github-dark !important;
-}
-
-:root[data-theme="dark"] {
-  --color-text: #f5e9df;
-  --color-text-muted: #c8aa98;
-
-  --color-bg-page: #241b18;
-  --color-bg-surface: #30231f;
-  --color-bg-soft: #3b2a24;
-  --color-bg-muted: #4a342b;
-
-  --color-primary: #d87852;
-  --color-primary-hover: #ed9067;
-  --color-secondary: #e5a35d;
-  --color-secondary-hover: #f0b66f;
-  --color-accent-soft: #694338;
-
-  --color-border: #5a4035;
-  --color-border-strong: #795344;
-
-  --shadow-color: rgb(0 0 0 / 35%);
 }
 
 @theme {
@@ -133,6 +76,29 @@
   /* Typographie */
   --font-body: "Segoe UI", sans-serif;
   --font-code: "Fira Code", "Consolas", monospace;
+}
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+[data-theme="dark"] {
+  --color-text: #f5e9df;
+  --color-text-muted: #c8aa98;
+
+  --color-bg-page: #241b18;
+  --color-bg-surface: #30231f;
+  --color-bg-soft: #3b2a24;
+  --color-bg-muted: #4a342b;
+
+  --color-primary: #d87852;
+  --color-primary-hover: #ed9067;
+  --color-secondary: #e5a35d;
+  --color-secondary-hover: #f0b66f;
+  --color-accent-soft: #694338;
+
+  --color-border: #5a4035;
+  --color-border-strong: #795344;
+
+  --shadow-color: rgb(0 0 0 / 35%);
 }
 
 @layer base {
