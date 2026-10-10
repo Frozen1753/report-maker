@@ -1,30 +1,39 @@
-import { PaintRoller } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { PaintRoller } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import {
   DEFAULT_SHIKI_DARK,
   DEFAULT_SHIKI_LIGHT,
   previewShikiThemes,
   SHIKI_DARK_VAR,
   SHIKI_LIGHT_VAR,
-} from '../code/shiki-theme-vars';
-import { Panel } from '../panel/Panel';
-import { formatColor, isColor, parseColor, toHex, type RGBA } from './theme-color';
-import './ThemePanel.css';
+} from "../code/shiki-theme-vars";
+import { Panel } from "../panel/Panel";
+import {
+  formatColor,
+  isColor,
+  parseColor,
+  toHex,
+  type RGBA,
+} from "./theme-color";
+import "./ThemePanel.css";
 
 const MANAGED_SHIKI_VARS = new Set([SHIKI_LIGHT_VAR, SHIKI_DARK_VAR]);
 
 interface ShikiThemeMeta {
   id: string;
   displayName: string;
-  type: 'light' | 'dark';
+  type: "light" | "dark";
 }
 
-type ShikiThemesByType = Record<'light' | 'dark', { id: string; displayName: string }[]>;
+type ShikiThemesByType = Record<
+  "light" | "dark",
+  { id: string; displayName: string }[]
+>;
 
 const EMPTY_SHIKI_THEMES: ShikiThemesByType = { light: [], dark: [] };
 
 type Vars = Record<string, string>;
-type PreviewMode = 'light' | 'dark';
+type PreviewMode = "light" | "dark";
 
 interface ThemeApiResponse {
   light: Vars;
@@ -38,7 +47,8 @@ interface ThemeApiResponse {
  */
 function applyPreview(vars: Vars) {
   const root = document.documentElement;
-  for (const [prop, value] of Object.entries(vars)) root.style.setProperty(prop, value);
+  for (const [prop, value] of Object.entries(vars))
+    root.style.setProperty(prop, value);
 }
 function clearPreview(props: string[]) {
   const root = document.documentElement;
@@ -50,19 +60,23 @@ export function ThemePanel() {
   const [loaded, setLoaded] = useState(false);
   const [light, setLight] = useState<Vars>({});
   const [dark, setDark] = useState<Vars>({});
-  const [previewMode, setPreviewMode] = useState<PreviewMode>('light');
+  const [previewMode, setPreviewMode] = useState<PreviewMode>("light");
   const [isSaving, setIsSaving] = useState(false);
-  const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
-  const [shikiThemesByType, setShikiThemesByType] = useState<ShikiThemesByType>(EMPTY_SHIKI_THEMES);
+  const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(
+    null,
+  );
+  const [shikiThemesByType, setShikiThemesByType] =
+    useState<ShikiThemesByType>(EMPTY_SHIKI_THEMES);
 
   // Theme catalog comes from the dev server (see shiki-themes-server-plugin.ts)
   // rather than importing 'shiki' here — keeps the package out of client source.
   useEffect(() => {
-    fetch('/api/shiki-themes')
+    fetch("/api/shiki-themes")
       .then((r) => r.json())
       .then((list: ShikiThemeMeta[]) => {
         const grouped: ShikiThemesByType = { light: [], dark: [] };
-        for (const t of list) grouped[t.type].push({ id: t.id, displayName: t.displayName });
+        for (const t of list)
+          grouped[t.type].push({ id: t.id, displayName: t.displayName });
         setShikiThemesByType(grouped);
       })
       .catch(() => {
@@ -73,7 +87,7 @@ export function ThemePanel() {
   // Load current values once, on first open.
   useEffect(() => {
     if (!isOpen || loaded) return;
-    fetch('/api/theme')
+    fetch("/api/theme")
       .then((r) => r.json())
       .then((data: ThemeApiResponse) => {
         setLight(data.light);
@@ -84,7 +98,9 @@ export function ThemePanel() {
           dark: data.light[SHIKI_DARK_VAR] ?? DEFAULT_SHIKI_DARK,
         });
       })
-      .catch((err) => setMessage({ ok: false, text: `Could not load theme: ${err.message}` }));
+      .catch((err) =>
+        setMessage({ ok: false, text: `Could not load theme: ${err.message}` }),
+      );
   }, [isOpen, loaded]);
 
   // Live preview whenever a value or the light/dark toggle changes.
@@ -92,7 +108,7 @@ export function ThemePanel() {
     if (!loaded) return;
     document.documentElement.dataset.theme = previewMode;
     applyPreview(light);
-    if (previewMode === 'dark') applyPreview(dark);
+    if (previewMode === "dark") applyPreview(dark);
   }, [light, dark, previewMode, loaded]);
 
   useEffect(() => {
@@ -107,23 +123,29 @@ export function ThemePanel() {
   }, []);
 
   const colorVars = useMemo(
-    () => Object.keys(light).filter((k) => isColor(light[k]) && !MANAGED_SHIKI_VARS.has(k)),
+    () =>
+      Object.keys(light).filter(
+        (k) => isColor(light[k]) && !MANAGED_SHIKI_VARS.has(k),
+      ),
     [light],
   );
   const otherVars = useMemo(
-    () => Object.keys(light).filter((k) => !isColor(light[k]) && !MANAGED_SHIKI_VARS.has(k)),
+    () =>
+      Object.keys(light).filter(
+        (k) => !isColor(light[k]) && !MANAGED_SHIKI_VARS.has(k),
+      ),
     [light],
   );
 
   const shikiLight = light[SHIKI_LIGHT_VAR] ?? DEFAULT_SHIKI_LIGHT;
   const shikiDark = light[SHIKI_DARK_VAR] ?? DEFAULT_SHIKI_DARK;
 
-  function setShikiTheme(which: 'light' | 'dark', value: string) {
+  function setShikiTheme(which: "light" | "dark", value: string) {
     const next = {
-      light: which === 'light' ? value : shikiLight,
-      dark: which === 'dark' ? value : shikiDark,
+      light: which === "light" ? value : shikiLight,
+      dark: which === "dark" ? value : shikiDark,
     };
-    setLightVar(which === 'light' ? SHIKI_LIGHT_VAR : SHIKI_DARK_VAR, value);
+    setLightVar(which === "light" ? SHIKI_LIGHT_VAR : SHIKI_DARK_VAR, value);
     previewShikiThemes(next);
   }
 
@@ -145,19 +167,22 @@ export function ThemePanel() {
     setIsSaving(true);
     setMessage(null);
     try {
-      const res = await fetch('/api/theme', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/theme", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ light, dark }),
       });
       const data = await res.json();
       setMessage(
         data.ok
-          ? { ok: true, text: 'Saved to style.css — Vite will hot-reload it.' }
-          : { ok: false, text: data.error ?? 'Save failed.' },
+          ? { ok: true, text: "Saved to style.css — Vite will hot-reload it." }
+          : { ok: false, text: data.error ?? "Save failed." },
       );
     } catch (err) {
-      setMessage({ ok: false, text: err instanceof Error ? err.message : String(err) });
+      setMessage({
+        ok: false,
+        text: err instanceof Error ? err.message : String(err),
+      });
     } finally {
       setIsSaving(false);
     }
@@ -191,18 +216,18 @@ export function ThemePanel() {
             <button
               type="button"
               role="tab"
-              aria-selected={previewMode === 'light'}
-              className={previewMode === 'light' ? 'active' : ''}
-              onClick={() => setPreviewMode('light')}
+              aria-selected={previewMode === "light"}
+              className={previewMode === "light" ? "active" : ""}
+              onClick={() => setPreviewMode("light")}
             >
               ☀ Light
             </button>
             <button
               type="button"
               role="tab"
-              aria-selected={previewMode === 'dark'}
-              className={previewMode === 'dark' ? 'active' : ''}
-              onClick={() => setPreviewMode('dark')}
+              aria-selected={previewMode === "dark"}
+              className={previewMode === "dark" ? "active" : ""}
+              onClick={() => setPreviewMode("dark")}
             >
               🌙 Dark
             </button>
@@ -210,7 +235,11 @@ export function ThemePanel() {
         }
         footer={
           <>
-            <button type="button" className="panel-btn panel-btn--secondary" onClick={handleReset}>
+            <button
+              type="button"
+              className="panel-btn panel-btn--secondary"
+              onClick={handleReset}
+            >
               Reset
             </button>
             <button
@@ -219,7 +248,7 @@ export function ThemePanel() {
               onClick={handleSave}
               disabled={isSaving || !loaded}
             >
-              {isSaving ? 'Saving…' : 'Save to style.css'}
+              {isSaving ? "Saving…" : "Save to style.css"}
             </button>
           </>
         }
@@ -231,10 +260,19 @@ export function ThemePanel() {
             <fieldset className="panel-section">
               <legend>Colors</legend>
               {colorVars.map((key) => {
-                const value = previewMode === 'dark' ? (dark[key] ?? light[key]) : light[key];
-                const overridden = previewMode === 'dark' && key in dark;
-                const parsed: RGBA = parseColor(value) ?? { r: 0, g: 0, b: 0, a: 1 };
-                const setVar = previewMode === 'dark' ? setDarkVar : setLightVar;
+                const value =
+                  previewMode === "dark"
+                    ? (dark[key] ?? light[key])
+                    : light[key];
+                const overridden = previewMode === "dark" && key in dark;
+                const parsed: RGBA = parseColor(value) ?? {
+                  r: 0,
+                  g: 0,
+                  b: 0,
+                  a: 1,
+                };
+                const setVar =
+                  previewMode === "dark" ? setDarkVar : setLightVar;
 
                 function updateHue(hex: string) {
                   const next = parseColor(hex);
@@ -267,7 +305,7 @@ export function ThemePanel() {
                       value={value}
                       onChange={(e) => setVar(key, e.target.value)}
                     />
-                    {previewMode === 'dark' && (
+                    {previewMode === "dark" && (
                       <button
                         type="button"
                         className="theme-panel-clear-override"
@@ -286,9 +324,13 @@ export function ThemePanel() {
             <fieldset className="panel-section">
               <legend>Typography &amp; sizes</legend>
               {otherVars.map((key) => {
-                const value = previewMode === 'dark' ? (dark[key] ?? light[key]) : light[key];
-                const overridden = previewMode === 'dark' && key in dark;
-                const setVar = previewMode === 'dark' ? setDarkVar : setLightVar;
+                const value =
+                  previewMode === "dark"
+                    ? (dark[key] ?? light[key])
+                    : light[key];
+                const overridden = previewMode === "dark" && key in dark;
+                const setVar =
+                  previewMode === "dark" ? setDarkVar : setLightVar;
                 return (
                   <label key={key} className="theme-panel-row">
                     <span className="theme-panel-var-name">{key}</span>
@@ -298,7 +340,7 @@ export function ThemePanel() {
                       value={value}
                       onChange={(e) => setVar(key, e.target.value)}
                     />
-                    {previewMode === 'dark' && (
+                    {previewMode === "dark" && (
                       <button
                         type="button"
                         className="theme-panel-clear-override"
@@ -321,7 +363,7 @@ export function ThemePanel() {
                 <select
                   className="theme-panel-value-text theme-panel-value-wide"
                   value={shikiLight}
-                  onChange={(e) => setShikiTheme('light', e.target.value)}
+                  onChange={(e) => setShikiTheme("light", e.target.value)}
                 >
                   <optgroup label="Light themes">
                     {shikiThemesByType.light.map((t) => (
@@ -344,7 +386,7 @@ export function ThemePanel() {
                 <select
                   className="theme-panel-value-text theme-panel-value-wide"
                   value={shikiDark}
-                  onChange={(e) => setShikiTheme('dark', e.target.value)}
+                  onChange={(e) => setShikiTheme("dark", e.target.value)}
                 >
                   <optgroup label="Dark themes">
                     {shikiThemesByType.dark.map((t) => (
@@ -363,13 +405,15 @@ export function ThemePanel() {
                 </select>
               </label>
               <p className="theme-panel-shiki-note">
-                Applies live to any <code>Code</code> block on the page. Requires a one-time CSS
-                rule in style.css — see README.
+                Applies live to any <code>Code</code> block on the page.
+                Requires a one-time CSS rule in style.css — see README.
               </p>
             </fieldset>
 
             {message && (
-              <p className={`theme-panel-message ${message.ok ? 'is-success' : 'is-error'}`}>
+              <p
+                className={`theme-panel-message ${message.ok ? "is-success" : "is-error"}`}
+              >
                 {message.text}
               </p>
             )}
