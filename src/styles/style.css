@@ -76,6 +76,24 @@
   /* Typographie */
   --font-body: "Segoe UI", sans-serif;
   --font-code: "Fira Code", "Consolas", monospace;
+
+  /* Gradients */
+  --background-image-rainbow-cone: conic-gradient(
+    from 135deg,
+    rgb(255, 0, 0, 0.75) 0%,
+    rgb(255, 128, 0, 0.75) 8%,
+    rgb(255, 255, 0, 0.75) 16%,
+    rgb(128, 255, 0, 0.75) 25%,
+    rgb(0, 255, 0, 0.75) 33%,
+    rgb(0, 255, 128, 0.75) 41%,
+    rgb(0, 255, 255, 0.75) 50%,
+    rgb(0, 128, 255, 0.75) 58%,
+    rgb(0, 0, 255, 0.75) 66%,
+    rgb(128, 0, 255, 0.75) 75%,
+    rgb(255, 0, 255, 0.75) 83%,
+    rgb(255, 0, 128, 0.75) 91%,
+    rgb(255, 0, 0, 0.75) 100%
+  );
 }
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));

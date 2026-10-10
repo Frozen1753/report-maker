@@ -15,7 +15,6 @@ import {
   toHex,
   type RGBA,
 } from "./theme-color";
-import "./ThemePanel.css";
 
 const MANAGED_SHIKI_VARS = new Set([SHIKI_LIGHT_VAR, SHIKI_DARK_VAR]);
 
@@ -198,7 +197,7 @@ export function ThemePanel() {
     <>
       <button
         type="button"
-        className="floating-button theme-panel-fab"
+        className="floating-button bg-rainbow-cone"
         onClick={() => setIsOpen(true)}
         aria-label="Open theme panel"
         title="Edit theme"
@@ -212,12 +211,15 @@ export function ThemePanel() {
         title="Theme"
         maxWidth="34rem"
         headerActions={
-          <div className="theme-panel-mode-toggle" role="tablist">
+          <div
+            className="border-border flex overflow-hidden rounded-full border border-solid"
+            role="tablist"
+          >
             <button
               type="button"
               role="tab"
               aria-selected={previewMode === "light"}
-              className={previewMode === "light" ? "active" : ""}
+              className="aria-selected:bg-primary aria-selected:text-text-on-accent cursor-pointer px-2.5 py-1 text-sm opacity-60 aria-selected:opacity-100"
               onClick={() => setPreviewMode("light")}
             >
               ☀ Light
@@ -226,7 +228,7 @@ export function ThemePanel() {
               type="button"
               role="tab"
               aria-selected={previewMode === "dark"}
-              className={previewMode === "dark" ? "active" : ""}
+              className="aria-selected:bg-primary aria-selected:text-text-on-accent cursor-pointer px-2.5 py-1 text-sm opacity-60 aria-selected:opacity-100"
               onClick={() => setPreviewMode("dark")}
             >
               🌙 Dark
@@ -254,7 +256,7 @@ export function ThemePanel() {
         }
       >
         {!loaded ? (
-          <p className="theme-panel-loading">Loading current theme…</p>
+          <p className="m-0 text-base opacity-70">Loading current theme…</p>
         ) : (
           <>
             <fieldset className="panel-section">
@@ -283,16 +285,19 @@ export function ThemePanel() {
                 }
 
                 return (
-                  <label key={key} className="theme-panel-row">
-                    <span className="theme-panel-var-name">{key}</span>
+                  <label key={key} className="flex items-center gap-2 py-1.25">
+                    <span className="basis-36 overflow-hidden font-mono text-xs text-ellipsis whitespace-nowrap opacity-80">
+                      {key}
+                    </span>
                     <input
+                      className="h-8 w-8 cursor-pointer rounded-sm"
                       type="color"
                       value={toHex(parsed)}
                       onChange={(e) => updateHue(e.target.value)}
                     />
                     <input
                       type="range"
-                      className="theme-panel-alpha"
+                      className="accent-secondary w-18 basis-auto"
                       min={0}
                       max={100}
                       value={Math.round(parsed.a * 100)}
@@ -301,14 +306,14 @@ export function ThemePanel() {
                     />
                     <input
                       type="text"
-                      className="theme-panel-value-text"
+                      className="border-border flex min-w-0 rounded-sm border border-solid px-2 py-1 text-sm"
                       value={value}
                       onChange={(e) => setVar(key, e.target.value)}
                     />
                     {previewMode === "dark" && (
                       <button
                         type="button"
-                        className="theme-panel-clear-override"
+                        className="cursor-pointer border-none bg-none text-base opacity-60 disabled:cursor-default disabled:opacity-20"
                         title="Use the same value as light mode"
                         disabled={!overridden}
                         onClick={() => clearDarkOverride(key)}
@@ -332,18 +337,20 @@ export function ThemePanel() {
                 const setVar =
                   previewMode === "dark" ? setDarkVar : setLightVar;
                 return (
-                  <label key={key} className="theme-panel-row">
-                    <span className="theme-panel-var-name">{key}</span>
+                  <label key={key} className="flex items-center gap-2 py-1.25">
+                    <span className="basis-36 overflow-hidden font-mono text-xs text-ellipsis whitespace-nowrap opacity-80">
+                      {key}
+                    </span>
                     <input
                       type="text"
-                      className="theme-panel-value-text theme-panel-value-wide"
+                      className="border-border flex min-w-0 basis-full rounded-sm border border-solid px-2 py-1 text-sm"
                       value={value}
                       onChange={(e) => setVar(key, e.target.value)}
                     />
                     {previewMode === "dark" && (
                       <button
                         type="button"
-                        className="theme-panel-clear-override"
+                        className="cursor-pointer border-none bg-none text-base opacity-60 disabled:cursor-default disabled:opacity-20"
                         title="Use the same value as light mode"
                         disabled={!overridden}
                         onClick={() => clearDarkOverride(key)}
@@ -358,10 +365,12 @@ export function ThemePanel() {
 
             <fieldset className="panel-section">
               <legend>Code syntax theme (Shiki)</legend>
-              <label className="theme-panel-row">
-                <span className="theme-panel-var-name">Light theme</span>
+              <label className="flex items-center gap-2 py-1.25">
+                <span className="basis-36 overflow-hidden font-mono text-xs text-ellipsis whitespace-nowrap opacity-80">
+                  Light theme
+                </span>
                 <select
-                  className="theme-panel-value-text theme-panel-value-wide"
+                  className="border-border flex min-w-0 basis-full rounded-sm border border-solid px-2 py-1 text-sm"
                   value={shikiLight}
                   onChange={(e) => setShikiTheme("light", e.target.value)}
                 >
@@ -381,10 +390,12 @@ export function ThemePanel() {
                   </optgroup>
                 </select>
               </label>
-              <label className="theme-panel-row">
-                <span className="theme-panel-var-name">Dark theme</span>
+              <label className="flex items-center gap-2 py-1.25">
+                <span className="basis-36 overflow-hidden font-mono text-xs text-ellipsis whitespace-nowrap opacity-80">
+                  Dark theme
+                </span>
                 <select
-                  className="theme-panel-value-text theme-panel-value-wide"
+                  className="border-border flex min-w-0 basis-full rounded-sm border border-solid px-2 py-1 text-sm"
                   value={shikiDark}
                   onChange={(e) => setShikiTheme("dark", e.target.value)}
                 >
@@ -404,7 +415,7 @@ export function ThemePanel() {
                   </optgroup>
                 </select>
               </label>
-              <p className="theme-panel-shiki-note">
+              <p className="mt-2 text-xs opacity-60">
                 Applies live to any <code>Code</code> block on the page.
                 Requires a one-time CSS rule in style.css — see README.
               </p>
@@ -412,7 +423,7 @@ export function ThemePanel() {
 
             {message && (
               <p
-                className={`theme-panel-message ${message.ok ? "is-success" : "is-error"}`}
+                className={`rounded-lg px-3.5 py-2.5 text-sm ${message.ok ? "bg-success/12 text-success" : "bg-error/12 text-error"}`}
               >
                 {message.text}
               </p>
