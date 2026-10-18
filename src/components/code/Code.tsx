@@ -1,12 +1,16 @@
 import { Copy, CopyCheck } from "lucide-react";
-import { useEffect, useState, type ReactNode } from "react";
-import { useCurrentTheme } from "../../utils/theme/useCurrentTheme";
+import {
+  useEffect,
+  useState,
+  type ReactNode
+} from "react";
+import { highlightLive, peekShiki } from "virtual:shiki-runtime";
+import { shikiKey } from "../../utils/shared/shiki-shared";
 import {
   SHIKI_PREVIEW_EVENT,
   getPersistedShikiThemes,
   type ShikiThemePair,
 } from "./shiki-theme-vars";
-import type { HighlighterCore } from "shiki";
 
 type CodeProps = {
   type?: "inline" | "bloc";
@@ -16,71 +20,6 @@ type CodeProps = {
   lang?: string;
   children: ReactNode;
 };
-
-// Vite resolves this at transform time. A glob (rather than a static import)
-// is what keeps dev working when the file doesn't exist, since codegen only
-// runs on `vite build`. The leading "/" is root-relative, so this doesn't
-// depend on where this file lives.
-const bundleModules = import.meta.glob<Promise<HighlighterCore>>(
-  "/src/generated/shiki-bundle.generated.ts",
-  { import: "highlighterPromise" },
-);
-
-async function loadProdHighlighter(): Promise<HighlighterCore> {
-  const [load] = Object.values(bundleModules);
-  if (!load) {
-    throw new Error("Shiki bundle not found: glob matched no files.");
-  }
-  return await load();
-}
-
-/**
- * Highlights the same code in both the light and dark theme.
- *
- * Dev: uses the full `shiki` package directly — any of its ~65 bundled themes
- * and ~180 languages can be requested, since `vite dev` never produces one
- * shipped bundle; nothing here is downloaded by a reader.
- *
- * Prod: uses `src/generated/shiki-bundle.generated.ts`, written at build time
- * by scripts/shiki-codegen.ts from exactly the languages found in report.mdx
- * and the two themes chosen in style.css — nothing else is bundled. Because
- * the two branches live behind `import.meta.env.DEV` (a compile-time
- * constant), Rollup fully removes whichever one doesn't apply.
- */
-async function highlightBothThemes(
-  code: string,
-  lang: string,
-  themePair: ShikiThemePair,
-): Promise<{ light: string; dark: string }> {
-  const requestedLang = lang || "text";
-
-  if (import.meta.env.DEV) {
-    const { codeToHtml } = await import("shiki");
-    const [light, dark] = await Promise.all([
-      codeToHtml(code, { lang: requestedLang, theme: themePair.light }),
-      codeToHtml(code, { lang: requestedLang, theme: themePair.dark }),
-    ]);
-    return { light, dark };
-  }
-
-  const h = await loadProdHighlighter();
-
-  const safeHighlight = (theme: string) => {
-    try {
-      return h.codeToHtml(code, { lang: requestedLang, theme });
-    } catch {
-      // A language the build-time scan didn't catch (e.g. a dynamic
-      // lang={expr} instead of a literal string) — fall back to
-      // unhighlighted rather than crash the whole report.
-      return h.codeToHtml(code, { lang: "text", theme });
-    }
-  };
-
-  return {
-    light: safeHighlight(themePair.light),
-    dark: safeHighlight(themePair.dark),
-  };
-}
 
 function copyFallback(text: string) {
   const textarea = document.createElement("textarea");
@@ -114,6 +53,18 @@ async function copyText(text: string) {
   return copyFallback(text);
 }
 
+/**
+ * A code block is highlighted ONCE, with both themes in a single HTML: every token
+ * carries --shiki-light / --shiki-dark variables, and style.css picks one according
+ * to :root[data-theme]. Switching the theme therefore never re-highlights anything.
+ *
+ * - build: the HTML was computed at build time (scripts/shiki-plugin.ts) and is
+ *   looked up synchronously by hash — no shiki, wasm or grammar in the bundle,
+ *   and no flash of unhighlighted code. A block missing from the table (dynamic
+ *   content the build couldn't read) stays as plain, unhighlighted text.
+ * - dev: highlighted live with the full `shiki` package, so any theme or language
+ *   works and ThemePanel's live preview keeps working.
+ */
 export function Code({
   type = "inline",
   copy = false,
@@ -122,22 +73,21 @@ export function Code({
   lang,
   children,
 }: CodeProps) {
-  const currentTheme = useCurrentTheme();
   const [copied, setCopied] = useState(false);
-  const [highlighted, setHighlighted] = useState<{
-    light: string;
-    dark: string;
-  }>({
-    light: "",
-    dark: "",
-  });
+  const [liveHtml, setLiveHtml] = useState("");
   const [themePair, setThemePair] = useState<ShikiThemePair>(() =>
     typeof window === "undefined"
       ? { light: "github-light", dark: "github-dark" }
       : getPersistedShikiThemes(),
   );
 
-  const code = typeof children === "string" ? children : String(children);
+  const code =
+    typeof children === "string"
+      ? children
+      : String(children);
+
+  // string in build (if the block was found), always undefined in dev
+  const precompiled = type === "bloc" ? peekShiki(shikiKey(code, lang || "")) : undefined;
 
   useEffect(() => {
     // Only fires in dev — ThemePanel (the only thing that dispatches this
@@ -150,18 +100,24 @@ export function Code({
   }, []);
 
   useEffect(() => {
-    if (type !== "bloc") return;
+    if (type !== "bloc" || precompiled !== undefined) return;
 
     let cancelled = false;
 
-    highlightBothThemes(code, lang || "", themePair).then((result) => {
-      if (!cancelled) setHighlighted(result);
-    });
+    highlightLive(code, lang || "", themePair)
+      .then((html) => {
+        if (!cancelled) setLiveHtml(html);
+      })
+      .catch(() => {
+        // Unknown language in dev, or a block the build didn't pre-highlight:
+        // stay on the plain, unhighlighted fallback below.
+        if (!cancelled) setLiveHtml("");
+      });
 
     return () => {
       cancelled = true;
     };
-  }, [type, code, lang, themePair]);
+  }, [type, code, lang, themePair, precompiled]);
 
   if (type === "inline") {
     return <code className="code-inline">{children}</code>;
@@ -179,26 +135,47 @@ export function Code({
     }, 1500);
   }
 
+  const html = precompiled ?? liveHtml;
+
   return (
     <div className={`code-wrapper ${bar ? "has-code-bar" : ""}`}>
       {bar && (
         <div className="code-bar">
           <div className="code-info">
-            {name && <span className="code-name">{name}</span>}
+            {name && (
+              <span className="code-name">
+                {name}
+              </span>
+            )}
 
-            {lang && <span className="code-language">{lang}</span>}
+            {lang && (
+              <span className="code-language">
+                {lang}
+              </span>
+            )}
           </div>
 
           {copy && (
             <button
               type="button"
-              className={`copy-button ${copied ? "copied-button" : ""}`}
+              className={`copy-button ${copied ? "copied-button" : ""
+                }`}
               onClick={handleCopy}
-              aria-label={copied ? "Code copied" : "Copy code"}
+              aria-label={
+                copied
+                  ? "Code copied"
+                  : "Copy code"
+              }
             >
-              {copied ? <CopyCheck size={18} /> : <Copy size={18} />}
+              {copied ? (
+                <CopyCheck size={18} />
+              ) : (
+                <Copy size={18} />
+              )}
 
-              <span>{copied ? "Copied" : "Copy"}</span>
+              <span>
+                {copied ? "Copied" : "Copy"}
+              </span>
             </button>
           )}
         </div>
@@ -207,21 +184,27 @@ export function Code({
       {!bar && copy && (
         <button
           type="button"
-          className={`copy-button-no-bar ${copied ? "copied-button" : ""}`}
+          className={`copy-button-no-bar ${copied ? "copied-button" : ""
+            }`}
           onClick={handleCopy}
-          aria-label={copied ? "Code copied" : "Copy code"}
+          aria-label={
+            copied
+              ? "Code copied"
+              : "Copy code"
+          }
         >
-          {copied ? <CopyCheck size={18} /> : <Copy size={18} />}
+          {copied ? (
+            <CopyCheck size={18} />
+          ) : (
+            <Copy size={18} />
+          )}
         </button>
       )}
 
-      {highlighted.light && highlighted.dark ? (
+      {html ? (
         <div
           className="code-shiki"
-          dangerouslySetInnerHTML={{
-            __html:
-              currentTheme === "dark" ? highlighted.dark : highlighted.light,
-          }}
+          dangerouslySetInnerHTML={{ __html: html }}
         />
       ) : (
         <pre className="code-bloc">

@@ -3,7 +3,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { visit } from 'unist-util-visit'
 import type { Plugin } from 'vite'
-import { mermaidKey, normalizeChart } from '../src/utils/mermaid/mermaid-shared.ts'
+import { mermaidKey, normalizeChart } from '../src/utils/shared/mermaid-shared.ts'
 
 /**
  * Mermaid pre-rendering.

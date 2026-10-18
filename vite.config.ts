@@ -15,7 +15,7 @@ import { loadAssetConfig, shouldInlineAsset } from "./scripts/asset-rules.ts";
 import { assetsServerPlugin } from "./scripts/assets-server-plugin.ts";
 import { exportServerPlugin } from "./scripts/export-server-plugin.ts";
 import { mermaidPlugin, remarkMermaidCollect } from './scripts/mermaid-plugin.ts';
-import { shikiCodegenPlugin } from "./scripts/shiki-codegen-plugin.ts";
+import { shikiPlugin } from './scripts/shiki-plugin.ts';
 import { shikiThemesServerPlugin } from "./scripts/shiki-themes-server-plugin.ts";
 import { themeServerPlugin } from "./scripts/theme-server-plugin.ts";
 import remarkHeadingNumbers from "./src/utils/mdx-plugins/remark-heading-numbers.ts";
@@ -52,24 +52,27 @@ const manualChunks = (id: string) => {
   */
 }
 
+import type { Options as MdxOptions } from '@mdx-js/rollup';
+
+const remarkPlugins: MdxOptions['remarkPlugins'] = [
+  remarkGfm,
+  remarkHeadingNumbers,
+  remarkDirective,
+  remarkDirectiveRehype,
+  remarkMermaidCollect,
+]
+
 export default defineConfig({
   base: buildMode === "folder" ? "/" : "./",
 
   plugins: [
     // Must run before @vitejs/plugin-react transforms the JSX MDX compiles down to.
     {
-      enforce: "pre",
-      ...mdx({
-        remarkPlugins: [
-          remarkGfm,
-          remarkHeadingNumbers,
-          remarkDirective,
-          remarkDirectiveRehype,
-          remarkMermaidCollect
-        ],
-        rehypePlugins: [rehypeMdxCodeProps, rehypeMdxImportMedia],
-      }),
+      enforce: 'pre',
+      ...mdx({ remarkPlugins, rehypePlugins: [rehypeMdxCodeProps, rehypeMdxImportMedia] })
     },
+    shikiPlugin({ remarkPlugins }),
+
     react({ include: /\.(jsx|js|mdx|md|tsx|ts)$/ }),
     tailwindcss(),
 
@@ -79,8 +82,6 @@ export default defineConfig({
     assetsServerPlugin(),
     shikiThemesServerPlugin(),
     mermaidPlugin(),
-
-    shikiCodegenPlugin(),
 
     // Full single-file mode: let the plugin apply its recommended config
     // (it force-inlines every JS/CSS/asset into one HTML — see its source).
@@ -122,11 +123,7 @@ export default defineConfig({
           gzipSize: true,
           brotliSize: true,
         })
-      ],
-      output: {
-        // singlefile/hybrid : le plugin coupe le code splitting, incompatible avec manualChunks
-        ...(buildMode === 'folder' ? { manualChunks } : {}),
-      }
+      ]
     }
   }
 })

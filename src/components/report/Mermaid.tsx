@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { peekMermaid, renderMermaid } from 'virtual:mermaid-runtime';
-import { MERMAID_CONFIG, mermaidKey, normalizeChart } from '../../utils/mermaid/mermaid-shared';
+import { MERMAID_CONFIG, mermaidKey, normalizeChart } from '../../utils/shared/mermaid-shared';
 
 interface MermaidProps {
   chart: string;
