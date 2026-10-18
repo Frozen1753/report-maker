@@ -1,6 +1,8 @@
 import { Children, type ComponentProps, type ReactElement } from "react";
 import { Code } from "./components/code";
-import { Mermaid } from "./components/report";
+import { Mermaid, Separator } from "./components/report";
+import { Callout, type CalloutProps } from "./components/report/Callout";
+import type { SeparatorProps } from "./components/report/Separator";
 
 // MDX compiles a ```mermaid fence to <pre><code className="language-mermaid">...
 // Intercepting `pre` lets every report.mdx just write plain ```mermaid blocks,
@@ -34,4 +36,7 @@ function PreOrMermaid({
 export const mdxComponents = {
   pre: PreOrMermaid,
   code: (props: any) => <Code type="inline" {...props} />,
+  hr: () => <Separator />,
+  separator: (props: SeparatorProps) => <Separator {...props} />,
+  callout: (props: CalloutProps) => <Callout {...props} />,
 };

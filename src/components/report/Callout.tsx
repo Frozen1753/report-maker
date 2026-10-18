@@ -10,7 +10,7 @@ import type { ComponentType, ReactNode } from 'react';
 
 type CalloutType = 'info' | 'tip' | 'note' | 'warning' | 'caution' | 'important';
 
-type CalloutProps = {
+export type CalloutProps = {
   type?: CalloutType;
   title?: string;
   children: ReactNode;

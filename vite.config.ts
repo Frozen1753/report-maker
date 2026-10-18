@@ -35,8 +35,13 @@ export default defineConfig({
     {
       enforce: "pre",
       ...mdx({
-        remarkPlugins: [remarkGfm, remarkHeadingNumbers, remarkDirective],
-        rehypePlugins: [rehypeMdxCodeProps, remarkDirectiveRehype],
+        remarkPlugins: [
+          remarkGfm,
+          remarkHeadingNumbers,
+          remarkDirective,
+          remarkDirectiveRehype,
+        ],
+        rehypePlugins: [rehypeMdxCodeProps],
       }),
     },
     react({ include: /\.(jsx|js|mdx|md|tsx|ts)$/ }),

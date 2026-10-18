@@ -19,15 +19,15 @@ import { easyTerm } from "./helpers/easy-term";
 
 Report Maker is a project that allows you to create a report using MDX file: plain Markdown for the text, real React components wherever Markdown alone isn't enough. Headings number themselves, a table of contents builds itself, and the whole thing can compile down to a single `index.html` (just like a pdf) with no extra runtime.
 
-<Callout type="info" title="How to read this guide">
-    This document is itself a Report Maker report — every component shown below is demonstrated
-    live, not just described. Open its source file alongside this rendered version if you want to
-    see the exact MDX behind each example.
-</Callout>
+:::callout{type="info" title="How to read this guide"}
+This document is itself a Report Maker report — every component shown below is demonstrated
+live, not just described. Open its source file alongside this rendered version if you want to
+see the exact MDX behind each example.
+:::
 
 In this report, we'll go over what Report Maker needs to run on your machine, how to use it, and everything that can be done with it (spoiler: basically **anything**).
 
-<Separator label="Getting Started" />
+::separator{label="Getting Started"}
 
 # Getting Started
 
@@ -44,7 +44,7 @@ In this report, we'll go over what Report Maker needs to run on your machine, ho
     debugging.
 </Collapsible>
 
-<Separator />
+---
 
 ## Clone & Install
 
@@ -103,7 +103,7 @@ A `degit` copy or a repo created from `Use this template` has no shared history 
 
 </Collapsible>
 
-<Separator label="The Report Shell" />
+::separator{label="The Report Shell"}
 
 # The Report Shell
 
@@ -123,11 +123,11 @@ vite.config.ts comfortable with React/Vite and want to build
 your own components or change how things compile.
 ```
 
-<Callout type="tip">
-    `style.css` and `report.assets.config.json` don't have to be edited by
-    hand — both have a live panel in dev mode instead. See [the theme editor](#live-theme-editor)
-    and [the export panel](#the-export-panel).
-</Callout>
+:::callout{type="tip"}
+`style.css` and `report.assets.config.json` don't have to be edited by
+hand — both have a live panel in dev mode instead. See [the theme editor](#live-theme-editor)
+and [the export panel](#the-export-panel).
+:::
 
 ## App.tsx
 
@@ -145,12 +145,12 @@ Trimmed down, it wires together:
   `import.meta.env.DEV`), see [Theming](#theming) and [Building &
   Exporting](#building-exporting).
 
-<Callout type="warning" title="Don't remove FigureProvider">
-    Every `<Figure>` needs a `<FigureProvider>` somewhere above it for
-    its automatic numbering to work — remove it and any `<Figure>` throws at render
-    instead of rendering. `App.tsx` already wraps `<Report />` in one; if
-    you ever restructure `App.tsx`, make sure that wrapper survives.
-</Callout>
+:::callout{type="warning" title="Don't remove FigureProvider"}
+Every `<Figure>` needs a `<FigureProvider>` somewhere above it for
+its automatic numbering to work — remove it and any `<Figure>` throws at render
+instead of rendering. `App.tsx` already wraps `<Report />` in one; if
+you ever restructure `App.tsx`, make sure that wrapper survives.
+:::
 
 <Collapsible title="Writing Mermaid diagrams as plain fences instead of <Mermaid>">
     `App.tsx` also intercepts plain triple-backtick `mermaid` code fences and
@@ -219,7 +219,7 @@ Pass your own `logo` once you no longer need the default Report Maker branding.
 
 </Collapsible>
 
-<Separator label="MDX" />
+::separator{label="MDX"}
 
 # Writing Content in MDX
 
@@ -251,7 +251,7 @@ import Report, { toc } from './report.mdx'
     reorder sections.
 </Collapsible>
 
-<Separator />
+---
 
 ## Importing Assets
 
@@ -265,14 +265,14 @@ import myScreenshot from './assets/screenshot.png'
 
 Feel free to organize the `assets/` folder however you like, grouping files into sub-folders or by naming convention — you just need the right path when importing them.
 
-<Callout type="warning" title="Avoid plain string paths">
+:::callout{type="warning" title="Avoid plain string paths"}
     Writing `src="./assets/screenshot.png"` directly (instead of importing it) means the
     bundler never sees the file — it won't be hashed, won't be inlined in singlefile builds, and
     will likely 404 once the report is actually deployed somewhere other than exactly where you
     tested it.
-</Callout>
+:::callout
 
-<Separator label="Components" />
+::separator{label="Components"}
 
 # Components
 
@@ -282,19 +282,29 @@ Each component below shows a live example first. Look inside its "En savoir plus
 
 Admonition-style boxes, heavily inspired by Markdown notes — six variants, an optional `title`, and any content as children:
 
-<Callout>Default — communicate anything.</Callout>
+:::callout
+Default — communicate anything.
+:::
 
-<Callout type="info">Add context, non-critical.</Callout>
+:::callout{type="info"}
+Add context, non-critical.
+:::
 
-<Callout type="tip">Suggest something, or give a hint to the reader.</Callout>
+:::callout{type="tip"}
+Suggest something, or give a hint to the reader.
+:::
 
-<Callout type="warning" title="Before continuing">
-    Make sure your configuration is backed up.
-</Callout>
+:::callout{type="warning" title="Before continuing"}
+Make sure your configuration is backed up.
+:::
 
-<Callout type="caution">This operation cannot be undone.</Callout>
+:::callout{type="caution"}
+This operation cannot be undone.
+:::
 
-<Callout type="important">Remember this for later.</Callout>
+:::callout{type="important"}
+Remember this for later.
+:::
 
 <Collapsible title="En savoir plus">
 ```mdx bar name="report.mdx"
@@ -365,7 +375,7 @@ Callouts accept any JSX as children, not just text — including other component
 />
 </Collapsible>
 
-<Separator />
+---
 
 ## Collapsible
 
@@ -446,13 +456,13 @@ Collapsibles accept any JSX too — including other components:
 />
 </Collapsible>
 
-<Separator />
+---
 
 ## Separator
 
 A plain rule (equivalent to `---` in Markdown), or a labeled break between sections.
 
-<Separator label="example" />
+::separator{label="example"}
 
 <Collapsible title="En savoir plus">
 ```mdx bar name="report.mdx"
@@ -480,7 +490,7 @@ type SeparatorProps = {
 />
 </Collapsible>
 
-<Separator />
+---
 
 ## Tabs
 
@@ -523,7 +533,7 @@ type TabsProps = {
 ```
 </Collapsible>
 
-<Separator />
+---
 
 ## BeforeAfter
 
@@ -550,19 +560,19 @@ type BeforeAfterProps = {
 };
 ```
 
-<Code type="bloc" lang="mdx">
-    {`<BeforeAfter
+```tsx
+<BeforeAfter
   before={<img src={guideBefore} alt="" />}
   after={<img src={guideAfter} alt="" />}
   beforeLabel="Before"
   afterLabel="After"
-/>`}
-</Code>
+/>
+```
 
 `before`/`after` accept any JSX, not just images — a `Code` block on each side works just as well for comparing two versions of a snippet.
 </Collapsible>
 
-<Separator />
+---
 
 ## Figure
 
@@ -575,36 +585,36 @@ An image, gif, or video with a numbered caption, and an optional lightbox (with 
 />
 
 <Collapsible title="En savoir plus">
-<Code type="bloc" bar name="report.mdx" lang="mdx">
-{`import { Figure } from './components/figure'`}
-</Code>
+```mdx bar name="report.mdx"
+import { Figure } from './components/figure'
+```
 
-<Code lang="tsx" type="bloc" name="Figure.tsx" bar>
-    {`type FigureProps = {
+```tsx bar name="Figure.tsx"
+type FigureProps = {
     media: ReactNode;             // the image, gif or video element
     caption?: ReactNode;          // shown next to the auto-generated figure number
     lightbox?: boolean;           // enables click-to-zoom (false by default)
     lightboxContent?: ReactNode;  // what the lightbox shows instead of media, if different
     className?: string;
-};`}
-</Code>
+};
+```
 
 By default the lightbox shows the same `media`. Pass `lightboxContent` to show something else instead — extra context, a higher-resolution version, or an entirely different element:
 
-<Code type="bloc" lang="mdx">
-    {`<Figure
+```tsx
+<Figure
   media={<img src={thumb} alt="..." />}
   lightbox
   lightboxContent={<img src={fullRes} alt="..." />}
   caption="..."
-/>`}
-</Code>
+/>
+```
 
 Videos work the same way, just swap the `<img>` for a `<video controls>` — captions and numbering behave identically.
 
 </Collapsible>
 
-<Separator />
+---
 
 ## Code
 
@@ -641,7 +651,7 @@ npm run build:hybrid
 ```
 </Collapsible>
 
-<Separator />
+---
 
 ## Mermaid
 
@@ -681,16 +691,15 @@ Diagrams render client-side via the `mermaid` package directly, rather than thro
 
 </Collapsible>
 
-<Separator />
+---
 
 ## Term
 
 An inline word with a tooltip attached — for definitions, jargon, or anything a reader might want explained without leaving the sentence. It's drawn with a dotted underline: hover { easyTerm('latency') } (or Tab to it) and the tooltip appears after a short delay.
 
-<Callout type="tip" title="Pin a tooltip">
-    Hover a term, then **middle-click** it or its tooltip to pin it open — its border gets stronger
-    to show it. Click anywhere else to close it.
-</Callout>
+:::callout{type="tip" title="Pin a tooltip"}
+Hover a term, then **middle-click** it or its tooltip to pin it open — its border gets stronger to show it. Click anywhere else to close it.
+:::
 
 <Collapsible title="En savoir plus">
 ```mdx bar name="report.mdx"
@@ -817,27 +826,26 @@ When a nested tooltip opens, the one that contains it is **pinned automatically*
 
 Any number of tooltips can be pinned at the same time, including from different terms.
 
-<Callout type="warning" title="Keep tooltips light">
-  Pinning is mouse-only, so keyboard and touch readers can't pin a tooltip. A tooltip also closes as soon as keyboard focus leaves its term, which means links or buttons inside one are out of keyboard reach. Put anything essential in the page itself, and use tooltips for supporting detail only. Also avoid placing a `Term` inside a link or a button: it is focusable itself.
-</Callout>
+:::callout{type="warning" title="Keep tooltips light"}
+Pinning is mouse-only, so keyboard and touch readers can't pin a tooltip. A tooltip also closes as soon as keyboard focus leaves its term, which means links or buttons inside one are out of keyboard reach. Put anything essential in the page itself, and use tooltips for supporting detail only. Also avoid placing a `Term` inside a link or a button: it is focusable itself.
+:::
 </Collapsible>
 
-<Separator label="Helpers" />
+::separator{label="Helpers"}
 
 # Helpers
 
 Components render from JSX tags. Helpers are plain functions you call from an MDX expression, like `{ easyTerm('latency') }`. Most read definitions you write once in `src/custom/`, so the report file stays about content. They ship with Report Maker, so there's nothing to install.
 
-<Separator />
+---
 
 ## Easy Terms
 
 Writing `<Term tooltip={...}>` every time gets heavy once the same word shows up in several places. `easyTerm` lets you define a term once, then use it anywhere with a single call: hover { easyTerm('latency') } (or Tab to it) and its tooltip appears, exactly like a regular <Code>Term</Code>.
 
-<Callout type="tip" title="Case and accents don't matter">
-    {easyTerm("Latency")} and {easyTerm("LATENCY")} both find the same definition. The term is
-    displayed exactly as you typed it, so it fits the sentence around it.
-</Callout>
+:::callout{type="tip" title="Case and accents don't matter"}
+{easyTerm("Latency")} and {easyTerm("LATENCY")} both find the same definition. The term is displayed exactly as you typed it, so it fits the sentence around it.
+:::
 
 <Collapsible title="En savoir plus">
 Add the import at the top of `report.mdx`, next to the others:
@@ -861,10 +869,9 @@ import { addTerm } from "../../helpers/easy-term";
 addTerm('latency', <>Time between a request and its response.</>);
 ```
 
-<Callout type="note">
-    The registry is filled when `src/custom/variables` is loaded. If a term you defined
-    shows up as `UNKNOWN_TERM`, check that its file is actually imported.
-</Callout>
+:::callout{type="note"}
+The registry is filled when `src/custom/variables` is loaded. If a term you defined shows up as `UNKNOWN_TERM`, check that its file is actually imported.
+:::
 
 ### Using a term
 
@@ -921,30 +928,24 @@ addTerm('request', <>A request is a {easyTerm('network')} thing.</>);
 addTerm('latency', <>Time between a {easyTerm('request')} and its response.</>);
 ```
 
-<Callout type="note" title="Order doesn't matter">
-    Terms are looked up when a tooltip opens, not when it is defined. You can define{" "}
-    `latency` before `request`, and two terms can even refer to each other.
-</Callout>
+:::callout{type="note" title="Order doesn't matter"}
+Terms are looked up when a tooltip opens, not when it is defined. You can define{" "} `latency` before `request`, and two terms can even refer to each other.
+:::
 
-<Callout type="caution" title="Unknown terms">
-    Asking for a term that was never defined renders a bold `UNKNOWN_TERM` in the report
-    and logs `unknown term: ...` as an error in the browser console.
-</Callout>
+:::callout{type="caution" title="Unknown terms"}
+Asking for a term that was never defined renders a bold `UNKNOWN_TERM` in the report and logs `unknown term: ...` as an error in the browser console.
+:::
 
-<Callout type="warning" title="Redefining a word">
-    Defining a word that already exists replaces the previous definition: the last one wins, and the
-    browser console logs `be careful as you are redefining the term`. Words that only
-    differ by case, accents or spacing count as the same word, so `Événement` and{" "}
-    `evenement` collide. In dev mode, the warning also appears each time you save the
-    definitions file; that's expected.
-</Callout>
+:::callout{type="warning" title="Redefining a word"}
+Defining a word that already exists replaces the previous definition: the last one wins, and the browser console logs `be careful as you are redefining the term`. Words that only differ by case, accents or spacing count as the same word, so `Événement` and `evenement` collide. In dev mode, the warning also appears each time you save the definitions file; that's expected.
+:::
 
 <Collapsible title="Why not defining everything at the top of the MDX?">
   You could define each tooltip at the start of `report.mdx` and use it with `easyTerm`. It works, but it mixes logic with content: the report gets longer before the first sentence, and the definitions can't be shared with another report. A separate registry keeps `report.mdx` readable and keeps every definition in one place.
 </Collapsible>
 </Collapsible>
 
-<Separator label="Theming" />
+::separator{label="Theming"}
 
 # Theming
 
@@ -974,18 +975,15 @@ A theme button ships in the published report itself — it's not a dev tool, it'
 
 It follows the reader's system preference until they click it once, then remembers their choice for next time.
 
-<Callout type="note">
-    The very first paint is handled by a small inline script in `index.html`, before
-    React even runs — without it, readers would see a flash of the wrong theme for a split second on
-    every load.
-</Callout>
+:::callout{type="note"}
+The very first paint is handled by a small inline script in `index.html`, before React even runs — without it, readers would see a flash of the wrong theme for a split second on every load.
+:::
 
 ## Live Theme Editor
 
-<Callout type="important" title="Development only">
-    Everything in this section is a dev tool — it appears while running `npm run dev` and
-    is never included in a build. If you're reading a published report, you won't see it.
-</Callout>
+:::callout{type="important" title="Development only"}
+Everything in this section is a dev tool — it appears while running `npm run dev` and is never included in a build. If you're reading a published report, you won't see it.
+:::
 
 A floating button opens a panel that edits `src/styles/style.css` directly, for both light and dark at once:
 
@@ -998,7 +996,7 @@ A floating button opens a panel that edits `src/styles/style.css` directly, for 
 
 Still inside the live theme editor: two comboboxes pick which Shiki theme highlights `<Code type="bloc">` blocks, one for light mode and one for dark mode — independently, so you're not stuck pairing a light code theme with a light report theme.
 
-<Separator label="Building" />
+::separator{label="Building"}
 
 # Building & Exporting
 
@@ -1032,21 +1030,19 @@ Anything matching an excluded extension, or an image wider than `maxImageWidth`,
 
 ## The Export Panel
 
-<Callout type="important" title="Development only">
-    Like the theme editor, this panel is a dev tool — it never ships in a build.
-</Callout>
+:::callout{type="important" title="Development only"}
+Like the theme editor, this panel is a dev tool — it never ships in a build.
+:::
 
 A second floating button runs an actual build without leaving the browser: pick a mode, check off any extensions or oversized images to keep external in `hybrid` mode, and it writes `report.assets.config.json` and runs the matching build script for you — the result lands in `dist/&lt;mode&gt;/` either way.
 
-<Separator label="Conclusion" />
+::separator{label="Conclusion"}
 
 # Conclusion
 
-<Callout type="note" title="Wrap-up">
-    Clone, `npm install`, `npm run dev`, write `report.mdx` with
-    the components above, pick a build mode when you're done. That's the whole workflow — everything
-    else is detail you can come back to from this guide when you need it.
-</Callout>
+:::callout{type="note" title="Wrap-up"}
+Clone, `npm install`, `npm run dev`, write `report.mdx` with the components above, pick a build mode when you're done. That's the whole workflow — everything else is detail you can come back to from this guide when you need it.
+:::
 
 ## A Note From the Author
 
@@ -1055,3 +1051,5 @@ I built Report Maker after a friend and I wrote a report by hand last year, in r
 If you ended up here because someone pointed you at the repo, or because you just stumbled onto it: use it, fork it, strip out whatever you don't need, build your own components on top of it. It's licensed under `MIT` — do basically anything with it, including in things you sell, just keep the license notice around.
 
 If you build something with it, improve on it, or find something I got wrong, I'd like to hear about it — open an issue or a PR on <a href="https://github.com/Frozen1753/report-maker" target="_blank" rel="noopener noreferrer">the repo</a>.
+
+::separator{label="THE END"}
