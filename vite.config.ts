@@ -13,6 +13,8 @@ import { shikiThemesServerPlugin } from "./scripts/shiki-themes-server-plugin.ts
 import { themeServerPlugin } from "./scripts/theme-server-plugin.ts";
 import remarkHeadingNumbers from "./src/utils/mdx-plugins/remark-heading-numbers.ts";
 import rehypeMdxCodeProps from "rehype-mdx-code-props";
+import remarkDirective from "remark-directive";
+import remarkDirectiveRehype from "remark-directive-rehype";
 
 // Set by scripts/build-report.mjs (see package.json "build:*" scripts):
 //   folder     -> normal Vite build, assets emitted to dist/folder/assets/
@@ -33,8 +35,8 @@ export default defineConfig({
     {
       enforce: "pre",
       ...mdx({
-        remarkPlugins: [remarkGfm, remarkHeadingNumbers],
-        rehypePlugins: [rehypeMdxCodeProps],
+        remarkPlugins: [remarkGfm, remarkHeadingNumbers, remarkDirective],
+        rehypePlugins: [rehypeMdxCodeProps, remarkDirectiveRehype],
       }),
     },
     react({ include: /\.(jsx|js|mdx|md|tsx|ts)$/ }),
