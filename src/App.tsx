@@ -1,31 +1,15 @@
-import type { ReactElement } from "react";
 import ReportMakerIcon from "./assets/report-maker_icon.svg?react";
 import { CoverPage } from "./components/cover-page/CoverPage";
 import { ExportPanel } from "./components/export-panel/ExportPanel";
 import { FigureProvider } from "./components/figure/FigureProvider";
 import { Header } from "./components/header/Header";
-import { Mermaid } from "./components/report/Mermaid";
 import { ThemeToggle } from "./components/theme-toggle/ThemeToggle";
 import { ThemePanel } from "./components/theme-panel/ThemePanel";
 import { TableOfContent } from "./components/toc/TableOfContent";
 import { TopButton } from "./components/top-button/TopButton";
 import Report, { toc } from "./report.mdx";
 import "./custom/variables";
-
-// MDX compiles a ```mermaid fence to <pre><code className="language-mermaid">...
-// Intercepting `pre` lets every report.mdx just write plain ```mermaid blocks,
-// no manual <Mermaid chart="..."> needed.
-function PreOrMermaid({
-  children,
-  ...props
-}: {
-  children?: ReactElement<{ className?: string; children?: string }>;
-}) {
-  const isMermaid = children?.props?.className?.includes("language-mermaid");
-  if (isMermaid)
-    return <Mermaid chart={String(children?.props?.children ?? "")} />;
-  return <pre {...props}>{children}</pre>;
-}
+import { mdxComponents } from "./overrides";
 
 export default function App() {
   return (
@@ -56,7 +40,7 @@ export default function App() {
 
         <div className="content">
           <FigureProvider>
-            <Report components={{ pre: PreOrMermaid }} />
+            <Report components={mdxComponents} />
           </FigureProvider>
         </div>
       </main>
