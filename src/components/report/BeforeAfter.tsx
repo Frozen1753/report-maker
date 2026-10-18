@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
-import { Tabs, type TabItem } from './Tabs';
+import type { ReactNode } from "react";
+import { Tabs } from "./tabs";
 
 type Slot = string | ReactNode;
 
@@ -16,16 +16,14 @@ export function BeforeAfter({
   beforeLabel = 'Avant',
   afterLabel = 'Après',
 }: BeforeAfterProps) {
-  const tabs: TabItem[] = [
-    {
-      label: beforeLabel,
-      content: <div className="before-after-content">{before}</div>,
-    },
-    {
-      label: afterLabel,
-      content: <div className="before-after-content">{after}</div>,
-    },
-  ];
-
-  return <Tabs tabs={tabs} className="before-after" />;
+  return (
+    <Tabs className="before-after">
+      <Tabs.Item label={beforeLabel}>
+        {<div className="before-after-content">{before}</div>}
+      </Tabs.Item>
+      <Tabs.Item label={afterLabel}>
+        {<div className="before-after-content">{after}</div>}
+      </Tabs.Item>
+    </Tabs>
+  );
 }
