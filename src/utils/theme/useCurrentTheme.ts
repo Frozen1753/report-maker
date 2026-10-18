@@ -1,29 +1,22 @@
-import { useEffect, useState } from 'react';
-import type { Theme } from './getSystemTheme';
+import { useSyncExternalStore } from "react";
+import { getAppliedTheme, type Theme } from "./theme";
 
-function readTheme(): Theme {
-  return document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+function subscribe(onChange: () => void): () => void {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
+  return () => observer.disconnect();
 }
 
 /**
- * Tracks document.documentElement.dataset.theme as React state.
+ * Tracks the `dark` class on <html> as React state.
  *
- * Needed because that attribute is set by ThemeButton (production) or
- * ThemePanel (dev preview) directly on the DOM — React has no idea it
- * changed, so any component that needs to react to the current theme
- * (not just read it once) has to watch for it explicitly.
+ * The class is set directly on the DOM by ThemeToggle (production) or
+ * ThemePanel (dev preview), so React doesn't know when it changes. Any
+ * component that must re-render on a theme change subscribes here.
  */
 export function useCurrentTheme(): Theme {
-  const [theme, setTheme] = useState<Theme>(readTheme);
-
-  useEffect(() => {
-    const observer = new MutationObserver(() => setTheme(readTheme()));
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['data-theme'],
-    });
-    return () => observer.disconnect();
-  }, []);
-
-  return theme;
+  return useSyncExternalStore(subscribe, getAppliedTheme);
 }

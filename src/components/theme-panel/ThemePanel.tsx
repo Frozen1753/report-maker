@@ -15,6 +15,7 @@ import {
   toHex,
   type RGBA,
 } from "./theme-color";
+import { applyTheme, resolveIsDark } from "../../utils/theme/theme";
 
 const MANAGED_SHIKI_VARS = new Set([SHIKI_LIGHT_VAR, SHIKI_DARK_VAR]);
 
@@ -41,7 +42,7 @@ interface ThemeApiResponse {
 
 /**
  * Applies (or clears) a set of CSS custom properties as inline styles on
- * <html>, which override :root/:root[data-theme] from style.css without
+ * <html>, which override :root/.dark from style.css without
  * writing anything to disk — this is the "preview" half of the panel.
  */
 function applyPreview(vars: Vars) {
@@ -105,7 +106,7 @@ export function ThemePanel() {
   // Live preview whenever a value or the light/dark toggle changes.
   useEffect(() => {
     if (!loaded) return;
-    document.documentElement.dataset.theme = previewMode;
+    applyTheme(previewMode === "dark");
     applyPreview(light);
     if (previewMode === "dark") applyPreview(dark);
   }, [light, dark, previewMode, loaded]);
@@ -115,7 +116,7 @@ export function ThemePanel() {
       // Panel unmounted: drop the forced preview, let the page fall back to
       // its own default (e.g. prefers-color-scheme via CSS, if you use that
       // for first-load, or plain :root if you don't).
-      delete document.documentElement.dataset.theme;
+      applyTheme(resolveIsDark());
       clearPreview([...Object.keys(light), ...Object.keys(dark)]);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
