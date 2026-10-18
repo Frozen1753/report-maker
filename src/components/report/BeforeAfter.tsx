@@ -13,8 +13,8 @@ type BeforeAfterProps = {
 export function BeforeAfter({
   before,
   after,
-  beforeLabel = 'Avant',
-  afterLabel = 'Après',
+  beforeLabel = "Before",
+  afterLabel = "After",
 }: BeforeAfterProps) {
   return (
     <Tabs className="before-after">
