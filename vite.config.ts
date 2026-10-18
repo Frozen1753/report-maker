@@ -1,12 +1,15 @@
 import mdx from '@mdx-js/rollup'
-import react from '@vitejs/plugin-react'
+import babel from '@rolldown/plugin-babel'
+import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import remarkGfm from 'remark-gfm'
+import { visualizer } from "rollup-plugin-visualizer"
 import { defineConfig, type PluginOption } from 'vite'
 import { viteSingleFile } from 'vite-plugin-singlefile'
 import svgr from 'vite-plugin-svgr'
 import { loadAssetConfig, shouldInlineAsset } from './scripts/asset-rules.ts'
 import { assetsServerPlugin } from './scripts/assets-server-plugin.ts'
 import { exportServerPlugin } from './scripts/export-server-plugin.ts'
+import { mermaidPlugin, remarkMermaidCollect } from './scripts/mermaid-plugin.ts'
 import { shikiCodegenPlugin } from './scripts/shiki-codegen-plugin.ts'
 import { shikiThemesServerPlugin } from './scripts/shiki-themes-server-plugin.ts'
 import { themeServerPlugin } from './scripts/theme-server-plugin.ts'
@@ -22,12 +25,33 @@ const buildMode = (process.env.REPORT_BUILD_MODE ?? 'folder') as ReportBuildMode
 
 const assetConfig = loadAssetConfig()
 
+const manualChunks = (id: string) => {
+  const path = id.replace(/\\/g, "/");
+
+  // Shiki - 1.3 Mo
+  if (path.includes("/node_modules/@shikijs/engine-oniguruma")) return "shiki";
+  if (path.includes("wasm")) return "shiki";
+  if (path.includes("shiki-bundle.generated")) return "shiki-themes";
+
+  // Index - 0.5 Mo
+  // Rolldown runtime - 2 Ko
+
+  /*
+  Chunker les composants connu au lieu d'un gros index
+
+  En mode folder, organiser :
+  - les js dans /assets/scripts
+  - png, etc. dans /assets/media
+  - styles dans /assets/styles
+  */
+}
+
 export default defineConfig({
   base: buildMode === 'folder' ? '/' : './',
 
   plugins: [
     // Must run before @vitejs/plugin-react transforms the JSX MDX compiles down to.
-    { enforce: 'pre', ...mdx({ remarkPlugins: [remarkGfm, remarkHeadingNumbers] }) },
+    { enforce: 'pre', ...mdx({ remarkPlugins: [remarkGfm, remarkHeadingNumbers, remarkMermaidCollect] }) },
     react({ include: /\.(jsx|js|mdx|md|tsx|ts)$/ }),
 
     svgr(),
@@ -35,6 +59,7 @@ export default defineConfig({
     themeServerPlugin(),
     assetsServerPlugin(),
     shikiThemesServerPlugin(),
+    mermaidPlugin(),
 
     shikiCodegenPlugin(),
 
@@ -46,6 +71,8 @@ export default defineConfig({
     // blanket "inline every asset" behavior, so we disable the recommended
     // config and set assetsInlineLimit ourselves below instead.
     buildMode === 'hybrid' && viteSingleFile({ useRecommendedBuildConfig: false }),
+
+    babel({ presets: [reactCompilerPreset()] })
   ].filter(Boolean) as PluginOption[],
 
   build: {
@@ -57,5 +84,29 @@ export default defineConfig({
       buildMode === 'hybrid'
         ? (filePath: string, content: Buffer) => shouldInlineAsset(filePath, content, assetConfig)
         : undefined, // folder: Vite's default 4kb threshold · singlefile: forced true by the plugin
-  },
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+      format: {
+        comments: false,
+      },
+    },
+    rolldownOptions: {
+      plugins: [
+        visualizer({
+          filename: "stats.html",
+          open: true,
+          gzipSize: true,
+          brotliSize: true,
+        })
+      ],
+      output: {
+        // singlefile/hybrid : le plugin coupe le code splitting, incompatible avec manualChunks
+        ...(buildMode === 'folder' ? { manualChunks } : {}),
+      }
+    }
+  }
 })
