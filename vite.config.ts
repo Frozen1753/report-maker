@@ -10,7 +10,7 @@ import { loadAssetConfig, shouldInlineAsset } from './scripts/asset-rules.ts'
 import { assetsServerPlugin } from './scripts/assets-server-plugin.ts'
 import { exportServerPlugin } from './scripts/export-server-plugin.ts'
 import { mermaidPlugin, remarkMermaidCollect } from './scripts/mermaid-plugin.ts'
-import { shikiCodegenPlugin } from './scripts/shiki-codegen-plugin.ts'
+import { shikiPlugin } from './scripts/shiki-plugin.ts'
 import { shikiThemesServerPlugin } from './scripts/shiki-themes-server-plugin.ts'
 import { themeServerPlugin } from './scripts/theme-server-plugin.ts'
 import remarkHeadingNumbers from './src/utils/mdx-plugins/remark-heading-numbers.ts'
@@ -61,7 +61,7 @@ export default defineConfig({
     shikiThemesServerPlugin(),
     mermaidPlugin(),
 
-    shikiCodegenPlugin(),
+    shikiPlugin(),
 
     // Full single-file mode: let the plugin apply its recommended config
     // (it force-inlines every JS/CSS/asset into one HTML — see its source).
@@ -102,11 +102,7 @@ export default defineConfig({
           gzipSize: true,
           brotliSize: true,
         })
-      ],
-      output: {
-        // singlefile/hybrid : le plugin coupe le code splitting, incompatible avec manualChunks
-        ...(buildMode === 'folder' ? { manualChunks } : {}),
-      }
+      ]
     }
   }
 })
