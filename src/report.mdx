@@ -6,11 +6,9 @@ import {
     BeforeAfter,
     Callout,
     Collapsible,
-    Mermaid,
     Separator,
     Tabs,
     Term,
-    Code,
     Figure,
 } from "./components/mdx";
 import { easyTerm } from "./helpers/easy-term";
@@ -48,26 +46,18 @@ In this report, we'll go over what Report Maker needs to run on your machine, ho
 
 ## Clone & Install
 
-<Tabs
-    tabs={[
-        {
-            label: "HTTPS",
-            content: (
-                <Code type="bloc" lang="bash" bar name="terminal" copy>
-                    {`git clone https://github.com/Frozen1753/report-maker.git my-report`}
-                </Code>
-            ),
-        },
-        {
-            label: "SSH",
-            content: (
-                <Code type="bloc" lang="bash" bar name="terminal" copy>
-                    {`git clone git@github.com:Frozen1753/report-maker.git my-report`}
-                </Code>
-            ),
-        },
-    ]}
-/>
+<Tabs>
+    <Tabs.Item label="HTTPS">
+        ```bash bar copy name="terminal"
+        git clone https://github.com/Frozen1753/report-maker.git my-report
+        ```
+    </Tabs.Item>
+    <Tabs.Item label="SSH">
+        ```bash bar copy name="terminal"
+        git clone git@github.com:Frozen1753/report-maker.git my-report
+        ```
+    </Tabs.Item>
+</Tabs>
 
 Then install dependencies and start the dev server:
 
@@ -319,60 +309,44 @@ type CalloutProps = {
 };
 ```
 
-<Tabs
-    tabs={[
-        {
-            label: "Exemple",
-            content: (
-                <Callout type="warning" title="Before continuing">
-                    Make sure your configuration is backed up.
-                </Callout>
-            ),
-        },
-        {
-            label: "Code",
-            content: (
-                <Code type="bloc" lang="mdx">
-                    {`<Callout type="warning" title="Before continuing">
-  Make sure your configuration is backed up.
-</Callout>`}
-                </Code>
-            ),
-        },
-    ]}
-/>
-
+<Tabs>
+    <Tabs.Item label="Exemple">
+        <Callout type="warning" title="Before continuing">
+            Make sure your configuration is backed up.
+        </Callout>
+    </Tabs.Item>
+    <Tabs.Item label="Code">
+        ```mdx
+        <Callout type="warning" title="Before continuing">
+            Make sure your configuration is backed up.
+        </Callout>
+        ```
+    </Tabs.Item>
+</Tabs>
 Callouts accept any JSX as children, not just text — including other components:
 
-<Tabs
-  tabs={[
-    {
-      label: "Exemple",
-      content: (
+<Tabs>
+    <Tabs.Item label="Exemple">
         <Callout type="important" title="Complex callout">
-          A callout with more than simple `text`.
-          <Collapsible title="Hidden message">
-            <img src={kiwiGif} />
-          </Collapsible>
+            A callout with more than simple `text`.
+            <Collapsible title="Hidden message">
+                <img src={kiwiGif} />
+            </Collapsible>
         </Callout>
-      ),
-    },
-    {
-      label: "Code",
-      content: (
-        <Code type="bloc" lang="mdx">
-{`<Callout type="important" title="Complex callout">
-  A callout with more than simple <Code>text</Code>.
+    </Tabs.Item>
+    <Tabs.Item label="Code">
 
-  <Collapsible title="Hidden message">
-    <img src={kiwiGif}/>
-  </Collapsible>
-</Callout>`}
-        </Code>
-      ),
-    },
-  ]}
-/>
+        ```mdx
+        <Callout type="important" title="Complex callout">
+            A callout with more than simple <Code>text</Code>.
+        
+            <Collapsible title="Hidden message">
+                <img src={kiwiGif}/>
+            </Collapsible>
+        </Callout>
+        ```
+    </Tabs.Item>
+</Tabs>
 </Collapsible>
 
 ---
@@ -404,56 +378,46 @@ type CollapsibleProps = {
 };
 ```
 
-<Tabs
-    tabs={[
-        {
-            label: "Exemple",
-            content: (
-                <Collapsible title="My titled collapsible">Any content works here.</Collapsible>
-            ),
-        },
-        {
-            label: "Code",
-            content: (
-                <Code type="bloc" lang="mdx">
-                    {`<Collapsible title="My titled collapsible">
-  Any content works here.
-</Collapsible>`}
-                </Code>
-            ),
-        },
-    ]}
-/>
+<Tabs>
+    <Tabs.Item label="Exemple">
+        <Collapsible title="My titled collapsible">
+            Any content works here.
+        </Collapsible>
+    </Tabs.Item>
+    <Tabs.Item label="Code">
+        ```mdx
+        <Collapsible title="My titled collapsible">
+            Any content works here.
+        </Collapsible>
+        ```
+    </Tabs.Item>
+</Tabs>
 
 Collapsibles accept any JSX too — including other components:
 
-<Tabs
-  tabs={[
-    {
-      label: "Exemple",
-      content: (
+<Tabs>
+    <Tabs.Item label="Exemple">
         <Collapsible title="Complex collapsible">
-          More than simple `text`.
-          <Callout type="tip">Callouts nest fine too, since they're just JSX.</Callout>
+            More than simple `text`.
+            
+            <Callout type="tip">
+                Callouts nest fine too, since they're just JSX.
+            </Callout>
         </Collapsible>
-      ),
-    },
-    {
-      label: "Code",
-      content: (
-        <Code type="bloc" lang="mdx">
-{`<Collapsible title="Complex collapsible">
-  More than simple <Code>text</Code>.
+    </Tabs.Item>
+    <Tabs.Item label="Code">
+        ```mdx
+        <Collapsible title="Complex collapsible">
+            More than simple `text`.
+            
+            <Callout type="tip">
+                Callouts nest fine too, since they're just JSX.
+            </Callout>
+        </Collapsible>
+        ```
+    </Tabs.Item>
+</Tabs>
 
-  <Callout type="tip">
-    Callouts nest fine too, since they're just JSX.
-  </Callout>
-</Collapsible>`}
-        </Code>
-      ),
-    },
-  ]}
-/>
 </Collapsible>
 
 ---
@@ -475,19 +439,31 @@ type SeparatorProps = {
 };
 ```
 
-<Tabs
-    tabs={[
-        { label: "Exemple", content: <Separator /> },
-        { label: "Code", content: <Code type="bloc" lang="mdx">{`<Separator />` }</Code> },
-    ]}
-/>
+<Tabs>
+    <Tabs.Item label="Exemple">
+        ---
+    </Tabs.Item>
+    <Tabs.Item label="Code">
+       ```mdx
+       ---
+       ```
+    </Tabs.Item>
+</Tabs>
 
-<Tabs
-  tabs={[
-    { label: "Exemple", content: <Separator label="my text here" /> },
-    { label: "Code", content: <Code type="bloc" lang="mdx">{`<Separator label="my text here" />`}</Code> },
-  ]}
-/>
+<Tabs>
+    <Tabs.Item label="Exemple">
+        ::separator{label="my text here"}
+    </Tabs.Item>
+    <Tabs.Item label="Code">
+        ```mdx
+        ::separator{label="my text here"}
+        ```
+        **OR**
+        ```mdx
+        <Separator label="my text here" />
+        ```
+    </Tabs.Item>
+</Tabs>
 </Collapsible>
 
 ---
@@ -496,22 +472,16 @@ type SeparatorProps = {
 
 Groups mutually-exclusive content — alternative commands, alternative approaches, anything where showing every option at once would be noise:
 
-<Tabs
-    tabs={[
-        {
-            label: "Option A",
-            content: <p>Content for the first tab. Any JSX works here, not just text.</p>,
-        },
-        {
-            label: "Option B",
-            content: (
-                <Code type="bloc" lang="bash" copy>
-                    {`echo "tab content can be a whole code block"`}
-                </Code>
-            ),
-        },
-    ]}
-/>
+<Tabs>
+    <Tabs.Item label="Option A">
+        Content for the first tab. Any JSX works here, not just text.
+    </Tabs.Item>
+    <Tabs.Item label="Option B">
+        ```bash copy
+        echo "tab content can be a whole code block"
+        ```
+    </Tabs.Item>
+</Tabs>
 
 <Collapsible title="En savoir plus">
 ```mdx bar name="report.mdx"
@@ -629,10 +599,6 @@ interface Report {
 
 <Collapsible title="En savoir plus">
 
-```mdx bar name="report.mdx"
-import { Code } from './components/code'
-```
-
 ```tsx bar name="Code.tsx"
 type CodeProps = {
     type?: "inline" | "bloc";  // "inline" by default
@@ -668,27 +634,23 @@ graph LR
 ```
 
 <Collapsible title="En savoir plus">
-```mdx bar name="report.mdx"
-import { Mermaid } from './components/mdx'
-```
-
 ```tsx bar name="Mermaid.tsx"
 type MermaidProps = {
     chart: string; // raw Mermaid diagram source
 };
 ```
 
-<Code type="bloc" lang="mdx">
-    {`<Mermaid chart={\`graph LR
+````mdx
+```mermaid
+graph LR
   A[Start] --> B{Decision}
   B -->|Yes| C[Do thing]
-\`} />`}
-</Code>
+```
+````
 
 Mermaid supports its own theming via `%%{init: {...}}%%` at the top of a chart — see Mermaid's own documentation for the full set of `themeVariables`.
 
 Diagrams render client-side via the `mermaid` package directly, rather than through its official React wrapper — in practice the official one didn't always render reliably while editing in dev mode (worked fine once built, but that defeats the point of live-editing a report). The component here just calls `mermaid.render()` itself and injects the resulting SVG.
-
 </Collapsible>
 
 ---
@@ -715,105 +677,47 @@ type TermProps = {
 };
 ```
 
-<Tabs
-    tabs={[
-        {
-            label: "Exemple",
-            content: (
-                <p>
-                    Hover{" "}
-                    <Term tooltip={<>Time between a request and its response.</>}>latency</Term> to
-                    read its definition.
-                </p>
-            ),
-        },
-        {
-            label: "Code",
-            content: (
-                <Code type="bloc" lang="mdx">
-                    {`Hover <Term tooltip={<>Time between a request and its response.</>}>latency</Term> to read its definition.`}
-                </Code>
-            ),
-        },
-    ]}
-/>
+<Tabs>
+    <Tabs.Item label="Exemple">
+        Hover <Term tooltip={<>Time between a request and its response.</>}>latency</Term> to read its definition.
+    </Tabs.Item>
+    <Tabs.Item label="Code">
+        ```mdx
+        Hover <Term tooltip={<>Time between a request and its response.</>}>latency</Term> to read its definition.
+        ```
+    </Tabs.Item>
+</Tabs>
 
 The tooltip accepts any JSX, not just text — including other components:
 
-<Tabs
-    tabs={[
-        {
-            label: "Exemple",
-            content: (
-                <p>
-                    <Term tooltip={<Callout type="tip">Callouts work in a tooltip too.</Callout>}>
-                        Hover me
-                    </Term>
-                    .
-                </p>
-            ),
-        },
-        {
-            label: "Code",
-            content: (
-                <Code type="bloc" lang="mdx">
-                    {`<Term tooltip={<Callout type="tip">Callouts work in a tooltip too.</Callout>}>Hover me</Term>`}
-                </Code>
-            ),
-        },
-    ]}
-/>
+<Tabs>
+    <Tabs.Item label="Exemple">
+        <Term tooltip={<Callout type="tip">Callouts work in a tooltip too.</Callout>}>
+            Hover me
+        </Term>
+        .
+    </Tabs.Item>
+    <Tabs.Item label="Code">
+        ```mdx
+        <Term tooltip={<Callout type="tip">Callouts work in a tooltip too.</Callout>}>Hover me</Term>
+        ```
+    </Tabs.Item>
+</Tabs>
 
 ### Nesting
 
 A tooltip can contain terms of its own, as deep as you like — a term, in a term, in a term:
 
-<Tabs
-    tabs={[
-        {
-            label: "Exemple",
-            content: (
-                <p>
-                    <Term
-                        tooltip={
-                            <>
-                                Time between a{" "}
-                                <Term
-                                    tooltip={
-                                        <Collapsible>
-                                            A request is a{" "}
-                                            <Term
-                                                tooltip={
-                                                    <>If you don't know what this is, you suck.</>
-                                                }
-                                            >
-                                                network
-                                            </Term>{" "}
-                                            thing.
-                                        </Collapsible>
-                                    }
-                                >
-                                    request
-                                </Term>{" "}
-                                and its response.
-                            </>
-                        }
-                    >
-                        latency
-                    </Term>
-                </p>
-            ),
-        },
-        {
-            label: "Code",
-            content: (
-                <Code type="bloc" lang="mdx">
-                    {`<Term tooltip={<>Time between a <Term tooltip={<Collapsible>A request is a <Term tooltip={<>If you don't know what this is, you suck.</>}>network</Term> thing.</Collapsible>}>request</Term> and its response.</>}>latency</Term>`}
-                </Code>
-            ),
-        },
-    ]}
-/>
+<Tabs>
+    <Tabs.Item label="Exemple">
+        <Term tooltip={<>Time between a <Term tooltip={<Collapsible>A request is a <Term tooltip={<>If you don't know what this is, you suck.</>}>network</Term> thing.</Collapsible>}>request</Term> and its response.</>}>latency</Term>
+    </Tabs.Item>
+    <Tabs.Item label="Code">
+        ```mdx
+        <Term tooltip={<>Time between a <Term tooltip={<Collapsible>A request is a <Term tooltip={<>If you don't know what this is, you suck.</>}>network</Term> thing.</Collapsible>}>request</Term> and its response.</>}>latency</Term>
+        ```
+    </Tabs.Item>
+</Tabs>
 
 When a nested tooltip opens, the one that contains it is **pinned automatically**, so the whole chain stays on screen while you read down it. A click anywhere outside the chain closes every pinned tooltip at once. Closing a tooltip always closes the ones nested inside it.
 
@@ -841,7 +745,7 @@ Components render from JSX tags. Helpers are plain functions you call from an MD
 
 ## Easy Terms
 
-Writing `<Term tooltip={...}>` every time gets heavy once the same word shows up in several places. `easyTerm` lets you define a term once, then use it anywhere with a single call: hover { easyTerm('latency') } (or Tab to it) and its tooltip appears, exactly like a regular <Code>Term</Code>.
+Writing `<Term tooltip={...}>` every time gets heavy once the same word shows up in several places. `easyTerm` lets you define a term once, then use it anywhere with a single call: hover { easyTerm('latency') } (or Tab to it) and its tooltip appears, exactly like a regular `Term`.
 
 :::callout{type="tip" title="Case and accents don't matter"}
 {easyTerm("Latency")} and {easyTerm("LATENCY")} both find the same definition. The term is displayed exactly as you typed it, so it fits the sentence around it.
@@ -877,22 +781,16 @@ The registry is filled when `src/custom/variables` is loaded. If a term you defi
 
 Call `easyTerm` in any MDX expression:
 
-<Tabs
-    tabs={[
-        {
-            label: "Exemple",
-            content: <p>Hover {easyTerm("latency")} to read its definition.</p>,
-        },
-        {
-            label: "Code",
-            content: (
-                <Code type="bloc" lang="mdx">
-                    {`Hover { easyTerm('latency') } to read its definition.`}
-                </Code>
-            ),
-        },
-    ]}
-/>
+<Tabs>
+    <Tabs.Item label="Exemple">
+        Hover { easyTerm("latency") } to read its definition.
+    </Tabs.Item>
+    <Tabs.Item label="Code">
+        ```mdx
+        Hover { easyTerm('latency') } to read its definition.
+        ```
+    </Tabs.Item>
+</Tabs>
 
 ### Matching
 
@@ -901,22 +799,16 @@ Call `easyTerm` in any MDX expression:
 - **Extra spaces** are ignored: `easyTerm('  Time   out ')` finds the term `time out`. Typographic apostrophes (`’`) match plain ones.
 - **The word you pass is the text shown**, unless you give a second argument. Other forms of a word (a plural, say) aren't matched automatically: pass the term to look up first, and the text to display second.
 
-<Tabs
-    tabs={[
-        {
-            label: "Exemple",
-            content: <p>Many {easyTerm("latency", "latencies")} add up.</p>,
-        },
-        {
-            label: "Code",
-            content: (
-                <Code type="bloc" lang="mdx">
-                    {`Many { easyTerm('latency', 'latencies') } add up.`}
-                </Code>
-            ),
-        },
-    ]}
-/>
+<Tabs>
+    <Tabs.Item label="Exemple">
+        Many { easyTerm("latency", "latencies") } add up.
+    </Tabs.Item>
+    <Tabs.Item label="Code">
+        ```mdx
+        Many { easyTerm('latency', 'latencies') } add up.
+        ```
+    </Tabs.Item>
+</Tabs>
 
 ### Nesting
 
