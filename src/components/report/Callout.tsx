@@ -5,10 +5,11 @@ import {
   SquareExclamationPoint,
   StickyNote,
   TriangleAlert,
-} from 'lucide-react';
-import type { ComponentType, ReactNode } from 'react';
+} from "lucide-react";
+import type { ComponentType, ReactNode } from "react";
 
-type CalloutType = 'info' | 'tip' | 'note' | 'warning' | 'caution' | 'important';
+type CalloutType =
+  "info" | "tip" | "note" | "warning" | "caution" | "important";
 
 export type CalloutProps = {
   type?: CalloutType;
@@ -21,44 +22,46 @@ type CalloutConfig = {
   Icon: ComponentType<{
     size?: number;
     strokeWidth?: number;
-    'aria-hidden'?: boolean;
+    "aria-hidden"?: boolean;
   }>;
 };
 
 const CALLOUT_CONFIG: Record<CalloutType, CalloutConfig> = {
   info: {
-    title: 'Info',
+    title: "Info",
     Icon: InfoIcon,
   },
   tip: {
-    title: 'Tip',
+    title: "Tip",
     Icon: Lightbulb,
   },
   note: {
-    title: 'Note',
+    title: "Note",
     Icon: StickyNote,
   },
   warning: {
-    title: 'Warning',
+    title: "Warning",
     Icon: TriangleAlert,
   },
   caution: {
-    title: 'Caution',
+    title: "Caution",
     Icon: SquareExclamationPoint,
   },
   important: {
-    title: 'Important',
+    title: "Important",
     Icon: MessageCircleWarning,
   },
 };
 
-export function Callout({ type = 'note', title, children }: CalloutProps) {
+export function Callout({ type = "note", title, children }: CalloutProps) {
   const { title: defaultTitle, Icon } = CALLOUT_CONFIG[type];
-
-  const isAlert = type === 'warning' || type === 'caution';
+  const isAlert = type === "warning" || type === "caution";
 
   return (
-    <aside className={`callout callout-${type}`} role={isAlert ? 'alert' : undefined}>
+    <aside
+      className={`callout callout-${type}`}
+      role={isAlert ? "alert" : undefined}
+    >
       <div className="callout-heading">
         <Icon size={22} strokeWidth={2.25} aria-hidden />
 
