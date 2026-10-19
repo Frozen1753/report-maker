@@ -13,6 +13,7 @@ import { shikiThemesServerPlugin } from "./scripts/shiki-themes-server-plugin.ts
 import { themeServerPlugin } from "./scripts/theme-server-plugin.ts";
 import remarkHeadingNumbers from "./src/utils/mdx-plugins/remark-heading-numbers.ts";
 import rehypeMdxCodeProps from "rehype-mdx-code-props";
+import rehypeMdxImportMedia from "rehype-mdx-import-media";
 import remarkDirective from "remark-directive";
 import remarkDirectiveRehype from "remark-directive-rehype";
 
@@ -41,7 +42,7 @@ export default defineConfig({
           remarkDirective,
           remarkDirectiveRehype,
         ],
-        rehypePlugins: [rehypeMdxCodeProps],
+        rehypePlugins: [rehypeMdxCodeProps, rehypeMdxImportMedia],
       }),
     },
     react({ include: /\.(jsx|js|mdx|md|tsx|ts)$/ }),

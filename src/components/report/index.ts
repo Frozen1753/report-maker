@@ -2,6 +2,6 @@ export { BeforeAfter } from "./BeforeAfter";
 export { Callout } from "./Callout";
 export { Collapsible } from "./Collapsible";
 export { Mermaid } from "./Mermaid";
-export { Separator } from "./Separator";
+export * from "./Separator";
 export * from "./tabs";
 export { Term } from "./term/Term";

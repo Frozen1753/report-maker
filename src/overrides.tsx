@@ -1,8 +1,7 @@
 import { Children, type ComponentProps, type ReactElement } from "react";
 import { Code } from "./components/code";
-import { Mermaid, Separator } from "./components/report";
+import { Mermaid, Separator, type SeparatorProps } from "./components/report";
 import { Callout, type CalloutProps } from "./components/report/Callout";
-import type { SeparatorProps } from "./components/report/Separator";
 
 // MDX compiles a ```mermaid fence to <pre><code className="language-mermaid">...
 // Intercepting `pre` lets every report.mdx just write plain ```mermaid blocks,

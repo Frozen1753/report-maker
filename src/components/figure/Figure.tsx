@@ -1,10 +1,10 @@
-import { X } from 'lucide-react';
-import { useEffect, useState, type ReactNode } from 'react';
-import { useFigureNumber } from './FigureProvider';
-import { ZoomPan } from './ZoomPan';
+import { X } from "lucide-react";
+import { useEffect, useState, type ReactNode } from "react";
+import { useFigureNumber } from "./FigureProvider";
+import { ZoomPan } from "./ZoomPan";
 
 type FigureProps = {
-  media: ReactNode;
+  children: ReactNode;
   caption?: ReactNode;
   lightbox?: boolean;
   lightboxContent?: ReactNode;
@@ -12,11 +12,11 @@ type FigureProps = {
 };
 
 export function Figure({
-  media,
+  children: media,
   caption,
   lightbox = false,
   lightboxContent,
-  className = '',
+  className = "",
 }: FigureProps) {
   const figureNumber = useFigureNumber();
   const [open, setOpen] = useState(false);
@@ -35,22 +35,22 @@ export function Figure({
     if (!open) return;
 
     function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === 'Escape') {
+      if (event.key === "Escape") {
         closeLightbox();
       }
     }
 
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [open]);
 
   return (
     <>
       <figure
-        className={`figure ${lightbox ? 'clickable' : ''} ${className}`}
+        className={`figure ${lightbox ? "clickable" : ""} ${className}`}
         onClick={openLightbox}
       >
         <div className="figure-media">{media}</div>
@@ -60,7 +60,7 @@ export function Figure({
 
           {caption && (
             <span className="figure-caption">
-              {' — '}
+              {" — "}
               {caption}
             </span>
           )}
@@ -75,7 +75,10 @@ export function Figure({
           aria-label={`Figure ${figureNumber}`}
           onClick={closeLightbox}
         >
-          <div className="figure-lightbox-content" onClick={(event) => event.stopPropagation()}>
+          <div
+            className="figure-lightbox-content"
+            onClick={(event) => event.stopPropagation()}
+          >
             {/* Remounted fresh each time the lightbox opens, so zoom/pan
                             always starts reset — no leftover state from last time. */}
             <ZoomPan>{lightboxContent ?? media}</ZoomPan>

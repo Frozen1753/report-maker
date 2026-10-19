@@ -1,12 +1,9 @@
 import guideAfter from "./assets/guide-placeholder-after.png";
 import guideBefore from "./assets/guide-placeholder-before.png";
-import guideFigure from "./assets/guide-placeholder-figure.png";
-import kiwiGif from "./assets/spinning-kiwi.gif";
 import {
     BeforeAfter,
     Callout,
     Collapsible,
-    Separator,
     Tabs,
     Term,
     Figure,
@@ -250,7 +247,9 @@ Images, gifs, and videos are real imports, not plain string paths — that's wha
 ```mdx
 import myScreenshot from './assets/screenshot.png'
 
-<Figure media={<img src={myScreenshot} alt="..." />} caption="..." />
+<Figure caption="...">
+    <img src={myScreenshot} alt="..." />
+</Figure>
 ```
 
 Feel free to organize the `assets/` folder however you like, grouping files into sub-folders or by naming convention — you just need the right path when importing them.
@@ -323,6 +322,7 @@ type CalloutProps = {
         ```
     </Tabs.Item>
 </Tabs>
+
 Callouts accept any JSX as children, not just text — including other components:
 
 <Tabs>
@@ -330,7 +330,7 @@ Callouts accept any JSX as children, not just text — including other component
         <Callout type="important" title="Complex callout">
             A callout with more than simple `text`.
             <Collapsible title="Hidden message">
-                <img src={kiwiGif} />
+                ![Spinning Kiwi](./assets/spinning-kiwi.gif)
             </Collapsible>
         </Callout>
     </Tabs.Item>
@@ -341,7 +341,7 @@ Callouts accept any JSX as children, not just text — including other component
             A callout with more than simple <Code>text</Code>.
         
             <Collapsible title="Hidden message">
-                <img src={kiwiGif}/>
+                ![Spinning Kiwi](./assets/spinning-kiwi.gif)
             </Collapsible>
         </Callout>
         ```
@@ -429,9 +429,6 @@ A plain rule (equivalent to `---` in Markdown), or a labeled break between secti
 ::separator{label="example"}
 
 <Collapsible title="En savoir plus">
-```mdx bar name="report.mdx"
-import { Separator } from './components/mdx'
-```
 
 ```mdx bar name="Separator.tsx"
 type SeparatorProps = {
@@ -460,7 +457,9 @@ type SeparatorProps = {
         ```
         **OR**
         ```mdx
-        <Separator label="my text here" />
+        import { Separator } from './components/mdx' <-- At the top
+        
+        <Separator label="my text here" /> <-- Where you need it
         ```
     </Tabs.Item>
 </Tabs>
@@ -548,11 +547,7 @@ type BeforeAfterProps = {
 
 An image, gif, or video with a numbered caption, and an optional lightbox (with pinch-to-zoom and drag-to-pan once opened):
 
-<Figure
-    media={<img src={guideFigure} alt="Placeholder figure" />}
-    caption="A placeholder figure — click to open the lightbox."
-    lightbox
-/>
+![A placeholder figure — click to open the lightbox.](./assets/guide-placeholder-figure.png)
 
 <Collapsible title="En savoir plus">
 ```mdx bar name="report.mdx"
