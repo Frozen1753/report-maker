@@ -17,7 +17,7 @@ export function Header({
       <span className="text-text-on-accent text-xl font-bold">{title}</span>
 
       <div
-        className="text-text-on-accent h-10 object-contain"
+        className="text-text-on-accent h-10 content-center object-contain"
         role={logoAlt ? "img" : undefined}
         aria-label={logoAlt || undefined}
       >
