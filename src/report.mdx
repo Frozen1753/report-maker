@@ -1,7 +1,7 @@
 import guideAfter from "./assets/guide-placeholder-after.png";
 import guideBefore from "./assets/guide-placeholder-before.png";
 import {
-    BeforeAfter,
+    Comparison,
     Callout,
     Collapsible,
     Tabs,
@@ -504,41 +504,50 @@ type TabsProps = {
 
 ---
 
-## BeforeAfter
+## Comparison
 
 A toggle between two states — screenshots, code, anything comparable. It's literally a 2-tab `Tabs` underneath, just make sure to wrap images/gifs in `<img>` and videos in `<video controls>`:
 
-<BeforeAfter
-    before={<img src={guideBefore} alt="" />}
-    after={<img src={guideAfter} alt="" />}
-    beforeLabel="Before"
-    afterLabel="After"
-/>
+<Comparison>
+  <Comparison.Left label="Before">
+    <img src={guideBefore} alt="" />
+  </Comparison.Left>
+
+  <Comparison.Right label="After">
+    <img src={guideAfter} alt="" />
+  </Comparison.Right>
+</Comparison>
 
 <Collapsible title="En savoir plus">
 ```mdx bar name="report.mdx"
-import { BeforeAfter } from './components/mdx'
+import { Comparison } from './components/mdx'
 ```
 
-```tsx bar name="BeforeAfter.tsx"
-type BeforeAfterProps = {
-    before: ReactNode;     // shown under the "before" tab
-    after: ReactNode;      // shown under the "after" tab
-    beforeLabel?: string;  // "Before" by default
-    afterLabel?: string;   // "After" by default
+```tsx bar name="Comparison.tsx"
+export type ComparisonProps = {
+    children: ReactNode;
+    className?: string;
+};
+
+export type ComparisonItemProps = {
+    children: ReactNode;
+    label?: string;
 };
 ```
 
 ```tsx
-<BeforeAfter
-  before={<img src={guideBefore} alt="" />}
-  after={<img src={guideAfter} alt="" />}
-  beforeLabel="Before"
-  afterLabel="After"
-/>
+<Comparison>
+  <Comparison.Left label="Before">
+    <img src={guideBefore} alt="" />
+  </Comparison.Left>
+
+  <Comparison.Right label="After">
+    <img src={guideAfter} alt="" />
+  </Comparison.Right>
+</Comparison>
 ```
 
-`before`/`after` accept any JSX, not just images — a `Code` block on each side works just as well for comparing two versions of a snippet.
+`left`/`right` accept any JSX, not just images — a `Code` block on each side works just as well for comparing two versions of a snippet.
 </Collapsible>
 
 ---

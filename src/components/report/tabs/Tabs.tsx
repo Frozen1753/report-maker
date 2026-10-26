@@ -1,5 +1,4 @@
 import React, { useId, useRef, useState, type KeyboardEvent } from "react";
-import { TabItem } from "./TabItem";
 import type { TabItemProps, TabsProps } from "./types";
 
 export function Tabs({
@@ -11,18 +10,11 @@ export function Tabs({
   const tabsId = useId();
   const buttonRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
-  // Extract and validate direct child Tab.Item props
+  // Extract direct child Tab.Item props
   const tabItems: TabItemProps[] = [];
   React.Children.forEach(children, (child) => {
     if (React.isValidElement(child)) {
-      const childType = child.type as any;
-      if (childType === TabItem || childType?.name === "TabItem") {
-        tabItems.push(child.props as TabItemProps);
-      } else {
-        console.warn(
-          "Tabs component only accepts <Tab.Item> as direct children.",
-        );
-      }
+      tabItems.push(child.props as TabItemProps);
     }
   });
 
