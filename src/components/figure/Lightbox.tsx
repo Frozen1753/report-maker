@@ -1,3 +1,5 @@
+import styles from "./Lightbox.module.css";
+
 import { X } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 import { ZoomPan } from "./ZoomPan";
@@ -19,21 +21,21 @@ export function Lightbox({ label, onClose, children }: LightboxProps) {
 
     return (
         <div
-            className="figure-lightbox"
+            className={styles.overlay}
             role="dialog"
             aria-modal="true"
             aria-label={label}
             onClick={onClose}
         >
             <div
-                className="figure-lightbox-content"
+                className={styles.content}
                 onClick={(event) => event.stopPropagation()}
             >
                 <ZoomPan>{children}</ZoomPan>
 
                 <button
                     type="button"
-                    className="figure-lightbox-close"
+                    className={styles.close}
                     onClick={onClose}
                     aria-label="Close figure"
                 >

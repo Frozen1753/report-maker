@@ -1,3 +1,5 @@
+import styles from "./Figure.module.css";
+
 import React, { useCallback, useState, type ReactNode } from "react";
 import { Lightbox } from "./Lightbox";
 import { FigureCaption, FigureLightbox, FigureMedia } from "./parts";
@@ -49,18 +51,15 @@ export function Figure({
     <>
       <figure
         id={id}
-        className={`figure ${hasLightbox ? "clickable" : ""} ${className}`}
+        className={`${styles.figure} ${hasLightbox ? styles.clickable : ""} ${className}`}
         onClick={hasLightbox ? () => setOpen(true) : undefined}
       >
-        <div className="figure-media">{media}</div>
+        <div className={styles.media}>{media}</div>
 
-        <figcaption>
-          <span className="figure-label">{label}</span>
+        <figcaption className={styles.figcaption}>
+          <span className={styles.label}>{label}</span>
           {caption && (
-            <span className="figure-caption">
-              {" — "}
-              {caption}
-            </span>
+            <span>{" — "}{caption}</span>
           )}
         </figcaption>
       </figure>
