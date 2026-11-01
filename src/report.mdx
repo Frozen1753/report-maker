@@ -556,7 +556,14 @@ export type ComparisonItemProps = {
 
 An image, gif, or video with a numbered caption, and an optional lightbox (with pinch-to-zoom and drag-to-pan once opened):
 
-![A placeholder figure — click to open the lightbox.](./assets/guide-placeholder-figure.png)
+<Figure>
+    <Figure.Media>
+        ![A placeholder figure — click to open the lightbox.](./assets/guide-placeholder-figure.png)
+    </Figure.Media>
+    <Figure.Lightbox>
+        Bonjour
+    </Figure.Lightbox>
+</Figure>
 
 <Collapsible title="En savoir plus">
 ```mdx bar name="report.mdx"
