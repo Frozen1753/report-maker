@@ -1,15 +1,16 @@
 import React, { useCallback, useState, type ReactNode } from "react";
-import { useFigureNumber } from "./FigureProvider";
 import { Lightbox } from "./Lightbox";
 import { FigureCaption, FigureLightbox, FigureMedia } from "./parts";
 import type { FigurePartProps, FigureProps } from "./types";
 
 export function Figure({
   children,
+  id,
+  number,
   lightbox = false,
   className = "",
 }: FigureProps) {
-  const figureNumber = useFigureNumber();
+  const label = number ? `Figure ${number}` : "Figure";
   const [open, setOpen] = useState(false);
   const close = useCallback(() => setOpen(false), []);
 
@@ -47,13 +48,14 @@ export function Figure({
   return (
     <>
       <figure
+        id={id}
         className={`figure ${hasLightbox ? "clickable" : ""} ${className}`}
         onClick={hasLightbox ? () => setOpen(true) : undefined}
       >
         <div className="figure-media">{media}</div>
 
         <figcaption>
-          <span className="figure-label">Figure {figureNumber}</span>
+          <span className="figure-label">{label}</span>
           {caption && (
             <span className="figure-caption">
               {" — "}
@@ -64,7 +66,7 @@ export function Figure({
       </figure>
 
       {open && (
-        <Lightbox label={`Figure ${figureNumber}`} onClose={close}>
+        <Lightbox label={label} onClose={close}>
           {lightboxContent ?? media}
         </Lightbox>
       )}

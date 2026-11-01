@@ -3,8 +3,6 @@
 - [ ] Project (ReportMaker)
   - [ ] Sort files
   - [ ] Remove tailwind for module.css files
-- [x] `<TableOfContents items={toc} />`
-  - [ ] Toc for figures
 - [ ] `<Collapsible title="...">`
   - [ ] Markdown syntax
   - [ ] Fix inner collapsible arrow animation not working

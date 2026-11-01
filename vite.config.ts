@@ -18,6 +18,7 @@ import { mermaidPlugin, remarkMermaidCollect } from './scripts/mermaid-plugin.ts
 import { shikiPlugin } from './scripts/shiki-plugin.ts';
 import { shikiThemesServerPlugin } from "./scripts/shiki-themes-server-plugin.ts";
 import { themeServerPlugin } from "./scripts/theme-server-plugin.ts";
+import remarkFigures from "./src/utils/mdx-plugins/remark-figures.ts";
 import remarkHeadingNumbers from "./src/utils/mdx-plugins/remark-heading-numbers.ts";
 
 // Set by scripts/build-report.mjs (see package.json "build:*" scripts):
@@ -57,6 +58,7 @@ import type { Options as MdxOptions } from '@mdx-js/rollup';
 const remarkPlugins: MdxOptions['remarkPlugins'] = [
   remarkGfm,
   remarkHeadingNumbers,
+  remarkFigures,
   remarkDirective,
   remarkDirectiveRehype,
   remarkMermaidCollect,

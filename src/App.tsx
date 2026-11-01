@@ -1,15 +1,15 @@
 import ReportMakerIcon from "./assets/report-maker_icon.svg?react";
 import { CoverPage } from "./components/cover-page/CoverPage";
 import { ExportPanel } from "./components/export-panel/ExportPanel";
-import { FigureProvider } from "./components/figure/FigureProvider";
 import { Header } from "./components/header/Header";
-import { ThemeToggle } from "./components/theme-toggle/ThemeToggle";
 import { ThemePanel } from "./components/theme-panel/ThemePanel";
+import { ThemeToggle } from "./components/theme-toggle/ThemeToggle";
+import { ListOfFigures } from "./components/toc/ListOfFigures";
 import { TableOfContent } from "./components/toc/TableOfContent";
 import { TopButton } from "./components/top-button/TopButton";
-import Report, { toc } from "./report.mdx";
 import "./custom/variables";
 import { mdxComponents } from "./overrides";
+import Report, { figures, toc } from "./report.mdx";
 
 export default function App() {
   return (
@@ -37,11 +37,10 @@ export default function App() {
         />
 
         <TableOfContent items={toc} />
+        <ListOfFigures items={figures} />
 
         <div className="content">
-          <FigureProvider>
-            <Report components={mdxComponents} />
-          </FigureProvider>
+          <Report components={mdxComponents} />
         </div>
       </main>
 
