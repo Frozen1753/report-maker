@@ -59,7 +59,7 @@ export function Figure({
         <figcaption className={styles.figcaption}>
           <span className={styles.label}>{label}</span>
           {caption && (
-            <span>{" — "}{caption}</span>
+            <span>{caption}</span>
           )}
         </figcaption>
       </figure>
