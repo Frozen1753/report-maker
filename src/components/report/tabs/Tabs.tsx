@@ -1,22 +1,27 @@
-import React, { useId, useRef, useState, type KeyboardEvent } from "react";
-import type { TabItemProps, TabsProps } from "./types";
+import { useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import { createSlot, readSlots } from "../../../utils/components/slots";
+import styles from "./Tabs.module.css";
 
-export function Tabs({
-  children,
-  defaultActive = 0,
-  className = "",
-}: TabsProps) {
+export type TabItemProps = {
+  label: ReactNode;
+  children: ReactNode;
+  disabled?: boolean;
+};
+
+export type TabsProps = {
+  children: ReactNode;
+  defaultActive?: number;
+  className?: string;
+};
+
+const Item = createSlot<TabItemProps>("Tabs.Item");
+
+function TabsRoot({ children, defaultActive = 0, className = "" }: TabsProps) {
   const [activeIndex, setActiveIndex] = useState(defaultActive);
   const tabsId = useId();
   const buttonRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
-  // Extract direct child Tab.Item props
-  const tabItems: TabItemProps[] = [];
-  React.Children.forEach(children, (child) => {
-    if (React.isValidElement(child)) {
-      tabItems.push(child.props as TabItemProps);
-    }
-  });
+  const tabItems = readSlots(children, [Item], "Tabs").map(({ props }) => props);
 
   const getNextEnabledIndex = (index: number, direction: 1 | -1): number => {
     let nextIndex = index;
@@ -74,9 +79,9 @@ export function Tabs({
   const activePanelId = `${tabsId}-panel-${activeIndex}`;
 
   return (
-    <div className={`tabs ${className}`}>
+    <div className={`${styles.tabs} ${className}`}>
       {/* Tab Triggers Header */}
-      <div className="tabs-list" role="tablist" aria-label="Content sections">
+      <div className={styles.tabslist} role="tablist" aria-label="Content sections">
         {tabItems.map((tab, index) => {
           const tabId = `${tabsId}-tab-${index}`;
           const panelId = `${tabsId}-panel-${index}`;
@@ -91,7 +96,7 @@ export function Tabs({
               id={tabId}
               type="button"
               role="tab"
-              className={`tabs-trigger ${isActive ? "active" : ""}`}
+              className={`${styles.tabstrigger} ${isActive ? styles.active : ""}`}
               aria-selected={isActive}
               aria-controls={panelId}
               tabIndex={isActive ? 0 : -1}
@@ -108,7 +113,7 @@ export function Tabs({
       {/* Active Tab Content Panel */}
       <div
         id={activePanelId}
-        className="tabs-panel"
+        className={styles.tabspanel}
         role="tabpanel"
         aria-labelledby={activeTabId}
         tabIndex={0}
@@ -118,3 +123,5 @@ export function Tabs({
     </div>
   );
 }
+
+export const Tabs = Object.assign(TabsRoot, { Item });
