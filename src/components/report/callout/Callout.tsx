@@ -8,6 +8,8 @@ import {
 } from "lucide-react";
 import type { ComponentType, ReactNode } from "react";
 
+import styles from "./Callout.module.css";
+
 type CalloutType =
   "info" | "tip" | "note" | "warning" | "caution" | "important";
 
@@ -53,22 +55,31 @@ const CALLOUT_CONFIG: Record<CalloutType, CalloutConfig> = {
   },
 };
 
+const CALLOUT_VARIANT_CLASS: Record<CalloutType, string> = {
+  info: styles["callout-info"],
+  tip: styles["callout-tip"],
+  note: styles["callout-note"],
+  warning: styles["callout-warning"],
+  caution: styles["callout-caution"],
+  important: styles["callout-important"],
+};
+
 export function Callout({ type = "note", title, children }: CalloutProps) {
   const { title: defaultTitle, Icon } = CALLOUT_CONFIG[type];
   const isAlert = type === "warning" || type === "caution";
 
   return (
     <aside
-      className={`callout callout-${type}`}
+      className={`${styles.callout} ${CALLOUT_VARIANT_CLASS[type]}`}
       role={isAlert ? "alert" : undefined}
     >
-      <div className="callout-heading">
+      <div className={styles["callout-heading"]}>
         <Icon size={22} strokeWidth={2.25} aria-hidden />
 
-        <div className="callout-title">{title ?? defaultTitle}</div>
+        <div className={styles["callout-title"]}>{title ?? defaultTitle}</div>
       </div>
 
-      <div className="callout-body">{children}</div>
+      <div className={styles["callout-body"]}>{children}</div>
     </aside>
   );
 }

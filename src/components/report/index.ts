@@ -1,5 +1,5 @@
-export { Callout } from "./Callout";
-export { Collapsible } from "./Collapsible";
+export { Callout } from "./callout/Callout";
+export { Collapsible } from "./collapsible/Collapsible";
 export * from "./comparison";
 export * from "./figure";
 export { Mermaid } from "./Mermaid";
