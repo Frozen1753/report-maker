@@ -1,3 +1,5 @@
+import styles from "./toc.module.css";
+
 import type { FigureEntry } from '../../utils/mdx-plugins/remark-figures';
 
 type ListOfFiguresProps = {
@@ -12,13 +14,13 @@ export function ListOfFigures({ title = 'Liste des figures', items }: ListOfFigu
         <>
             <h1>{title}</h1>
 
-            <nav className="toc" aria-label={title}>
-                <ul className="toc__list">
+            <nav className={styles.toc} aria-label={title}>
+                <ul className={styles.list}>
                     {items.map((item) => (
-                        <li key={item.id} className="toc__item">
-                            <div className="toc__row">
-                                <a href={`#${item.id}`} className="toc__link">
-                                    <span className="toc__number">Figure {item.number} :</span>
+                        <li key={item.id} className={styles.item}>
+                            <div className={styles.row}>
+                                <a href={`#${item.id}`} className={styles.link}>
+                                    <span className={styles.number}>Figure {item.number} :</span>
                                     {item.caption && <span>{item.caption}</span>}
                                 </a>
                             </div>

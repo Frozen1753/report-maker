@@ -1,3 +1,5 @@
+import styles from "./toc.module.css";
+
 import { ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 
@@ -54,12 +56,12 @@ function TocItem({ item, expandedItems, toggleItem }: TocItemProps) {
   const isExpanded = item.depth === 1 || expandedItems.has(item.id);
 
   return (
-    <li className={`toc__item lvl${item.depth}`}>
-      <div className="toc__row">
+    <li className={`${styles.item} ${styles[`lvl${item.depth}`]}`}>
+      <div className={styles.row}>
         {canExpand ? (
           <button
             type="button"
-            className={`toc__toggle ${isExpanded ? 'is-expanded' : ''}`}
+            className={`${styles.toggle} ${isExpanded ? styles.expanded : ""}`}
             onClick={() => toggleItem(item.id)}
             aria-expanded={isExpanded}
             aria-label={isExpanded ? `Réduire ${item.text}` : `Développer ${item.text}`}
@@ -67,17 +69,17 @@ function TocItem({ item, expandedItems, toggleItem }: TocItemProps) {
             <ChevronRight size={18} strokeWidth={2.5} />
           </button>
         ) : (
-          <span className="toc__toggle-placeholder" aria-hidden="true" />
+          <span className={styles.togglePlaceholder} aria-hidden="true" />
         )}
 
-        <a href={`#${item.id}`} className="toc__link">
-          <span className="toc__number">{item.number}</span>
+        <a href={`#${item.id}`} className={styles.link}>
+          <span className={styles.number}>{item.number}</span>
           <span>{item.text}</span>
         </a>
       </div>
 
       {hasChildren && isExpanded && (
-        <ul className="toc__children">
+        <ul className={styles.children}>
           {item.children.map((child) => (
             <TocItem
               key={child.id}
@@ -116,8 +118,8 @@ export function TableOfContent({ title = 'Sommaire', items }: TableOfContentProp
     <>
       <h1>{title}</h1>
 
-      <nav className="toc" aria-label="Table des matières">
-        <ul className="toc__list">
+      <nav className={styles.toc} aria-label="Table des matières">
+        <ul className={styles.list}>
           {tree.map((item) => (
             <TocItem
               key={item.id}
