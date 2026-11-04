@@ -2,7 +2,7 @@ import styles from "./Lightbox.module.css";
 
 import { X } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
-import { ZoomPan } from "./ZoomPan";
+import { ZoomPan } from "./zoom-pan/ZoomPan";
 
 type LightboxProps = {
     label: string;

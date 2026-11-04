@@ -1,3 +1,2 @@
-export * from './report';
 export * from './code';
-export * from './figure';
+export * from './report';
