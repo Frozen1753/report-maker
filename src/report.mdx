@@ -7,6 +7,7 @@ import {
     Tabs,
     Term,
     Figure,
+    Link
 } from "./components/mdx";
 
 # Introduction
@@ -265,6 +266,68 @@ Feel free to organize the `assets/` folder however you like, grouping files into
 # Components
 
 Each component below shows a live example first. Look inside its "En savoir plus" for the full prop list and more variants.
+
+## Link
+
+Use `Link` for internal references and external URLs. Internal links open in the current tab; external links open in a new tab.
+
+```mdx
+<Link href="#link">Link to this document section</Link>
+```
+
+You can also use the directive syntax:
+
+```mdx
+:::link{href="#link"}
+Link to this document section
+:::
+```
+
+Or place a link directly within a sentence:
+
+```mdx
+You can put a :link[link]{href="#link"} in the middle of text.
+```
+
+Standard Markdown links work too:
+
+```md
+[Link to this document section](#link)
+```
+
+<Collapsible title="En savoir plus">
+
+Import `Link` when you want to use it as a JSX component:
+
+```mdx
+import { Link } from "./components/mdx";
+```
+
+Its `href` determines how the link behaves:
+
+- **Internal links**, such as `#getting-started` or `/guide`, open in the current tab.
+- **External links**, such as `https://example.com`, open in a new tab with `noopener noreferrer`.
+
+`Link` also accepts standard anchor attributes, such as `className` and `aria-label`.
+
+<Tabs>
+  <Tabs.Item label="Exemple">
+    <Link href="https://example.com" aria-label="Visit Example.com">
+      Visit Example.com
+    </Link>
+  </Tabs.Item>
+  <Tabs.Item label="Code">
+    ```mdx
+    <Link href="https://example.com" aria-label="Visit Example.com">
+      Visit Example.com
+    </Link>
+    ```
+  </Tabs.Item>
+</Tabs>
+
+Standard Markdown links like `[label](href)` are automatically rendered using `Link`, so internal and external links get the same behavior without extra syntax.
+
+</Collapsible>
 
 ## Callout
 

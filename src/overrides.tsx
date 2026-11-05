@@ -4,17 +4,15 @@ import {
   Code,
   GlossaryProvider,
   GlossaryTerm,
+  Link,
   Mermaid,
   Separator,
   type CalloutProps,
   type GlossaryTermProps,
-  type SeparatorProps
+  type LinkProps,
+  type SeparatorProps,
 } from "./components/report";
 import { terms } from "./custom/glossary";
-
-// MDX compiles a ```mermaid fence to <pre><code className="language-mermaid">...
-// Intercepting `pre` lets every report.mdx just write plain ```mermaid blocks,
-// no manual <Mermaid chart="..."> needed.
 
 function Pre({ children, ...meta }: ComponentProps<"pre">) {
   const child = Children.only(children) as ReactElement<{
@@ -53,4 +51,7 @@ export const mdxComponents = {
   separator: (props: SeparatorProps) => <Separator {...props} />,
   callout: (props: CalloutProps) => <Callout {...props} />,
   term: (props: GlossaryTermProps) => <GlossaryTerm {...props} />,
+  a: ({ href, ...props }: ComponentProps<"a">) =>
+    href ? <Link href={href} {...props} /> : <a {...props} />,
+  link: (props: LinkProps) => <Link {...props} />
 };
