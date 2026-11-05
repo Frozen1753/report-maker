@@ -27,6 +27,7 @@ import {
   type MouseEvent,
   type ReactNode,
 } from 'react';
+import styles from './Tooltip.module.css';
 
 const DEFAULT_OPEN_DELAY_MS = 300;
 const DEFAULT_CLOSE_DELAY_MS = 100;
@@ -170,7 +171,7 @@ function TooltipNode({
           <div
             ref={refs.setFloating}
             style={floatingStyles}
-            className="z-500 box-border max-w-[min(20rem,calc(100vw-1rem))] rounded-md border-[3px] border-border bg-bg-surface px-3 py-2 text-sm leading-[1.4] text-text shadow-[0_4px_12px_rgb(0_0_0/0.25)] animate-[fade-in_120ms_ease-out] motion-reduce:animate-none data-pinned:border-border-strong"
+            className={styles.tooltip}
             data-pinned={pinned || undefined}
             {...getFloatingProps(pinHandlers)}
           >

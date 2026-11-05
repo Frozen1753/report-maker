@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import styles from './Term.module.css';
 import { Tooltip, type TooltipProps } from './Tooltip';
 
 export interface TermProps extends Omit<TooltipProps, 'content' | 'className'> {
@@ -6,11 +7,5 @@ export interface TermProps extends Omit<TooltipProps, 'content' | 'className'> {
 }
 
 export function Term({ tooltip, ...rest }: TermProps) {
-  return (
-    <Tooltip
-      content={tooltip}
-      className="underline decoration-dotted decoration-primary decoration-3 underline-offset-4 cursor-help"
-      {...rest}
-    />
-  );
+  return <Tooltip content={tooltip} className={styles.term} {...rest} />;
 }
