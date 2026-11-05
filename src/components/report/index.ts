@@ -6,5 +6,5 @@ export * from "./figure";
 export { Mermaid } from "./Mermaid";
 export * from "./separator/Separator";
 export * from "./tabs";
-export { Term } from "./term/Term";
+export * from "./term";
 

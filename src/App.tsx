@@ -7,7 +7,6 @@ import { ThemeToggle } from "./components/theme-toggle/ThemeToggle";
 import { ListOfFigures } from "./components/toc/ListOfFigures";
 import { TableOfContent } from "./components/toc/TableOfContent";
 import { TopButton } from "./components/top-button/TopButton";
-import "./custom/variables";
 import { mdxComponents } from "./overrides";
 import Report, { figures, toc } from "./report.mdx";
 

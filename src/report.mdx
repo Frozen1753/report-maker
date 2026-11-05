@@ -8,7 +8,6 @@ import {
     Term,
     Figure,
 } from "./components/mdx";
-import { easyTerm } from "./helpers/easy-term";
 
 # Introduction
 
@@ -671,7 +670,7 @@ Diagrams render client-side via the `mermaid` package directly, rather than thro
 
 ## Term
 
-An inline word with a tooltip attached — for definitions, jargon, or anything a reader might want explained without leaving the sentence. It's drawn with a dotted underline: hover { easyTerm('latency') } (or Tab to it) and the tooltip appears after a short delay.
+An inline word with a tooltip attached — for definitions, jargon, or anything a reader might want explained without leaving the sentence. It's drawn with a dotted underline: hover :term[latency] (or Tab to it) and the tooltip appears after a short delay.
 
 :::callout{type="tip" title="Pin a tooltip"}
 Hover a term, then **middle-click** it or its tooltip to pin it open — its border gets stronger to show it. Click anywhere else to close it.
@@ -753,29 +752,19 @@ Pinning is mouse-only, so keyboard and touch readers can't pin a tooltip. A tool
 
 # Helpers
 
-Components render from JSX tags. Helpers are plain functions you call from an MDX expression, like `{ easyTerm('latency') }`. Most read definitions you write once in `src/custom/`, so the report file stays about content. They ship with Report Maker, so there's nothing to install.
+Components render from JSX tags. Helpers are plain functions you call from an MDX expression, like `:term[Latency]`. Most read definitions you write once in `src/custom/`, so the report file stays about content. They ship with Report Maker, so there's nothing to install.
 
 ---
 
 ## Easy Terms
 
-Writing `<Term tooltip={...}>` every time gets heavy once the same word shows up in several places. `easyTerm` lets you define a term once, then use it anywhere with a single call: hover { easyTerm('latency') } (or Tab to it) and its tooltip appears, exactly like a regular `Term`.
+Writing `<Term tooltip={...}>` every time gets heavy once the same word shows up in several places. `easyTerm` lets you define a term once, then use it anywhere with a single call: hover :term[latency] (or Tab to it) and its tooltip appears, exactly like a regular `Term`.
 
 :::callout{type="tip" title="Case and accents don't matter"}
-{easyTerm("Latency")} and {easyTerm("LATENCY")} both find the same definition. The term is displayed exactly as you typed it, so it fits the sentence around it.
+:term[Latency] and :term[LATENCY] both find the same definition. The term is displayed exactly as you typed it, so it fits the sentence around it.
 :::
 
 <Collapsible title="En savoir plus">
-Add the import at the top of `report.mdx`, next to the others:
-
-```mdx bar name="report.mdx"
-import { easyTerm } from './helpers/easy-term'
-```
-
-```tsx bar name="easy-term.tsx"
-function addTerm(word: string, tooltip: ReactNode): void;                  // register a term
-function easyTerm(keyOrWord: string, displayWord?: string): ReactNode;     // render it
-```
 
 ### Defining a term
 
@@ -797,29 +786,29 @@ Call `easyTerm` in any MDX expression:
 
 <Tabs>
     <Tabs.Item label="Exemple">
-        Hover { easyTerm("latency") } to read its definition.
+        Hover :term[latency] to read its definition.
     </Tabs.Item>
     <Tabs.Item label="Code">
         ```mdx
-        Hover { easyTerm('latency') } to read its definition.
+        Hover :term[latency] to read its definition.
         ```
     </Tabs.Item>
 </Tabs>
 
 ### Matching
 
-- **Case** is ignored: `easyTerm('Latency')` and `easyTerm('LATENCY')` are the same term.
+- **Case** is ignored: `:term[Latency]` and `:term[LATENCY]` are the same term.
 - **Accents and ligatures** are ignored: a term defined as `événement` is found by `Evenement`, and `cœur` by `coeur`.
-- **Extra spaces** are ignored: `easyTerm('  Time   out ')` finds the term `time out`. Typographic apostrophes (`’`) match plain ones.
+- **Extra spaces** are ignored: `:term[ Time   out ]` finds the term `time out`. Typographic apostrophes (`’`) match plain ones.
 - **The word you pass is the text shown**, unless you give a second argument. Other forms of a word (a plural, say) aren't matched automatically: pass the term to look up first, and the text to display second.
 
 <Tabs>
     <Tabs.Item label="Exemple">
-        Many { easyTerm("latency", "latencies") } add up.
+        Many :term[latencies]{id=latency} add up.
     </Tabs.Item>
     <Tabs.Item label="Code">
         ```mdx
-        Many { easyTerm('latency', 'latencies') } add up.
+        Many :term[latencies]{id=latency} add up.
         ```
     </Tabs.Item>
 </Tabs>
@@ -828,10 +817,10 @@ Call `easyTerm` in any MDX expression:
 
 A definition can use other terms, just like nested `Term` components:
 
-```tsx bar name="src/custom/variables/term.tsx"
-addTerm('network', <>Computers talking to each other through {easyTerm('request', 'requests')}.</>);
-addTerm('request', <>A request is a {easyTerm('network')} thing.</>);
-addTerm('latency', <>Time between a {easyTerm('request')} and its response.</>);
+```tsx bar name="src/custom/glossary.tsx"
+network: <>Computers talking to each other through <GlossaryTerm id="request">requests</GlossaryTerm>.</>,
+request: <>A request is a <GlossaryTerm id="network" /> thing.</>,
+latency: <>Time between a <GlossaryTerm id="request" /> and its response.</>,
 ```
 
 :::callout{type="note" title="Order doesn't matter"}
