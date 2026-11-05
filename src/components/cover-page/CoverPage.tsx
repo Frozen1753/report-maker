@@ -1,4 +1,5 @@
-import type { ReactNode } from 'react';
+import type { ReactNode } from "react";
+import styles from "./CoverPage.module.css";
 
 type CoverMedia = {
   content: ReactNode;
@@ -22,18 +23,20 @@ type CoverPageProps = {
 };
 
 export function CoverPage({
-  title = 'My report',
+  title = "My report",
   coverMedia,
-  date = new Date().toLocaleDateString(navigator.languages, { dateStyle: 'long' }),
+  date = new Date().toLocaleDateString(navigator.languages, {
+    dateStyle: "long",
+  }),
   authors = [],
   affiliations = [],
 }: CoverPageProps) {
   return (
-    <section className="cover-page" aria-labelledby="cover-title">
+    <section className={styles["cover-page"]} aria-labelledby="cover-title">
       <h1 id="cover-title">{title}</h1>
 
       {coverMedia && (
-        <div className="cover-media">
+        <div className={styles["cover-media"]}>
           {coverMedia.href ? (
             <a
               href={coverMedia.href}
@@ -49,20 +52,27 @@ export function CoverPage({
         </div>
       )}
 
-      <div className="cover-authors">
-        <time className="info-line" dateTime={date}>
+      <div className={styles["cover-authors"]}>
+        <time className={styles["info-line"]} dateTime={date}>
           {date}
         </time>
 
         {authors.map((author, index) => {
-          const fullName = [author.firstName, author.lastName].filter(Boolean).join(' ');
+          const fullName = [author.firstName, author.lastName]
+            .filter(Boolean)
+            .join(" ");
 
-          const displayName = author.alias ? `${fullName} (${author.alias})` : fullName;
+          const displayName = author.alias
+            ? `${fullName} (${author.alias})`
+            : fullName;
 
           if (!displayName) return null;
 
           return (
-            <div className="info-line authors" key={author.href ?? index}>
+            <div
+              className={`${styles["info-line"]} ${styles.authors}`}
+              key={author.href ?? index}
+            >
               {author.href ? (
                 <a href={author.href} target="_blank" rel="noopener noreferrer">
                   {displayName}
@@ -75,7 +85,7 @@ export function CoverPage({
         })}
 
         {affiliations.map((affiliation, index) => (
-          <div className="info-line" key={`${affiliation}-${index}`}>
+          <div className={styles["info-line"]} key={`${affiliation}-${index}`}>
             {affiliation}
           </div>
         ))}
