@@ -1,13 +1,14 @@
 import { PaintRoller } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { applyTheme, resolveIsDark } from "../../utils/theme/theme";
+import { Panel } from "../panel/Panel";
 import {
   DEFAULT_SHIKI_DARK,
   DEFAULT_SHIKI_LIGHT,
   previewShikiThemes,
   SHIKI_DARK_VAR,
   SHIKI_LIGHT_VAR,
-} from "../code/shiki-theme-vars";
-import { Panel } from "../panel/Panel";
+} from "../report/code/shiki-theme-vars";
 import {
   formatColor,
   isColor,
@@ -15,7 +16,6 @@ import {
   toHex,
   type RGBA,
 } from "./theme-color";
-import { applyTheme, resolveIsDark } from "../../utils/theme/theme";
 
 const MANAGED_SHIKI_VARS = new Set([SHIKI_LIGHT_VAR, SHIKI_DARK_VAR]);
 

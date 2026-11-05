@@ -1,9 +1,10 @@
-export { Callout } from "./callout/Callout";
+export * from "./callout/Callout";
+export { Code } from "./code/Code";
 export { Collapsible } from "./collapsible/Collapsible";
 export * from "./comparison";
 export * from "./figure";
 export { Mermaid } from "./Mermaid";
-export { Separator } from "./separator/Separator";
+export * from "./separator/Separator";
 export * from "./tabs";
 export { Term } from "./term/Term";
 

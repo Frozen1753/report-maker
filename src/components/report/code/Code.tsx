@@ -5,7 +5,7 @@ import {
   type ReactNode
 } from "react";
 import { highlightLive, peekShiki } from "virtual:shiki-runtime";
-import { shikiKey } from "../../utils/shared/shiki-shared";
+import { shikiKey } from "../../../utils/shared/shiki-shared";
 import {
   SHIKI_PREVIEW_EVENT,
   getPersistedShikiThemes,
