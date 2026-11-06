@@ -3,8 +3,6 @@
 ## Features
 
 - [ ] Project (ReportMaker)
-  - [ ] Dev
-    - [ ] `<Link/>`
   - [ ] Remove tailwind for module.css files
     - [X] toc
       - [X] `<ListOfFigures/>`
