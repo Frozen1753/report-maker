@@ -3,7 +3,8 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { visit } from 'unist-util-visit'
 import type { Plugin } from 'vite'
-import { mermaidKey, normalizeChart } from '../src/utils/shared/mermaid-shared.ts'
+import { PATHS } from '../paths.ts'
+import { mermaidKey, normalizeChart } from '../../src/utils/shared/mermaid-shared.ts'
 
 /**
  * Mermaid pre-rendering.
@@ -21,7 +22,7 @@ import { mermaidKey, normalizeChart } from '../src/utils/shared/mermaid-shared.t
 
 const VIRTUAL_ID = 'virtual:mermaid-runtime'
 const RESOLVED_ID = '\0' + VIRTUAL_ID
-const SVG_DIR = 'src/generated/mermaid'
+const SVG_DIR = PATHS.mermaidSvgs
 const KEY_RE = /^[0-9a-f]{14}$/
 
 // ---------------------------------------------------------------------------

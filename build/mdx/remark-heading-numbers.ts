@@ -1,23 +1,16 @@
-import { visit } from 'unist-util-visit';
-import { toString as mdastToString } from 'mdast-util-to-string';
 import GithubSlugger from 'github-slugger';
-import { valueToEstree } from 'estree-util-value-to-estree';
-import type { Root, Heading } from 'mdast';
+import type { Heading, Root } from 'mdast';
+import { toString as mdastToString } from 'mdast-util-to-string';
 import type { Plugin } from 'unified';
+import { visit } from 'unist-util-visit';
+import type { TocEntry } from '../../src/types/mdx-exports.ts';
+import { exportConst } from './export-const.ts';
 
 // Note: `hProperties` is already declared on mdast's `Data` type by
 // mdast-util-to-hast (typed as hast's `Properties`, i.e. string/number/
 // boolean/array values) — no module augmentation needed here. Redeclaring
 // it with an incompatible type (e.g. `Record<string, unknown>`) causes a
 // "subsequent property declarations must have the same type" error.
-
-export interface TocEntry {
-  id: string;
-  depth: number;
-  /** e.g. "2.1" */
-  number: string;
-  text: string;
-}
 
 export interface HeadingNumbersOptions {
   /** Shallowest heading depth to number (default: 1) */
@@ -63,7 +56,9 @@ const remarkHeadingNumbers: Plugin<[HeadingNumbersOptions?], Root> = (options = 
       const id = slugger.slug(text || `section-${number}`);
 
       const data = (node.data ??= {});
+      //@ts-ignore Property 'hProperties' DOES EXIST on type 'HeadingData'
       data.hProperties = {
+        //@ts-ignore
         ...data.hProperties,
         id,
         'data-heading-number': number,
@@ -78,34 +73,7 @@ const remarkHeadingNumbers: Plugin<[HeadingNumbersOptions?], Root> = (options = 
 
     // Inject `export const toc = [...]` as an MDX ESM node so it becomes a
     // real named export of the compiled module.
-    tree.children.unshift({
-      type: 'mdxjsEsm',
-      value: '',
-      data: {
-        estree: {
-          type: 'Program',
-          sourceType: 'module',
-          body: [
-            {
-              type: 'ExportNamedDeclaration',
-              specifiers: [],
-              source: null,
-              declaration: {
-                type: 'VariableDeclaration',
-                kind: 'const',
-                declarations: [
-                  {
-                    type: 'VariableDeclarator',
-                    id: { type: 'Identifier', name: exportName },
-                    init: valueToEstree(toc),
-                  },
-                ],
-              },
-            },
-          ],
-        },
-      },
-    } as never);
+    tree.children.unshift(exportConst(exportName, toc));
 
     file.data.toc = toc;
   };

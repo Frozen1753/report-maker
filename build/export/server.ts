@@ -1,9 +1,10 @@
 import type { Plugin } from 'vite';
 import { spawn } from 'node:child_process';
 import fs from 'node:fs';
-import path from 'node:path';
+import { PATHS, resolvePath } from '../paths.ts';
+import type { ReportBuildMode } from '../modes.ts';
 
-export type ReportBuildMode = 'folder' | 'singlefile' | 'hybrid';
+export type { ReportBuildMode };
 
 export interface ExportRequestBody {
   mode: ReportBuildMode;
@@ -55,7 +56,7 @@ export function exportServerPlugin(): Plugin {
             return;
           }
 
-          const configPath = path.resolve(process.cwd(), 'report.assets.config.json');
+          const configPath = resolvePath('assetsConfig');
           fs.writeFileSync(
             configPath,
             JSON.stringify(
@@ -70,7 +71,7 @@ export function exportServerPlugin(): Plugin {
           );
 
           const mode = payload.mode ?? 'folder';
-          const child = spawn('node', ['scripts/build-report.mjs', mode], {
+          const child = spawn('node', [PATHS.buildScript, mode], {
             cwd: process.cwd(),
             shell: true,
           });

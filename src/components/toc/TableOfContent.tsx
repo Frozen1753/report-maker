@@ -2,8 +2,7 @@ import styles from "./toc.module.css";
 
 import { ChevronRight } from 'lucide-react';
 import { useState } from 'react';
-
-import type { TocEntry } from '../../utils/mdx-plugins/remark-heading-numbers';
+import type { TocEntry } from "../../types/mdx-exports";
 
 type TocEntryWithChildren = TocEntry & {
   children: TocEntryWithChildren[];

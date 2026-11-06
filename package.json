@@ -8,9 +8,9 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "build:folder": "node scripts/build-report.mjs folder",
-    "build:singlefile": "node scripts/build-report.mjs singlefile",
-    "build:hybrid": "node scripts/build-report.mjs hybrid"
+    "build:folder": "node build/build-report.mjs folder",
+    "build:singlefile": "node build/build-report.mjs singlefile",
+    "build:hybrid": "node build/build-report.mjs hybrid"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.20",

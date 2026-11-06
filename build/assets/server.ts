@@ -1,8 +1,9 @@
 import type { Plugin } from 'vite';
 import fs from 'node:fs';
 import path from 'node:path';
+import { resolvePath } from '../paths.ts';
 
-const ASSETS_DIR = path.resolve(process.cwd(), 'src/assets');
+const ASSETS_DIR = resolvePath('assets');
 const MATCH_EXT = new Set(['.png', '.jpg', '.jpeg', '.webp', '.gif', '.mp4', '.mov', '.webm']);
 
 function listRecursively(dir: string, base = ''): string[] {

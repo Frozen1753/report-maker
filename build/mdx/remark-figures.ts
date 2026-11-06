@@ -1,54 +1,16 @@
-import { valueToEstree } from 'estree-util-value-to-estree';
 import type { Root } from 'mdast';
 import type { MdxJsxFlowElement } from 'mdast-util-mdx-jsx';
 import { toString as mdastToString } from 'mdast-util-to-string';
 import type { Plugin } from 'unified';
 import { visit } from 'unist-util-visit';
-
-export interface FigureEntry {
-    id: string;
-    /** e.g. "3" */
-    number: string;
-    /** Texte brut de la légende ("" si absente) */
-    caption: string;
-}
+import type { FigureEntry } from '../../src/types/mdx-exports.ts';
+import { exportConst } from './export-const.ts';
 
 export interface RemarkFiguresOptions {
     /** Nom du composant MDX (default: "Figure") */
     componentName?: string;
     /** Nom de l'export injecté dans le module MDX compilé (default: "figures") */
     exportName?: string;
-}
-
-function exportConst(name: string, value: unknown) {
-    return {
-        type: 'mdxjsEsm',
-        value: '',
-        data: {
-            estree: {
-                type: 'Program',
-                sourceType: 'module',
-                body: [
-                    {
-                        type: 'ExportNamedDeclaration',
-                        specifiers: [],
-                        source: null,
-                        declaration: {
-                            type: 'VariableDeclaration',
-                            kind: 'const',
-                            declarations: [
-                                {
-                                    type: 'VariableDeclarator',
-                                    id: { type: 'Identifier', name },
-                                    init: valueToEstree(value),
-                                },
-                            ],
-                        },
-                    },
-                ],
-            },
-        },
-    } as never;
 }
 
 /**

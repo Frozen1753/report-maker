@@ -1,6 +1,5 @@
+import type { FigureEntry } from "../../types/mdx-exports";
 import styles from "./toc.module.css";
-
-import type { FigureEntry } from '../../utils/mdx-plugins/remark-figures';
 
 type ListOfFiguresProps = {
     title?: string;

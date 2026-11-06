@@ -1,10 +1,10 @@
 import { createProcessor } from '@mdx-js/mdx'
 import fs from 'node:fs'
-import path from 'node:path'
 import postcss from 'postcss'
 import type { Plugin } from 'vite'
-import { normalizeCode, shikiKey } from '../src/utils/shared/shiki-shared.ts'
-import { collectCodeBlocks } from './shiki-extract.ts'
+import { resolvePath } from '../paths.ts'
+import { normalizeCode, shikiKey } from '../../src/utils/shared/shiki-shared.ts'
+import { collectCodeBlocks } from './extract.ts'
 
 /**
  * Shiki pre-highlighting.
@@ -60,8 +60,8 @@ async function precompute(
   remarkPlugins: MdxOptions['remarkPlugins'],
   warn: (message: string) => void,
 ): Promise<Map<string, string>> {
-  const mdxPath = path.resolve(root, 'src/report.mdx')
-  const cssPath = path.resolve(root, 'src/styles/style.css')
+  const mdxPath = resolvePath('report', root)
+  const cssPath = resolvePath('baselineCss', root)
   const result = new Map<string, string>()
 
   // Parse only (no transform): we just need the syntax tree.

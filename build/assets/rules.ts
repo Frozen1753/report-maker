@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { imageSize } from 'image-size';
+import { resolvePath } from '../paths.ts';
 
 export interface AssetExclusionConfig {
   /** File extensions that always stay external, regardless of size, e.g. video/gif */
@@ -11,7 +12,7 @@ export interface AssetExclusionConfig {
   excludeFiles: string[];
 }
 
-const CONFIG_PATH = path.resolve(process.cwd(), 'report.assets.config.json');
+const CONFIG_PATH = resolvePath('assetsConfig');
 
 export const DEFAULT_ASSET_CONFIG: AssetExclusionConfig = {
   excludeExtensions: ['.mp4', '.mov', '.webm', '.gif'],

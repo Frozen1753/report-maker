@@ -1,8 +1,7 @@
 import { Download } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import type { ReportBuildMode } from "../../../build/modes";
 import { Panel } from "../panel/Panel";
-
-type ReportBuildMode = "folder" | "singlefile" | "hybrid";
 
 interface ExportResult {
   ok: boolean;
@@ -15,25 +14,25 @@ const MODE_INFO: {
   label: string;
   description: string;
 }[] = [
-  {
-    value: "folder",
-    label: "Folder",
-    description:
-      "index.html + a separate assets/ folder (default Vite output).",
-  },
-  {
-    value: "singlefile",
-    label: "Single file",
-    description:
-      "Everything — JS, CSS, every image/gif/video — inlined into one .html.",
-  },
-  {
-    value: "hybrid",
-    label: "Hybrid",
-    description:
-      "One .html for JS/CSS, but the assets you exclude below stay in assets/.",
-  },
-];
+    {
+      value: "folder",
+      label: "Folder",
+      description:
+        "index.html + a separate assets/ folder (default Vite output).",
+    },
+    {
+      value: "singlefile",
+      label: "Single file",
+      description:
+        "Everything — JS, CSS, every image/gif/video — inlined into one .html.",
+    },
+    {
+      value: "hybrid",
+      label: "Hybrid",
+      description:
+        "One .html for JS/CSS, but the assets you exclude below stay in assets/.",
+    },
+  ];
 
 const KNOWN_EXTENSIONS = [".gif", ".mp4", ".mov", ".webm"] as const;
 

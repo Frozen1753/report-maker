@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import { execSync } from "node:child_process";
 
 const VALID_MODES = ["folder", "singlefile", "hybrid"];
