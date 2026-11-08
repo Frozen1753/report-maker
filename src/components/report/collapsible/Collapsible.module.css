@@ -1,8 +1,8 @@
 .collapsible {
   --collapsible-border: color-mix(
     in srgb,
-    var(--color-primary) 35%,
-    var(--color-bg-page)
+    var(--c-primary) 35%,
+    var(--c-bg-page)
   );
 
   margin: var(--space-5) 0;
@@ -10,7 +10,7 @@
 
   border: 1px solid var(--collapsible-border);
   border-radius: var(--radius-lg);
-  background: var(--color-bg-surface);
+  background: var(--c-bg-surface);
 
   transition:
     border-color var(--transition-normal),
@@ -18,7 +18,7 @@
 }
 
 .collapsible:hover {
-  border-color: var(--color-primary);
+  border-color: var(--c-primary);
 }
 
 .collapsible[open] {
@@ -32,8 +32,8 @@
 
   padding: 14px var(--space-4);
 
-  background: var(--color-bg-soft);
-  color: var(--color-text);
+  background: var(--c-bg-soft);
+  color: var(--c-text);
 
   cursor: pointer;
   font-weight: 700;
@@ -49,7 +49,7 @@
 .collapsible-chevron {
   display: inline-flex;
   flex: 0 0 auto;
-  color: var(--color-primary);
+  color: var(--c-primary);
   transition: transform var(--transition-normal);
 }
 
@@ -61,7 +61,7 @@
   padding: var(--space-4);
 
   border-top: 1px solid var(--collapsible-border);
-  color: var(--color-text);
+  color: var(--c-text);
   line-height: 1.6;
 }
 

@@ -10,7 +10,7 @@
   padding: 0;
 
   background: none;
-  color: var(--color-primary);
+  color: var(--c-primary);
 
   font-size: 3.5rem;
   font-weight: 800;
@@ -58,16 +58,16 @@
 }
 
 .cover-authors .info-line {
-  color: var(--color-text);
+  color: var(--c-text);
   font-size: 1.2rem;
 }
 
 .cover-authors .authors a {
-  color: var(--color-primary);
+  color: var(--c-primary);
   font-weight: 700;
   text-decoration: none;
 }
 
 .cover-authors .authors a:hover {
-  color: var(--color-secondary);
+  color: var(--c-secondary);
 }

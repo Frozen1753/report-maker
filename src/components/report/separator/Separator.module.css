@@ -1,7 +1,7 @@
 hr.separator {
   margin: var(--space-10) 0;
   border: 0;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid var(--c-border);
 }
 
 .separator-labeled {
@@ -14,11 +14,11 @@ hr.separator {
 .separator-line {
   flex: 1;
   height: 2px;
-  background: var(--color-border);
+  background: var(--c-border);
 }
 
 .separator-label {
-  color: var(--color-primary);
+  color: var(--c-primary);
   font-size: 0.9rem;
   font-weight: 600;
   white-space: nowrap;
