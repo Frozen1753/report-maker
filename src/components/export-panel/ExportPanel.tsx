@@ -1,7 +1,9 @@
 import { Download } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { ReportBuildMode } from "../../../build/modes";
+import { FloatingButton } from "../floating-button";
 import { Panel } from "../panel/Panel";
+import styles from "./ExportPanel.module.css";
 
 interface ExportResult {
   ok: boolean;
@@ -105,15 +107,13 @@ export function ExportPanel() {
 
   return (
     <>
-      <button
-        type="button"
-        className="floating-button"
+      <FloatingButton
         onClick={() => setIsOpen(true)}
         aria-label="Open export panel"
         title="Export report"
       >
         <Download />
-      </button>
+      </FloatingButton>
 
       <Panel
         isOpen={isOpen}
@@ -121,56 +121,45 @@ export function ExportPanel() {
         title="Export report"
         footer={
           <>
-            <button
-              type="button"
-              className="panel-btn panel-btn--secondary"
-              onClick={() => setIsOpen(false)}
-            >
+            <Panel.Button variant="secondary" onClick={() => setIsOpen(false)}>
               Close
-            </button>
-            <button
-              type="button"
-              className="panel-btn panel-btn--primary"
-              onClick={handleExport}
-              disabled={isExporting}
-            >
+            </Panel.Button>
+            <Panel.Button onClick={handleExport} disabled={isExporting}>
               {isExporting ? "Building…" : "Export"}
-            </button>
+            </Panel.Button>
           </>
         }
       >
-        <fieldset className="panel-section">
-          <legend>Build mode</legend>
+        <Panel.Section legend="Build mode">
           {MODE_INFO.map((m) => (
             <label
               key={m.value}
-              className="flex cursor-pointer items-start gap-2.5 py-1.5"
+              className={styles.radio}
             >
               <input
-                className="mt-1.5"
+                className={styles.radioInput}
                 type="radio"
                 name="report-export-mode"
                 value={m.value}
                 checked={mode === m.value}
                 onChange={() => setMode(m.value)}
               />
-              <span className="flex flex-col">
+              <span className={styles.radioText}>
                 <strong>{m.label}</strong>
-                <small className="text-sm opacity-65">{m.description}</small>
+                <small className={styles.description}>{m.description}</small>
               </span>
             </label>
           ))}
-        </fieldset>
+        </Panel.Section>
 
         {mode === "hybrid" && (
-          <fieldset className="panel-section">
-            <legend>Keep external (don't inline)</legend>
+          <Panel.Section legend="Keep external (don't inline)">
 
-            <div className="my-2 flex flex-wrap gap-x-5 gap-y-2">
+            <div className={styles.checkboxRow}>
               {KNOWN_EXTENSIONS.map((ext) => (
                 <label
                   key={ext}
-                  className="flex cursor-pointer items-center gap-1.5 text-sm"
+                  className={styles.checkbox}
                 >
                   <input
                     type="checkbox"
@@ -182,10 +171,10 @@ export function ExportPanel() {
               ))}
             </div>
 
-            <label className="mt-2 flex items-center gap-2 text-sm">
+            <label className={styles.widthRow}>
               Exclude images wider than
               <input
-                className="w-22 px-1.5 py-1"
+                className={styles.widthInput}
                 type="number"
                 min={0}
                 step={100}
@@ -197,14 +186,14 @@ export function ExportPanel() {
 
             {largeAssets.length > 0 && (
               <>
-                <p className="mt-3 text-sm opacity-75">
+                <p className={styles.assetsHint}>
                   Detected gif/video assets — exclude individually:
                 </p>
-                <div className="my-2 flex max-h-32 flex-col flex-wrap gap-x-5 gap-y-2 overflow-y-auto">
+                <div className={styles.assetList}>
                   {largeAssets.map((f) => (
                     <label
                       key={f}
-                      className="flex cursor-pointer items-center gap-1.5 text-sm"
+                      className={styles.checkbox}
                     >
                       <input
                         type="checkbox"
@@ -219,18 +208,18 @@ export function ExportPanel() {
                 </div>
               </>
             )}
-          </fieldset>
+          </Panel.Section>
         )}
 
         {result && (
           <div
-            className={`rounded-lg px-4 py-3 text-sm ${result.ok ? "bg-success/12 text-success" : "bg-error/12 text-error"}`}
+            className={`${styles.result} ${result.ok ? styles.ok : styles.error}`}
           >
             <p>
               {result.ok ? `✓ Built to ${result.outDir}/` : "✗ Build failed"}
             </p>
             {result.log && (
-              <pre className="mt-2 max-h-40 overflow-auto text-xs whitespace-pre-wrap">
+              <pre className={styles.log}>
                 {result.log}
               </pre>
             )}
