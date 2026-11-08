@@ -11,6 +11,7 @@ import {
   getPersistedShikiThemes,
   type ShikiThemePair,
 } from "./shiki-theme-vars";
+import styles from "./Code.module.css";
 
 type CodeProps = {
   type?: "inline" | "bloc";
@@ -120,7 +121,7 @@ export function Code({
   }, [type, code, lang, themePair, precompiled]);
 
   if (type === "inline") {
-    return <code className="code-inline">{children}</code>;
+    return <code className={styles.inline}>{children}</code>;
   }
 
   async function handleCopy() {
@@ -138,18 +139,18 @@ export function Code({
   const html = precompiled ?? liveHtml;
 
   return (
-    <div className={`code-wrapper ${bar ? "has-code-bar" : ""}`}>
+    <div className={`${styles.wrapper} ${bar ? styles.hasBar : ""}`}>
       {bar && (
-        <div className="code-bar">
-          <div className="code-info">
+        <div className={styles.bar}>
+          <div className={styles.info}>
             {name && (
-              <span className="code-name">
+              <span className={styles.name}>
                 {name}
               </span>
             )}
 
             {lang && (
-              <span className="code-language">
+              <span className={styles.language}>
                 {lang}
               </span>
             )}
@@ -158,8 +159,7 @@ export function Code({
           {copy && (
             <button
               type="button"
-              className={`copy-button ${copied ? "copied-button" : ""
-                }`}
+              className={`${styles.copyButton} ${copied ? styles.copied : ""}`}
               onClick={handleCopy}
               aria-label={
                 copied
@@ -184,8 +184,7 @@ export function Code({
       {!bar && copy && (
         <button
           type="button"
-          className={`copy-button-no-bar ${copied ? "copied-button" : ""
-            }`}
+          className={`${styles.copyButtonNoBar} ${copied ? styles.copied : ""}`}
           onClick={handleCopy}
           aria-label={
             copied
@@ -203,11 +202,11 @@ export function Code({
 
       {html ? (
         <div
-          className="code-shiki"
+          className={styles.highlighted}
           dangerouslySetInnerHTML={{ __html: html }}
         />
       ) : (
-        <pre className="code-bloc">
+        <pre>
           <code>{code}</code>
         </pre>
       )}
