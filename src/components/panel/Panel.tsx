@@ -1,6 +1,6 @@
-import { useEffect, useId, type ReactNode } from "react";
 import { X } from "lucide-react";
-import "./Panel.css";
+import { useEffect, useId, type ButtonHTMLAttributes, type ReactNode } from "react";
+import styles from "./Panel.module.css";
 
 interface PanelProps {
   isOpen: boolean;
@@ -9,7 +9,7 @@ interface PanelProps {
   title: string;
   /** Extra header content, rendered between the title and the close button. */
   headerActions?: ReactNode;
-  /** Footer content, typically `.panel-btn` buttons. */
+  /** Footer content, typically <Panel.Button>s. */
   footer: ReactNode;
   /** Any CSS length. Defaults to 30rem. */
   maxWidth?: string;
@@ -21,7 +21,7 @@ interface PanelProps {
  * body and footer. It owns open/close behaviour (backdrop click, Escape) and
  * dialog semantics; callers own the content and the actions.
  */
-export function Panel({
+function PanelRoot({
   isOpen,
   onClose,
   title,
@@ -51,25 +51,25 @@ export function Panel({
     // Escape or the close button, hence role="presentation".
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events
     <div
-      className="fixed inset-0 z-10 flex items-center justify-center bg-black/45 p-4"
+      className={styles.overlay}
       role="presentation"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       <div
-        className="bg-bg-surface text-text max-h-[85vh] w-full overflow-y-auto rounded-xl shadow-2xl"
+        className={styles.dialog}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
         style={{ maxWidth: maxWidth ?? "30rem" }}
       >
-        <header className="border-b-border flex items-center gap-3 border-b border-solid px-5 py-4">
-          <h2 id={titleId} className="panel-title">
+        <header className={styles.header}>
+          <h2 id={titleId} className={styles.title}>
             {title}
           </h2>
           {headerActions}
           <button
             type="button"
-            className="cursor-pointer border-none bg-none text-base opacity-60 hover:opacity-100"
+            className={styles.close}
             onClick={onClose}
             aria-label="Close"
           >
@@ -77,12 +77,44 @@ export function Panel({
           </button>
         </header>
 
-        <div className="flex flex-col gap-5 p-5">{children}</div>
+        <div className={styles.body}>{children}</div>
 
-        <footer className="border-border flex justify-end gap-2.5 border-t border-solid px-5 py-4">
-          {footer}
-        </footer>
+        <footer className={styles.footer}>{footer}</footer>
       </div>
     </div>
   );
 }
+
+/** Bordered group of related fields, with an uppercase legend. */
+function PanelSection({ legend, children }: { legend: string; children: ReactNode }) {
+  return (
+    <fieldset className={styles.section}>
+      <legend>{legend}</legend>
+      {children}
+    </fieldset>
+  );
+}
+
+type PanelButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: "primary" | "secondary";
+};
+
+function PanelButton({
+  variant = "primary",
+  type = "button",
+  className = "",
+  ...rest
+}: PanelButtonProps) {
+  return (
+    <button
+      type={type}
+      className={`${styles.button} ${variant === "primary" ? styles.primary : styles.secondary} ${className}`}
+      {...rest}
+    />
+  );
+}
+
+export const Panel = Object.assign(PanelRoot, {
+  Section: PanelSection,
+  Button: PanelButton,
+});
