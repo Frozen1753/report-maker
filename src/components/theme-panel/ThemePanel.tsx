@@ -1,6 +1,7 @@
 import { PaintRoller } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { applyTheme, resolveIsDark } from "../../utils/theme/theme";
+import { FloatingButton } from "../floating-button";
 import { Panel } from "../panel/Panel";
 import {
   DEFAULT_SHIKI_DARK,
@@ -16,6 +17,7 @@ import {
   toHex,
   type RGBA,
 } from "./theme-color";
+import styles from "./ThemePanel.module.css";
 
 const MANAGED_SHIKI_VARS = new Set([SHIKI_LIGHT_VAR, SHIKI_DARK_VAR]);
 
@@ -175,7 +177,7 @@ export function ThemePanel() {
       const data = await res.json();
       setMessage(
         data.ok
-          ? { ok: true, text: "Saved to style.css — Vite will hot-reload it." }
+          ? { ok: true, text: "Saved to vars.css — Vite will hot-reload it." }
           : { ok: false, text: data.error ?? "Save failed." },
       );
     } catch (err) {
@@ -196,15 +198,14 @@ export function ThemePanel() {
 
   return (
     <>
-      <button
-        type="button"
-        className="floating-button bg-rainbow-cone"
+      <FloatingButton
+        className={styles.rainbow}
         onClick={() => setIsOpen(true)}
         aria-label="Open theme panel"
         title="Edit theme"
       >
         <PaintRoller />
-      </button>
+      </FloatingButton>
 
       <Panel
         isOpen={isOpen}
@@ -213,14 +214,14 @@ export function ThemePanel() {
         maxWidth="34rem"
         headerActions={
           <div
-            className="border-border flex overflow-hidden rounded-full border border-solid"
+            className={styles.modeTabs}
             role="tablist"
           >
             <button
               type="button"
               role="tab"
               aria-selected={previewMode === "light"}
-              className="aria-selected:bg-primary aria-selected:text-text-on-accent cursor-pointer px-2.5 py-1 text-sm opacity-60 aria-selected:opacity-100"
+              className={styles.modeTab}
               onClick={() => setPreviewMode("light")}
             >
               ☀ Light
@@ -229,7 +230,7 @@ export function ThemePanel() {
               type="button"
               role="tab"
               aria-selected={previewMode === "dark"}
-              className="aria-selected:bg-primary aria-selected:text-text-on-accent cursor-pointer px-2.5 py-1 text-sm opacity-60 aria-selected:opacity-100"
+              className={styles.modeTab}
               onClick={() => setPreviewMode("dark")}
             >
               🌙 Dark
@@ -238,30 +239,20 @@ export function ThemePanel() {
         }
         footer={
           <>
-            <button
-              type="button"
-              className="panel-btn panel-btn--secondary"
-              onClick={handleReset}
-            >
+            <Panel.Button variant="secondary" onClick={handleReset}>
               Reset
-            </button>
-            <button
-              type="button"
-              className="panel-btn panel-btn--primary"
-              onClick={handleSave}
-              disabled={isSaving || !loaded}
-            >
-              {isSaving ? "Saving…" : "Save to style.css"}
-            </button>
+            </Panel.Button>
+            <Panel.Button onClick={handleSave} disabled={isSaving || !loaded}>
+              {isSaving ? "Saving…" : "Save to vars.css"}
+            </Panel.Button>
           </>
         }
       >
         {!loaded ? (
-          <p className="m-0 text-base opacity-70">Loading current theme…</p>
+          <p className={styles.loading}>Loading current theme…</p>
         ) : (
           <>
-            <fieldset className="panel-section">
-              <legend>Colors</legend>
+            <Panel.Section legend="Colors">
               {colorVars.map((key) => {
                 const value =
                   previewMode === "dark"
@@ -286,19 +277,19 @@ export function ThemePanel() {
                 }
 
                 return (
-                  <label key={key} className="flex items-center gap-2 py-1.25">
-                    <span className="basis-36 overflow-hidden font-mono text-xs text-ellipsis whitespace-nowrap opacity-80">
+                  <label key={key} className={styles.row}>
+                    <span className={styles.name}>
                       {key}
                     </span>
                     <input
-                      className="h-8 w-8 cursor-pointer rounded-sm"
+                      className={styles.swatch}
                       type="color"
                       value={toHex(parsed)}
                       onChange={(e) => updateHue(e.target.value)}
                     />
                     <input
                       type="range"
-                      className="accent-secondary w-18 basis-auto"
+                      className={styles.alpha}
                       min={0}
                       max={100}
                       value={Math.round(parsed.a * 100)}
@@ -307,14 +298,14 @@ export function ThemePanel() {
                     />
                     <input
                       type="text"
-                      className="border-border flex min-w-0 rounded-sm border border-solid px-2 py-1 text-sm"
+                      className={styles.field}
                       value={value}
                       onChange={(e) => setVar(key, e.target.value)}
                     />
                     {previewMode === "dark" && (
                       <button
                         type="button"
-                        className="cursor-pointer border-none bg-none text-base opacity-60 disabled:cursor-default disabled:opacity-20"
+                        className={styles.reset}
                         title="Use the same value as light mode"
                         disabled={!overridden}
                         onClick={() => clearDarkOverride(key)}
@@ -325,10 +316,9 @@ export function ThemePanel() {
                   </label>
                 );
               })}
-            </fieldset>
+            </Panel.Section>
 
-            <fieldset className="panel-section">
-              <legend>Typography &amp; sizes</legend>
+            <Panel.Section legend="Typography & sizes">
               {otherVars.map((key) => {
                 const value =
                   previewMode === "dark"
@@ -338,20 +328,20 @@ export function ThemePanel() {
                 const setVar =
                   previewMode === "dark" ? setDarkVar : setLightVar;
                 return (
-                  <label key={key} className="flex items-center gap-2 py-1.25">
-                    <span className="basis-36 overflow-hidden font-mono text-xs text-ellipsis whitespace-nowrap opacity-80">
+                  <label key={key} className={styles.row}>
+                    <span className={styles.name}>
                       {key}
                     </span>
                     <input
                       type="text"
-                      className="border-border flex min-w-0 basis-full rounded-sm border border-solid px-2 py-1 text-sm"
+                      className={styles.fieldFull}
                       value={value}
                       onChange={(e) => setVar(key, e.target.value)}
                     />
                     {previewMode === "dark" && (
                       <button
                         type="button"
-                        className="cursor-pointer border-none bg-none text-base opacity-60 disabled:cursor-default disabled:opacity-20"
+                        className={styles.reset}
                         title="Use the same value as light mode"
                         disabled={!overridden}
                         onClick={() => clearDarkOverride(key)}
@@ -362,16 +352,15 @@ export function ThemePanel() {
                   </label>
                 );
               })}
-            </fieldset>
+            </Panel.Section>
 
-            <fieldset className="panel-section">
-              <legend>Code syntax theme (Shiki)</legend>
-              <label className="flex items-center gap-2 py-1.25">
-                <span className="basis-36 overflow-hidden font-mono text-xs text-ellipsis whitespace-nowrap opacity-80">
+            <Panel.Section legend="Code syntax theme (Shiki)">
+              <label className={styles.row}>
+                <span className={styles.name}>
                   Light theme
                 </span>
                 <select
-                  className="border-border flex min-w-0 basis-full rounded-sm border border-solid px-2 py-1 text-sm"
+                  className={styles.fieldFull}
                   value={shikiLight}
                   onChange={(e) => setShikiTheme("light", e.target.value)}
                 >
@@ -391,12 +380,12 @@ export function ThemePanel() {
                   </optgroup>
                 </select>
               </label>
-              <label className="flex items-center gap-2 py-1.25">
-                <span className="basis-36 overflow-hidden font-mono text-xs text-ellipsis whitespace-nowrap opacity-80">
+              <label className={styles.row}>
+                <span className={styles.name}>
                   Dark theme
                 </span>
                 <select
-                  className="border-border flex min-w-0 basis-full rounded-sm border border-solid px-2 py-1 text-sm"
+                  className={styles.fieldFull}
                   value={shikiDark}
                   onChange={(e) => setShikiTheme("dark", e.target.value)}
                 >
@@ -416,15 +405,14 @@ export function ThemePanel() {
                   </optgroup>
                 </select>
               </label>
-              <p className="mt-2 text-xs opacity-60">
+              <p className={styles.hint}>
                 Applies live to any <code>Code</code> block on the page.
-                Requires a one-time CSS rule in style.css — see README.
               </p>
-            </fieldset>
+            </Panel.Section>
 
             {message && (
               <p
-                className={`rounded-lg px-3.5 py-2.5 text-sm ${message.ok ? "bg-success/12 text-success" : "bg-error/12 text-error"}`}
+                className={`${styles.message} ${message.ok ? styles.ok : styles.error}`}
               >
                 {message.text}
               </p>
