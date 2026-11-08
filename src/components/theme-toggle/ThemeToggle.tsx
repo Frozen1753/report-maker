@@ -1,6 +1,7 @@
 import { Moon, Sun } from "lucide-react";
 import { applyTheme, saveTheme } from "../../utils/theme/theme";
 import { useCurrentTheme } from "../../utils/theme/useCurrentTheme";
+import { FloatingButton } from "../floating-button";
 
 /**
  * The class on <html> is the source of truth, set before first paint by the
@@ -19,14 +20,8 @@ export function ThemeToggle() {
   const label = isDark ? "Switch to light theme" : "Switch to dark theme";
 
   return (
-    <button
-      type="button"
-      className="floating-button"
-      onClick={toggle}
-      aria-label={label}
-      title={label}
-    >
+    <FloatingButton onClick={toggle} aria-label={label} title={label}>
       {isDark ? <Sun /> : <Moon />}
-    </button>
+    </FloatingButton>
   );
 }
