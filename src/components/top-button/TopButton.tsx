@@ -1,4 +1,6 @@
-import { ArrowUp } from 'lucide-react';
+import { ArrowUp } from "lucide-react";
+import { FloatingButton } from "../floating-button";
+import styles from "./TopButton.module.css";
 
 function topFunction() {
   document.body.scrollTop = 0; // Safari
@@ -7,13 +9,14 @@ function topFunction() {
 
 export function TopButton() {
   return (
-    <>
-      <button
-        className="floating-button floating-button--surface top-button"
-        onClick={() => topFunction()}
-      >
-        <ArrowUp />
-      </button>
-    </>
+    <FloatingButton
+      variant="surface"
+      className={styles.top}
+      onClick={topFunction}
+      aria-label="Back to top"
+      title="Back to top"
+    >
+      <ArrowUp />
+    </FloatingButton>
   );
 }
