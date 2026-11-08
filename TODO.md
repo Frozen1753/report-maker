@@ -3,12 +3,12 @@
 ## Features
 
 - [ ] Project (ReportMaker)
-  - [ ] Remove tailwind for module.css files
+  - [X] Remove tailwind for module.css files
     - [X] toc
       - [X] `<ListOfFigures/>`
       - [X] `<TableOfContent/>`
     - [X] `<CoverPage/>`
-    - [ ] `report.mdx`
+    - [X] `report.mdx`
       - [X] `<Callout/>`
       - [X] `<Collapsible/>`
       - [X] `<Comparison/>`
@@ -18,17 +18,20 @@
       - [X] `<Separator/>`
       - [X] `<Tabs/>`
       - [X] `<Term/>`
-      - [?] `<Mermaid/>`
-      - [ ] `<Code/>`
-    - [ ] `<ThemePanel/>`
-    - [ ] `<ThemeToggle/>`
-    - [ ] `<Header/>`
-    - [ ] `<ExportPanel/>`
-    - [ ] `<Panel/>`
-    - [ ] `<ExportPanel/>`
-    - [ ] `<TopButton/>`
-    - [ ] `styles.css`
+      - [X] `<Mermaid/>`
+      - [X] `<Code/>`
+    - [X] `<ThemePanel/>`
+    - [X] `<ThemeToggle/>`
+    - [X] `<Header/>`
+    - [X] `<ExportPanel/>`
+    - [X] `<Panel/>`
+    - [X] `<ExportPanel/>`
+    - [X] `<TopButton/>`
+    - [X] `styles.css`
   - [ ] Restructure
+    - [ ] app
+    - [ ] core
+    - [ ] custom
 - [?] Markdown-friendly syntax
   - [X] `<Tabs/>`
   - [X] `<Comparison/>`
