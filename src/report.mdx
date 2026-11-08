@@ -271,7 +271,7 @@ Each component below shows a live example first. Look inside its "En savoir plus
 
 Use `Link` for internal references and external URLs. Internal links open in the current tab; external links open in a new tab.
 
-```mdx
+```tsx
 <Link href="#link">Link to this document section</Link>
 ```
 
@@ -299,7 +299,7 @@ Standard Markdown links work too:
 
 Import `Link` when you want to use it as a JSX component:
 
-```mdx
+```tsx
 import { Link } from "./components/mdx";
 ```
 
@@ -312,15 +312,17 @@ Its `href` determines how the link behaves:
 
 <Tabs>
   <Tabs.Item label="Exemple">
-    <Link href="https://example.com" aria-label="Visit Example.com">
+    <Link href="https://example.com" aria-label="Visit Example.com" icon>
       Visit Example.com
     </Link>
+    See the link section by clicking :link[here]{href="#link" icon=true}.
   </Tabs.Item>
   <Tabs.Item label="Code">
     ```mdx
-    <Link href="https://example.com" aria-label="Visit Example.com">
+    <Link href="https://example.com" aria-label="Visit Example.com" icon>
       Visit Example.com
     </Link>
+    See the link section by clicking :link[here]{href="#link" icon=true}.
     ```
   </Tabs.Item>
 </Tabs>
