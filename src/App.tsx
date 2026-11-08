@@ -1,6 +1,7 @@
 import ReportMakerIcon from "./assets/report-maker_icon.svg?react";
 import { CoverPage } from "./components/cover-page/CoverPage";
 import { ExportPanel } from "./components/export-panel/ExportPanel";
+import { FloatingButtons } from "./components/floating-button";
 import { Header } from "./components/header/Header";
 import { ThemePanel } from "./components/theme-panel/ThemePanel";
 import { ThemeToggle } from "./components/theme-toggle/ThemeToggle";
@@ -44,15 +45,10 @@ export default function App() {
       </main>
 
       <TopButton />
-      <div className="floating-buttons">
+      <FloatingButtons>
         <ThemeToggle />
-        {import.meta.env.DEV && (
-          <>
-            <ExportPanel />
-            <ThemePanel />
-          </>
-        )}
-      </div>
+        {import.meta.env.DEV && (<><ExportPanel /><ThemePanel /></>)}
+      </FloatingButtons>
     </div>
   );
 }
