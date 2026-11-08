@@ -1,3 +1,4 @@
+import { ExternalLinkIcon, LinkIcon } from "lucide-react";
 import type { AnchorHTMLAttributes } from "react";
 import styles from "./Link.module.css";
 
@@ -6,6 +7,7 @@ export type LinkProps = Omit<
     "href"
 > & {
     href: string;
+    icon?: boolean;
 };
 
 function isExternalLink(href: string): boolean {
@@ -22,7 +24,7 @@ function isExternalLink(href: string): boolean {
     }
 }
 
-export function Link({ href, children, ...props }: LinkProps) {
+export function Link({ href, children, icon, ...props }: LinkProps) {
     const external = isExternalLink(href);
 
     return (
@@ -35,6 +37,7 @@ export function Link({ href, children, ...props }: LinkProps) {
             {...props}
         >
             {children}
+            {icon && (external ? <ExternalLinkIcon /> : <LinkIcon />)}
         </a>
     );
 }

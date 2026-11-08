@@ -1,9 +1,14 @@
 .link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+
   position: relative;
   color: var(--c-primary);
   font-weight: 600;
   text-decoration: none;
 }
+
 
 .link::after {
   position: absolute;
@@ -32,4 +37,13 @@
   border-radius: 2px;
   outline: 2px solid var(--c-primary);
   outline-offset: 3px;
+}
+
+.link:visited {
+  color: var(--c-secondary);
+}
+
+.link:hover,
+.link:visited:hover {
+  color: var(--c-secondary-hover);
 }
