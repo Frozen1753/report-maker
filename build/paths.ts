@@ -21,6 +21,8 @@ export const PATHS = {
   mermaidSvgs: "report/generated/mermaid",
   /** Entry of `npm run build:*`, also spawned by the export panel. */
   buildScript: "build/build-report.mjs",
+  /** Entry for custom favicon */
+  favicon: "report/favicon.svg",
 } as const;
 
 export type PathKey = keyof typeof PATHS;

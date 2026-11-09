@@ -14,6 +14,7 @@ import svgr from "vite-plugin-svgr";
 import { loadAssetConfig, shouldInlineAsset } from "./assets/rules.ts";
 import { assetsServerPlugin } from "./assets/server.ts";
 import { exportServerPlugin } from "./export/server.ts";
+import { inlineFaviconPlugin } from "./favicon/plugin.ts";
 import remarkFigures from "./mdx/remark-figures.ts";
 import remarkHeadingNumbers from "./mdx/remark-heading-numbers.ts";
 import { mermaidPlugin, remarkMermaidCollect } from "./mermaid/plugin.ts";
@@ -62,8 +63,9 @@ export function reportMaker(): UserConfig {
       themeServerPlugin(),
       assetsServerPlugin(),
       shikiThemesServerPlugin(),
-
       mermaidPlugin(),
+
+      buildMode !== "folder" && inlineFaviconPlugin(),
 
       // Full single-file mode: let the plugin apply its recommended config
       // (it force-inlines every JS/CSS/asset into one HTML — see its source).
