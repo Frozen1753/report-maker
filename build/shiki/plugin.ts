@@ -3,7 +3,7 @@ import fs from 'node:fs'
 import postcss from 'postcss'
 import type { Plugin } from 'vite'
 import { resolvePath } from '../paths.ts'
-import { normalizeCode, shikiKey } from '../../src/utils/shared/shiki-shared.ts'
+import { normalizeCode, shikiKey } from '../../src/core/utils/shared/shiki-shared.ts'
 import { collectCodeBlocks } from './extract.ts'
 
 /**

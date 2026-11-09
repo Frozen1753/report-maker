@@ -10,23 +10,20 @@
     "preview": "vite preview",
     "build:folder": "node build/build-report.mjs folder",
     "build:singlefile": "node build/build-report.mjs singlefile",
-    "build:hybrid": "node build/build-report.mjs hybrid"
+    "build:hybrid": "node build/build-report.mjs hybrid",
+    "check:boundaries": "node build/check-boundaries.mjs"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.20",
     "lucide-react": "^1.48.0",
-    "mermaid": "^12.0.0",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8",
-    "rollup-plugin-visualizer": "^7.1.1",
-    "terser": "^5.51.2"
+    "react-dom": "^19.2.8"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",
     "@mdx-js/mdx": "^3.1.1",
     "@mdx-js/rollup": "^3.1.1",
     "@rolldown/plugin-babel": "^0.2.3",
-    "@tailwindcss/vite": "^4.3.3",
     "@types/babel__core": "^7.20.5",
     "@types/mdast": "^4.0.4",
     "@types/node": "^24.13.3",
@@ -38,6 +35,7 @@
     "github-slugger": "^2.0.0",
     "image-size": "^2.0.2",
     "mdast-util-to-string": "^4.0.0",
+    "mermaid": "^12.3.0",
     "oxlint": "^1.81.0",
     "postcss": "^8.5.29",
     "prettier": "^3.9.9",
@@ -47,7 +45,9 @@
     "remark-directive-mdx": "^0.1.1",
     "remark-directive-rehype": "^1.0.0",
     "remark-gfm": "^4.0.1",
+    "rollup-plugin-visualizer": "^7.1.3",
     "shiki": "^4.5.0",
+    "terser": "^5.51.2",
     "typescript": "~6.0.2",
     "unist-util-visit": "^5.1.0",
     "vite": "^8.3.0",

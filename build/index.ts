@@ -1,7 +1,7 @@
 import mdx, { type Options as MdxOptions } from "@mdx-js/rollup";
 import babel from "@rolldown/plugin-babel";
-import tailwindcss from "@tailwindcss/vite";
 import react, { reactCompilerPreset } from "@vitejs/plugin-react";
+import path from "node:path";
 import rehypeMdxCodeProps from "rehype-mdx-code-props";
 import rehypeMdxImportMedia from "rehype-mdx-import-media";
 import remarkDirective from "remark-directive";
@@ -43,6 +43,8 @@ export function reportMaker(): UserConfig {
   return {
     base: buildMode === "folder" ? "/" : "./",
 
+    resolve: { alias: { "report-maker": path.resolve(process.cwd(), "src/core/mdx.ts") } },
+
     plugins: [
       // Must run before @vitejs/plugin-react transforms the JSX MDX compiles down to.
       {
@@ -52,7 +54,6 @@ export function reportMaker(): UserConfig {
       shikiPlugin({ remarkPlugins }),
 
       react({ include: /\.(jsx|js|mdx|md|tsx|ts)$/ }),
-      tailwindcss(),
 
       svgr(),
 

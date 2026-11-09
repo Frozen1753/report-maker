@@ -3,7 +3,7 @@ import type { MdxJsxFlowElement } from 'mdast-util-mdx-jsx';
 import { toString as mdastToString } from 'mdast-util-to-string';
 import type { Plugin } from 'unified';
 import { visit } from 'unist-util-visit';
-import type { FigureEntry } from '../../src/types/mdx-exports.ts';
+import type { FigureEntry } from '../../src/core/types/mdx-exports.ts';
 import { exportConst } from './export-const.ts';
 
 export interface RemarkFiguresOptions {

@@ -3,7 +3,7 @@ import type { Heading, Root } from 'mdast';
 import { toString as mdastToString } from 'mdast-util-to-string';
 import type { Plugin } from 'unified';
 import { visit } from 'unist-util-visit';
-import type { TocEntry } from '../../src/types/mdx-exports.ts';
+import type { TocEntry } from '../../src/core/types/mdx-exports.ts';
 import { exportConst } from './export-const.ts';
 
 // Note: `hProperties` is already declared on mdast's `Data` type by

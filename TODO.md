@@ -28,10 +28,10 @@
     - [X] `<ExportPanel/>`
     - [X] `<TopButton/>`
     - [X] `styles.css`
-  - [ ] Restructure
-    - [ ] app
-    - [ ] core
-    - [ ] custom
+  - [X] Restructure
+    - [X] app
+    - [X] core
+    - [X] custom
 - [?] Markdown-friendly syntax
   - [X] `<Tabs/>`
   - [X] `<Comparison/>`
@@ -42,16 +42,24 @@
   - [X] `<Separator/>`
   - [?] `<Collapsible/>`
   - [?] `<Figure/>`
-- [x] `<ExportPanel/>` :
+- [ ] Panel components redesign 
+  - [ ] `<ExportPanel/>` :
+  - [ ] `<ThemePanel/>` :
+- [ ] `<ExportPanel/>` :
   - [ ] modes :
     - [x] folder
     - [x] singlefile
-    - [ ] hybrid
+    - [ ] hybrid (not tested yet)
   - [ ] Assets weight display, filter by dimensions, weight, etc.
-  - [ ] Exclud individual files
+  - [ ] Exclude individual files
+- [ ] MDX files
+  - [ ] documentation.mdx : "How to use Report-Maker?", appears on /doc (/documentation, /help, etc.) pages, not present in build
+    - [ ] update doc first
+  - [ ] report.mdx : blank report, only links to /doc page to start
 
 ## Bugfixes
 
 - [ ] nested `<Collapsible />` inner collapsible arrow animation not working
-- [ ] `<ThemeToggle>` stops working after style edition preview
-- [ ] `<ExportPanel>` doesn't display logs on build
+- [ ] `<ThemeToggle>` stops working after theme edition preview
+- [ ] `<ExportPanel>` throws error on build (despite success) and disappears without printings logs
+- [ ] build singlefile creates two files : index.html and favicon-<hash>.svg
