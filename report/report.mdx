@@ -28,15 +28,14 @@ In this report, we'll go over what Report Maker needs to run on your machine, ho
 
 ## Prerequisites
 
-- **Node.js 18 or newer**
+- **Node.js 20.19+ or 22.12+** (the minimum of Vite 8, which builds your report)
 - **npm** (or an equivalent package manager — examples below use npm)
 - A code editor with TypeScript/MDX support (most modern editors handle both out of the box)
 
 <Collapsible title="Why these specific versions?">
-    Vite 5+ and the MDX/rehype toolchain used here rely on modern ESM resolution — older Node
-    versions can resolve packages inconsistently, which shows up as confusing build errors that have
-    nothing to do with your actual report content. Staying current avoids an entire category of
-    debugging.
+    Vite 8 (built on Rolldown) and the MDX/rehype toolchain used here rely on modern ESM resolution.
+    Older Node versions don't resolve those packages at all, and fail right away with import errors
+    that have nothing to do with your actual report content. Run `node -v` to check yours.
 </Collapsible>
 
 ---
@@ -90,120 +89,103 @@ A `degit` copy or a repo created from `Use this template` has no shared history 
 
 </Collapsible>
 
-::separator{label="The Report Shell"}
+::separator{label="Project Layout"}
 
-# The Report Shell
+# Project Layout
 
-`report.mdx` is your content. Everything else in the project exists to turn it into a
-finished report — some of it you'll open constantly, some of it basically never. Roughly from most
-to least often touched:
+Everything you edit lives in one folder: `report/`. The rest of the project exists to turn it into a finished report — you can leave it alone until you want to build your own components or change how things compile.
 
 ```
-report.mdx                  <- your content. You'll live in this file.
-assets/                     <- images, gifs, videos you import into report.mdx
-styles/style.css            <- theme: colors, fonts, light & dark
-App.tsx                     <- the frame around your content: cover page, header — see below
-report.assets.config.json   <- which assets stay external in "hybrid" builds
+report/                    <- YOUR zone. Everything you edit lives here.
+  report.mdx               <- your content. You'll live in this file.
+  report.config.tsx        <- title, cover page and header
+  assets/                  <- images, gifs, videos you import into report.mdx
+  custom/
+    glossary.tsx           <- the terms behind :term[...]
+    mdx-components.ts      <- optional: extra MDX components
+  theme.css                <- your color overrides (written by the theme editor)
+  assets.config.json       <- which assets stay external in "hybrid" builds
+  generated/mermaid/       <- pre-rendered diagrams. Commit them.
+  favicon.svg
 
-scripts/, components/, <- the engine itself. Only touch these if you're
-vite.config.ts comfortable with React/Vite and want to build
-your own components or change how things compile.
+src/core/                  <- the engine: components, styles, utilities
+src/app/                   <- the page around your report: header, cover, buttons, dev panels
+build/                     <- Vite configuration and plugins (Mermaid, Shiki, theme, export...)
 ```
 
 :::callout{type="tip"}
-`style.css` and `report.assets.config.json` don't have to be edited by
-hand — both have a live panel in dev mode instead. See [the theme editor](#live-theme-editor)
-and [the export panel](#the-export-panel).
+`theme.css` and `assets.config.json` don't have to be edited by hand — both have a live panel in dev mode instead. See [the theme editor](#live-theme-editor) and [the export panel](#the-export-panel).
 :::
 
-## App.tsx
+## report.config.tsx
 
-Trimmed down, it wires together:
+The title, the cover page and the header are configured in one place, as plain data — there is no component to edit:
 
-- `<Header title="..." />` — the sticky bar, see below.
-- `<CoverPage .../>` — the title page, see below.
-- `<TableOfContent items={toc} />` — reads the `toc` export straight from
-  `report.mdx`, nothing to configure.
-- `<FigureProvider>` wrapping `<Report />` — required for
-  `<Figure>`'s automatic numbering to work.
-- `<TopButton />` — a scroll-to-top button once the reader scrolls down.
-- `<ThemeButton />` — the light/dark toggle, see [Theming](#theming).
-- `<ExportPanel />` / `<ThemePanel />` — dev-only (
-  `import.meta.env.DEV`), see [Theming](#theming) and [Building &
-  Exporting](#building-exporting).
+```tsx bar name="report/report.config.tsx"
+import { defineReport } from "report-maker";
+import MyLogo from "./assets/logo.svg?react";
 
-:::callout{type="warning" title="Don't remove FigureProvider"}
-Every `<Figure>` needs a `<FigureProvider>` somewhere above it for
-its automatic numbering to work — remove it and any `<Figure>` throws at render
-instead of rendering. `App.tsx` already wraps `<Report />` in one; if
-you ever restructure `App.tsx`, make sure that wrapper survives.
-:::
+export default defineReport({
+  title: "My report",
 
-<Collapsible title="Writing Mermaid diagrams as plain fences instead of <Mermaid>">
-    `App.tsx` also intercepts plain triple-backtick `mermaid` code fences and
-    renders them as live diagrams automatically — an alternative to writing{" "}
-    `<Mermaid chart={...} />` explicitly. Both produce the same result; pick
-    whichever reads better in your source.
-</Collapsible>
+  cover: {
+    media: {
+      content: <MyLogo width={256} height={256} />,
+      href: "https://github.com/your-org/your-repo",
+      ariaLabel: "Project logo",
+    },
+    date: "September 2026",
+    authors: [{ firstName: "Jane", lastName: "Doe", href: "https://github.com/..." }],
+    affiliations: ["Your team or organization"],
+  },
+});
+```
 
-## CoverPage
+Only `title` is required. It is the browser tab's title, and the default title of the header and of the cover page.
 
-The title page rendered before your report's content — title, date, authors, and an optional piece of media (a logo, an icon, a cover image).
+### Cover page
+
+The title page rendered before your report's content: title, date, authors, and an optional piece of media (a logo, an icon, a cover image).
 
 <Collapsible title="En savoir plus">
-```tsx bar name="CoverPage.tsx"
-type CoverPageProps = {
-    title?: string;       // "My report" by default
-    coverMedia?: {
-        content: ReactNode;  // an image, icon, logo — anything
-        href?: string;       // wraps coverMedia in a link, when set
-        ariaLabel?: string;
+```tsx bar name="ReportConfig"
+type ReportConfig = {
+    title: string;
+    cover?: {
+        title?: string;       // the report title by default
+        media?: {
+            content: ReactNode;  // an image, icon, logo — anything
+            href?: string;       // wraps the media in a link, when set
+            ariaLabel?: string;
+        };
+        date?: string;         // today's date by default
+        authors?: {
+            firstName?: string;
+            lastName?: string;
+            alias?: string;      // shown in parentheses after the name
+            href?: string;       // wraps the author's name in a link
+        }[];
+        affiliations?: string[];
     };
-    date: string;          // required
-    authors?: {
-        firstName?: string;
-        lastName?: string;
-        alias?: string;     // shown in parentheses after the name
-        href?: string;      // wraps the author's name in a link
-    }[];
-    affiliations?: string[];
+    header?: { /* see below */ };
 };
-```
-
-```tsx bar name="App.tsx"
-<CoverPage
-  title="How to use Report Maker?"
-  date="September 2026"
-  coverMedia={{
-    content: <ReportMakerIcon width={256} height={256} />,
-    href: "https://github.com/your-org/report-maker",
-    ariaLabel: "Report Maker icon",
-  }}
-  authors={[{ firstName: "Jane", lastName: "Doe", href: "https://github.com/..." }]}
-  affiliations={["Your team or organization"]}
-/>
 ```
 </Collapsible>
 
-## Header
+### Header
 
-The sticky bar shown above the report content.
+The sticky bar shown above the report content. Without any configuration it shows the report title and the Report Maker logo.
 
 <Collapsible title="En savoir plus">
-```tsx bar name="Header.tsx"
-type HeaderProps = {
-    title?: string;    // "[report title]" by default
-    logo?: ReactNode;  // defaults to the Report Maker logo
-    logoAlt?: string;  // "Logo" by default — accessible label for the logo
-};
-```
-
-```tsx bar name="App.tsx"
-<Header title="How to use Report Maker?" />
+```tsx bar name="report/report.config.tsx"
+header: {
+    title: "My report",    // the report title by default
+    logo: <MyLogo />,      // defaults to the Report Maker logo
+    logoAlt: "My logo",    // "Logo" by default — accessible label for the logo
+},
 ```
 
 Pass your own `logo` once you no longer need the default Report Maker branding.
-
 </Collapsible>
 
 ::separator{label="MDX"}
@@ -224,11 +206,14 @@ Every `<hX>` you write gets numbered and anchored automatically — that's what 
 
 The same mechanism exports a `toc` array from your compiled MDX module, so the table of contents builds itself from whatever headings actually exist in the file — add, remove, or reorder headings in `report.mdx` and it follows, nothing to update by hand:
 
-```tsx bar name="App.tsx"
-import Report, { toc } from './report.mdx'
+```tsx bar name="src/app/App.tsx"
+import Report, { figures, toc } from "../../report/report.mdx";
 
 <TableOfContent items={toc} />
+<ListOfFigures items={figures} />
 ```
+
+Figures work the same way: `<Figure>`s are numbered in reading order at compile time, and the `figures` export builds the list of figures, with nothing to configure either.
 
 <Collapsible title="How the numbering actually works">
     A remark plugin walks the Markdown AST once per file, keeping a running counter per heading
@@ -237,6 +222,24 @@ import Report, { toc } from './report.mdx'
     slug + visible prefix directly on each heading — no manual bookkeeping, no renumbering when you
     reorder sections.
 </Collapsible>
+
+---
+
+## Two Syntaxes
+
+Components can be written as JSX, or — for the ones that have a directive form — with colons, which reads closer to Markdown:
+
+| Kind        | Syntax                              | Example                              |
+| ----------- | ----------------------------------- | ------------------------------------ |
+| Block       | `:::name{attributes}` ... `:::`     | `:::callout{type="tip"}`             |
+| Single line | `::name{attributes}`                | `::separator{label="Chapter 2"}`     |
+| Inline      | `:name[text]{attributes}`           | `:link[docs]{href="#link"}`          |
+
+At the moment `callout`, `separator`, `link` and `term` have a directive form. Code and diagrams use plain Markdown fences, and everything else (`Tabs`, `Collapsible`, `Comparison`, `Figure`) is JSX. Directive attributes are always strings.
+
+:::callout{type="caution" title="A colon followed by a word is a directive"}
+Text like `note:foo` would be read as the directive `foo`. To write a literal colon-word, escape the colon: `\:foo`.
+:::
 
 ---
 
@@ -300,7 +303,7 @@ Standard Markdown links work too:
 Import `Link` when you want to use it as a JSX component:
 
 ```tsx
-import { Link } from "./components/mdx";
+import { Link } from "report-maker";
 ```
 
 Its `href` determines how the link behaves:
@@ -361,7 +364,7 @@ Remember this for later.
 
 <Collapsible title="En savoir plus">
 ```mdx bar name="report.mdx"
-import { Callout } from './components/mdx'
+import { Callout } from "report-maker"
 ```
 
 ```tsx bar name="Callout.tsx"
@@ -431,7 +434,7 @@ Keeps optional detail out of the main reading flow — you've likely clicked a f
 
 <Collapsible title="En savoir plus">
 ```mdx bar name="report.mdx"
-import { Collapsible } from './components/mdx'
+import { Collapsible } from "report-maker"
 ```
 
 ```tsx bar name="Collapsible.tsx"
@@ -521,7 +524,7 @@ type SeparatorProps = {
         ```
         **OR**
         ```mdx
-        import { Separator } from './components/mdx' {/* At the top */}
+        import { Separator } from "report-maker" {/* At the top */}
 
         <Separator label="my text here" /> {/* Where you need it */}
         ```
@@ -548,21 +551,28 @@ Groups mutually-exclusive content — alternative commands, alternative approach
 
 <Collapsible title="En savoir plus">
 ```mdx bar name="report.mdx"
-import { Tabs } from './components/mdx'
+import { Tabs } from "report-maker"
 ```
 
 ```tsx bar name="Tabs.tsx"
-type TabItem = {
-    label: string;
-    content: ReactNode;
-    disabled?: boolean;
-};
-
 type TabsProps = {
-    tabs: TabItem[];
-    defaultActive?: number;
+    children: ReactNode;      // <Tabs.Item> elements
+    defaultActive?: number;   // index of the tab opened first (0 by default)
     className?: string;
 };
+
+type TabItemProps = {         // <Tabs.Item ...>
+    label: ReactNode;         // the tab's title
+    children: ReactNode;      // the panel content
+    disabled?: boolean;
+};
+```
+
+```mdx
+<Tabs>
+  <Tabs.Item label="Option A">Content for the first tab.</Tabs.Item>
+  <Tabs.Item label="Option B">Content for the second tab.</Tabs.Item>
+</Tabs>
 ```
 </Collapsible>
 
@@ -584,13 +594,12 @@ A toggle between two states — screenshots, code, anything comparable. It's lit
 
 <Collapsible title="En savoir plus">
 ```mdx bar name="report.mdx"
-import { Comparison } from './components/mdx'
+import { Comparison } from "report-maker"
 ```
 
 ```tsx bar name="Comparison.tsx"
 export type ComparisonProps = {
     children: ReactNode;
-    className?: string;
 };
 
 export type ComparisonItemProps = {
@@ -611,7 +620,7 @@ export type ComparisonItemProps = {
 </Comparison>
 ```
 
-`left`/`right` accept any JSX, not just images — a `Code` block on each side works just as well for comparing two versions of a snippet.
+`<Comparison.Left>` and `<Comparison.Right>` accept any JSX, not just images (their labels default to `"Before"` and `"After"`) — a `Code` block on each side works just as well for comparing two versions of a snippet.
 </Collapsible>
 
 ---
@@ -628,38 +637,40 @@ An image, gif, or video with a numbered caption, and an optional lightbox (with 
         This is my caption
     </Figure.Caption>
     <Figure.Lightbox>
-        Bonjour
+        Anything can go here: a higher-resolution version, extra context...
     </Figure.Lightbox>
 </Figure>
 
 <Collapsible title="En savoir plus">
 ```mdx bar name="report.mdx"
-import { Figure } from './components/figure'
+import { Figure } from "report-maker"
 ```
 
 ```tsx bar name="Figure.tsx"
 type FigureProps = {
-    media: ReactNode;             // the image, gif or video element
-    caption?: ReactNode;          // shown next to the auto-generated figure number
-    lightbox?: boolean;           // enables click-to-zoom (false by default)
-    lightboxContent?: ReactNode;  // what the lightbox shows instead of media, if different
+    children: ReactNode;  // <Figure.Media>, <Figure.Caption> and <Figure.Lightbox>
+    lightbox?: boolean;   // click-to-zoom on the media itself (false by default)
     className?: string;
 };
 ```
 
-By default the lightbox shows the same `media`. Pass `lightboxContent` to show something else instead — extra context, a higher-resolution version, or an entirely different element:
+`<Figure.Media>` is required; `<Figure.Caption>` and `<Figure.Lightbox>` are optional. Writing a `<Figure.Lightbox>` turns the lightbox on by itself, and what it contains is shown instead of the media — extra context, a higher-resolution version, or an entirely different element:
 
-```tsx
-<Figure
-  media={<img src={thumb} alt="..." />}
-  lightbox
-  lightboxContent={<img src={fullRes} alt="..." />}
-  caption="..."
-/>
+```mdx
+<Figure>
+  <Figure.Media>
+    ![A thumbnail](./assets/thumb.png)
+  </Figure.Media>
+  <Figure.Caption>My **caption**, with `Markdown`</Figure.Caption>
+  <Figure.Lightbox>
+    ![The full-resolution version](./assets/full.png)
+  </Figure.Lightbox>
+</Figure>
 ```
 
-Videos work the same way, just swap the `<img>` for a `<video controls>` — captions and numbering behave identically.
+Videos work the same way, just put a `<video controls>` in `<Figure.Media>` — captions and numbering behave identically.
 
+Figures are numbered at compile time, in reading order, so there is nothing to wrap in a provider. The same pass exports the `figures` array behind the list of figures at the top of this guide.
 </Collapsible>
 
 ---
@@ -693,6 +704,8 @@ Add a header bar with a file name and a copy button when it's worth labeling:
 ```bash bar copy name="terminal"
 npm run build:hybrid
 ```
+
+Blocks are highlighted by Shiki **at build time**, so no Shiki, WASM or grammar ends up in the final report. A block whose language or content isn't a static string (a `{...}` expression containing `${}`, say) can't be read by the build: it renders as plain text, and the build prints a warning for each one. In dev mode, blocks are highlighted live, with every Shiki language and theme available.
 </Collapsible>
 
 ---
@@ -728,14 +741,20 @@ graph LR
 
 Mermaid supports its own theming via `%%{init: {...}}%%` at the top of a chart — see Mermaid's own documentation for the full set of `themeVariables`.
 
-Diagrams render client-side via the `mermaid` package directly, rather than through its official React wrapper — in practice the official one didn't always render reliably while editing in dev mode (worked fine once built, but that defeats the point of live-editing a report). The component here just calls `mermaid.render()` itself and injects the resulting SVG.
+Diagrams are **pre-rendered**. In dev mode each diagram is rendered live by the `mermaid` package, so syntax errors show up while you type, and the resulting SVG is saved to `report/generated/mermaid/`. A build never contains `mermaid.js`: it only embeds those SVGs. So after adding or changing a diagram, run `npm run dev`, open the report once, then build.
+
+:::callout{type="important" title="Commit report/generated/"}
+The build can't render a diagram by itself. If an SVG is missing, the build prints a warning and the report shows an error in place of the diagram. A diagram whose source isn't a static string (`<Mermaid chart={someVariable} />`) can't be pre-rendered either.
+:::
+
+You don't need `<Mermaid>` at all: plain triple-backtick `mermaid` fences are intercepted in `src/app/overrides.tsx` and rendered the same way.
 </Collapsible>
 
 ---
 
 ## Term
 
-An inline word with a tooltip attached — for definitions, jargon, or anything a reader might want explained without leaving the sentence. It's drawn with a dotted underline: hover :term[latency] (or Tab to it) and the tooltip appears after a short delay.
+An inline word with a tooltip attached — for definitions, jargon, or anything a reader might want explained without leaving the sentence. It's drawn with a dotted underline: hover :term[latency] (or Tab to it) and the tooltip appears after a short delay. For words you reuse, define them once in [the glossary](#glossary).
 
 :::callout{type="tip" title="Pin a tooltip"}
 Hover a term, then **middle-click** it or its tooltip to pin it open — its border gets stronger to show it. Click anywhere else to close it.
@@ -743,7 +762,7 @@ Hover a term, then **middle-click** it or its tooltip to pin it open — its bor
 
 <Collapsible title="En savoir plus">
 ```mdx bar name="report.mdx"
-import { Term } from './components/mdx'
+import { Term } from "report-maker"
 ```
 
 ```tsx bar name="Term.tsx"
@@ -813,17 +832,11 @@ Pinning is mouse-only, so keyboard and touch readers can't pin a tooltip. A tool
 :::
 </Collapsible>
 
-::separator{label="Helpers"}
+::separator{label="Glossary"}
 
-# Helpers
+# Glossary
 
-Components render from JSX tags. Helpers are plain functions you call from an MDX expression, like `:term[Latency]`. Most read definitions you write once in `src/custom/`, so the report file stays about content. They ship with Report Maker, so there's nothing to install.
-
----
-
-## Easy Terms
-
-Writing `<Term tooltip={...}>` every time gets heavy once the same word shows up in several places. `easyTerm` lets you define a term once, then use it anywhere with a single call: hover :term[latency] (or Tab to it) and its tooltip appears, exactly like a regular `Term`.
+Writing `<Term tooltip={...}>` every time gets heavy once the same word shows up in several places. The glossary lets you define a term once, then use it anywhere with a single directive: hover :term[latency] (or Tab to it) and its tooltip appears, exactly like a regular `Term`.
 
 :::callout{type="tip" title="Case and accents don't matter"}
 :term[Latency] and :term[LATENCY] both find the same definition. The term is displayed exactly as you typed it, so it fits the sentence around it.
@@ -831,23 +844,25 @@ Writing `<Term tooltip={...}>` every time gets heavy once the same word shows up
 
 <Collapsible title="En savoir plus">
 
-### Defining a term
+## Defining a term
 
-Definitions live in `src/custom/variables/term.tsx`, away from the report content. The tooltip is regular JSX, so anything that works in a `Term` works here — import what you need at the top of the file.
+Definitions live in `report/custom/glossary.tsx`, away from the report content. The tooltip is regular JSX, so anything that works in a `Term` works here — import what you need at the top of the file.
 
-```tsx bar name="src/custom/variables/term.tsx"
-import { addTerm } from "../../helpers/easy-term";
+```tsx bar name="report/custom/glossary.tsx"
+import type { GlossaryEntries } from "report-maker";
 
-addTerm('latency', <>Time between a request and its response.</>);
+export const terms = {
+  latency: <>Time between a request and its response.</>,
+} satisfies GlossaryEntries;
 ```
 
 :::callout{type="note"}
-The registry is filled when `src/custom/variables` is loaded. If a term you defined shows up as `UNKNOWN_TERM`, check that its file is actually imported.
+`src/app/overrides.tsx` hands this object to the report. If a term you defined shows up as `UNKNOWN_TERM`, check that it is spelled the same in the glossary and in the report.
 :::
 
-### Using a term
+## Using a term
 
-Call `easyTerm` in any MDX expression:
+Put the word in brackets after a colon:
 
 <Tabs>
     <Tabs.Item label="Exemple">
@@ -860,12 +875,12 @@ Call `easyTerm` in any MDX expression:
     </Tabs.Item>
 </Tabs>
 
-### Matching
+## Matching
 
 - **Case** is ignored: `:term[Latency]` and `:term[LATENCY]` are the same term.
 - **Accents and ligatures** are ignored: a term defined as `événement` is found by `Evenement`, and `cœur` by `coeur`.
 - **Extra spaces** are ignored: `:term[ Time   out ]` finds the term `time out`. Typographic apostrophes (`’`) match plain ones.
-- **The word you pass is the text shown**, unless you give a second argument. Other forms of a word (a plural, say) aren't matched automatically: pass the term to look up first, and the text to display second.
+- **The word you write is the text shown**, unless you give an `id`. Other forms of a word (a plural, say) aren't matched automatically: put the term to look up in `id`, and the text to display in the brackets.
 
 <Tabs>
     <Tabs.Item label="Exemple">
@@ -878,30 +893,30 @@ Call `easyTerm` in any MDX expression:
     </Tabs.Item>
 </Tabs>
 
-### Nesting
+## Nesting
 
-A definition can use other terms, just like nested `Term` components:
+A definition can use other terms, just like nested `Term` components, with `GlossaryTerm` in the glossary file:
 
-```tsx bar name="src/custom/glossary.tsx"
+```tsx bar name="report/custom/glossary.tsx"
 network: <>Computers talking to each other through <GlossaryTerm id="request">requests</GlossaryTerm>.</>,
 request: <>A request is a <GlossaryTerm id="network" /> thing.</>,
 latency: <>Time between a <GlossaryTerm id="request" /> and its response.</>,
 ```
 
 :::callout{type="note" title="Order doesn't matter"}
-Terms are looked up when a tooltip opens, not when it is defined. You can define{" "} `latency` before `request`, and two terms can even refer to each other.
+Terms are looked up when a tooltip opens, not when it is defined. You can define `latency` before `request`, and two terms can even refer to each other.
 :::
 
 :::callout{type="caution" title="Unknown terms"}
-Asking for a term that was never defined renders a bold `UNKNOWN_TERM` in the report and logs `unknown term: ...` as an error in the browser console.
+Asking for a term that was never defined renders a bold `UNKNOWN_TERM` in the report and logs `unknown term: ...` as an error in the browser console. Builds strip console output, so the bold marker is the signal that stays.
 :::
 
-:::callout{type="warning" title="Redefining a word"}
-Defining a word that already exists replaces the previous definition: the last one wins, and the browser console logs `be careful as you are redefining the term`. Words that only differ by case, accents or spacing count as the same word, so `Événement` and `evenement` collide. In dev mode, the warning also appears each time you save the definitions file; that's expected.
+:::callout{type="warning" title="Duplicate words"}
+Words that only differ by case, accents or spacing count as the same word, so `Événement` and `evenement` collide: the last one defined wins, without any warning.
 :::
 
 <Collapsible title="Why not defining everything at the top of the MDX?">
-  You could define each tooltip at the start of `report.mdx` and use it with `easyTerm`. It works, but it mixes logic with content: the report gets longer before the first sentence, and the definitions can't be shared with another report. A separate registry keeps `report.mdx` readable and keeps every definition in one place.
+  You could write each tooltip at the start of `report.mdx` and use it with `<Term>`. It works, but it mixes logic with content: the report gets longer before the first sentence, and the definitions can't be shared with another report. A separate glossary keeps `report.mdx` readable and keeps every definition in one place.
 </Collapsible>
 </Collapsible>
 
@@ -911,23 +926,25 @@ Defining a word that already exists replaces the previous definition: the last o
 
 ## CSS Variables
 
-Everything visual is driven by CSS custom properties in `src/styles/style.css`:
+Everything visual is driven by CSS custom properties. The defaults live in `src/core/styles/tokens.css`; your own values live in `report/theme.css`, loaded after it, so anything you set there wins:
 
-```css
+```css bar name="report/theme.css"
 :root {
-  --text-lightbg: #000000;
-  --bg-primary: #f8f8f8;
-  --accent-primary: #0149ad;
-  --font-size-h1: 1.8rem;
+  --c-primary: #0149ad;
+  --c-bg-surface: #fbfbfb;
+  --text-h1: 2rem;
 }
 
-:root[data-theme="dark"] {
---text-lightbg: #d6d6d6;
---bg-primary: #2c2c2c;
+.dark {
+  --c-primary: #6fa3ef;
 }
 ```
 
-Light values live in `:root`; dark values only need to list what actually changes — anything not overridden falls through to the light value.
+Colors are named `--c-*`; sizes and fonts use `--text-*`, `--font-*`, `--radius-*`, `--space-*` and `--transition-*`. Light values live in `:root`, dark values in `.dark`.
+
+:::callout{type="caution" title="A :root value also applies in dark mode"}
+`:root` and `.dark` have the same priority, and `report/theme.css` is loaded last. So a color you set in `:root` there also wins in dark mode, unless you set it in `.dark` too (and after `:root`). The theme editor handles this for you; if you edit the file by hand, set both.
+:::
 
 ## Light / Dark Mode
 
@@ -945,7 +962,7 @@ The very first paint is handled by a small inline script in `index.html`, before
 Everything in this section is a dev tool — it appears while running `npm run dev` and is never included in a build. If you're reading a published report, you won't see it.
 :::
 
-A floating button opens a panel that edits `src/styles/style.css` directly, for both light and dark at once:
+A floating button opens a panel that writes `report/theme.css`, for both light and dark at once — and only the values that differ from the defaults, so emptying the file brings the default theme back:
 
 - **Colors** get a real color picker (hex, `rgb()`, `rgba()`, `hsl()` are all recognized) plus a separate opacity slider, since colors with transparency need one.
 - **Everything else** (sizes, generic values) gets a plain text field.
@@ -954,7 +971,7 @@ A floating button opens a panel that edits `src/styles/style.css` directly, for 
 
 ## Code Syntax Theme
 
-Still inside the live theme editor: two comboboxes pick which Shiki theme highlights `<Code type="bloc">` blocks, one for light mode and one for dark mode — independently, so you're not stuck pairing a light code theme with a light report theme.
+Still inside the live theme editor: two comboboxes pick which Shiki theme highlights `<Code type="bloc">` blocks, one for light mode and one for dark mode — independently, so you're not stuck pairing a light code theme with a light report theme. The choice is stored in `report/theme.css` with the rest of your theme.
 
 ::separator{label="Building"}
 
@@ -976,9 +993,9 @@ npm run build:hybrid
 
 ## Choosing What Stays External
 
-In `hybrid` mode, `report.assets.config.json` decides what gets excluded from the single file:
+In `hybrid` mode, `report/assets.config.json` decides what gets excluded from the single file:
 
-```json name="report.assets.config.json"
+```json bar name="report/assets.config.json"
 {
   "excludeExtensions": [".mp4", ".mov", ".webm", ".gif"],
   "maxImageWidth": 3000,
@@ -994,14 +1011,80 @@ Anything matching an excluded extension, or an image wider than `maxImageWidth`,
 Like the theme editor, this panel is a dev tool — it never ships in a build.
 :::
 
-A second floating button runs an actual build without leaving the browser: pick a mode, check off any extensions or oversized images to keep external in `hybrid` mode, and it writes `report.assets.config.json` and runs the matching build script for you — the result lands in `dist/&lt;mode&gt;/` either way.
+A second floating button runs an actual build without leaving the browser: pick a mode, check off any extensions or oversized images to keep external in `hybrid` mode, and it writes `report/assets.config.json` and runs the matching build script for you — the result lands in `dist/&lt;mode&gt;/` either way.
+
+## Why Builds Stay Small
+
+The two heaviest parts of a report are never shipped:
+
+- **Mermaid diagrams** are rendered in dev mode and saved as SVG, so `mermaid.js` isn't in the build.
+- **Code blocks** are highlighted by Shiki while building, so neither Shiki nor its grammars are in the build.
+
+The price is one habit: after adding or changing a diagram, open the report once with `npm run dev` before building. See [Mermaid](#mermaid) and [Code](#code).
+
+::separator{label="Extending"}
+
+# Extending Report Maker
+
+The engine is meant to be extended from `report/`, without touching `src/`.
+
+## Your own components
+
+Import them at the top of `report.mdx`, like any React component:
+
+```mdx
+import MyChart from "./custom/MyChart";
+
+<MyChart title="Sales" />
+```
+
+To use one without any import — or to replace a built-in one — register it in `report/custom/mdx-components.ts`:
+
+```ts bar name="report/custom/mdx-components.ts"
+import type { ElementType } from "react";
+import { MyChart } from "./MyChart";
+
+export const components: Record<string, ElementType> = {
+  MyChart,         // <MyChart /> works everywhere, no import needed
+  chart: MyChart,  // lowercase names also work as directives: :::chart{title="Sales"}
+};
+```
+
+Built-in directives such as `callout`, `separator`, `link` and `term` work the same way. Directive attributes are strings; pass anything richer through JSX.
+
+## The public API
+
+Everything you can import from `"report-maker"` comes from `src/core/mdx.ts`: the components (`Callout`, `Code`, `Collapsible`, `Comparison`, `Figure`, `Link`, `Mermaid`, `Separator`, `Tabs`, `Term`, `GlossaryTerm`...) and `defineReport`.
+
+<Collapsible title="Keeping the engine clean">
+Dependencies go one way:
+
+```
+report/  ->  src/app  ->  src/core
+```
+
+`src/core` imports nothing from `src/app`, `report/` or `build/`; `src/app` assembles the engine and your report; and `report/` only talks to the engine through `"report-maker"`. A small script checks it:
+
+```bash bar copy name="terminal"
+node build/check-boundaries.mjs
+```
+</Collapsible>
+
+<Collapsible title="What is in build/">
+- `mdx/` — the heading numbering and the figure numbering.
+- `mermaid/` — diagram pre-rendering.
+- `shiki/` — code highlighting at build time.
+- `theme/`, `assets/`, `export/` — the dev-only endpoints behind the theme editor and the export panel.
+- `index.ts` — assembles the Vite configuration; `vite.config.ts` only calls it.
+</Collapsible>
+
 
 ::separator{label="Conclusion"}
 
 # Conclusion
 
 :::callout{type="note" title="Wrap-up"}
-Clone, `npm install`, `npm run dev`, write `report.mdx` with the components above, pick a build mode when you're done. That's the whole workflow — everything else is detail you can come back to from this guide when you need it.
+Clone, `npm install`, `npm run dev`, write `report/report.mdx` with the components above, set your title and authors in `report/report.config.tsx`, pick a build mode when you're done. That's the whole workflow — everything else is detail you can come back to from this guide when you need it.
 :::
 
 ## A Note From the Author
