@@ -43,15 +43,15 @@
   - [?] `<Collapsible/>`
   - [?] `<Figure/>`
 - [ ] Panel components redesign 
-  - [ ] `<ExportPanel/>` :
+  - [X] `<ExportPanel/>` :
   - [ ] `<ThemePanel/>` :
-- [ ] `<ExportPanel/>` :
-  - [ ] modes :
+- [X] `<ExportPanel/>` :
+  - [X] modes :
     - [x] folder
     - [x] singlefile
-    - [ ] hybrid (not tested yet)
-  - [ ] Assets weight display, filter by dimensions, weight, etc.
-  - [ ] Exclude individual files
+    - [X] hybrid
+  - [X] Assets weight display, filter by dimensions, weight, etc.
+  - [X] Exclude individual files
 - [ ] MDX files
   - [ ] documentation.mdx : "How to use Report-Maker?", appears on /doc (/documentation, /help, etc.) pages, not present in build
     - [ ] update doc first
@@ -61,5 +61,4 @@
 
 - [ ] nested `<Collapsible />` inner collapsible arrow animation not working
 - [ ] `<ThemeToggle>` stops working after theme edition preview
-- [ ] `<ExportPanel>` throws error on build (despite success) and disappears without printings logs
-- [ ] build singlefile creates two files : index.html and favicon-<hash>.svg
+- [ ] Build time in hybrid increases with lower image width filter

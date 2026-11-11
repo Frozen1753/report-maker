@@ -1,9 +1,12 @@
 import { Download } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import type { ReportBuildMode } from "../../../core/types/build-mode";
+import { KNOWN_EXTENSIONS, SUPPORTED_ASSET_EXTENSIONS } from "../../../core/types/extensions";
 import { FloatingButton } from "../../components/floating-button";
 import { Panel } from "../panel/Panel";
-import styles from "./ExportPanel.module.css";
+import { BuildModeSelector } from "./components/BuildModeSelector";
+import { ExportFeedback } from "./components/ExportFeedback";
+import { HybridAssetOptions, type AssetItem } from "./components/HybridAssetOptions";
 
 interface ExportResult {
   ok: boolean;
@@ -11,93 +14,102 @@ interface ExportResult {
   outDir: string;
 }
 
-const MODE_INFO: {
-  value: ReportBuildMode;
-  label: string;
-  description: string;
-}[] = [
-    {
-      value: "folder",
-      label: "Folder",
-      description:
-        "index.html + a separate assets/ folder (default Vite output).",
-    },
-    {
-      value: "singlefile",
-      label: "Single file",
-      description:
-        "Everything — JS, CSS, every image/gif/video — inlined into one .html.",
-    },
-    {
-      value: "hybrid",
-      label: "Hybrid",
-      description:
-        "One .html for JS/CSS, but the assets you exclude below stay in assets/.",
-    },
-  ];
-
-const KNOWN_EXTENSIONS = [".gif", ".mp4", ".mov", ".webm"] as const;
+function toggleValue<T>(current: Set<T>, value: T): Set<T> {
+  const next = new Set(current);
+  if (next.has(value)) next.delete(value);
+  else next.add(value);
+  return next;
+}
 
 export function ExportPanel() {
   const [isOpen, setIsOpen] = useState(false);
   const [mode, setMode] = useState<ReportBuildMode>("hybrid");
   const [excludedExt, setExcludedExt] = useState<Set<string>>(
-    new Set([".gif", ".mp4", ".mov", ".webm"]),
+    new Set(KNOWN_EXTENSIONS),
   );
   const [maxImageWidth, setMaxImageWidth] = useState(3000);
+  const [maxAssetSizeMb, setMaxAssetSizeMb] = useState(5);
+  const [assetNameFilter, setAssetNameFilter] = useState("");
+  const [minimumAssetSizeMb, setMinimumAssetSizeMb] = useState(0);
   const [excludedFiles, setExcludedFiles] = useState<Set<string>>(new Set());
+  const [detectedAssets, setDetectedAssets] = useState<AssetItem[]>([]);
+  const [assetsLoading, setAssetsLoading] = useState(false);
+  const [assetsError, setAssetsError] = useState<string | null>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [result, setResult] = useState<ExportResult | null>(null);
 
-  const [detectedAssets, setDetectedAssets] = useState<string[]>([]);
-
   useEffect(() => {
+    let cancelled = false;
+    setAssetsLoading(true);
+
     fetch("/api/assets")
-      .then((r) => r.json())
-      .then((d) => setDetectedAssets(d.files));
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Unable to load assets (${response.status}).`);
+        }
+        return response.json();
+      })
+      .then((data: { files?: AssetItem[] }) => {
+        if (!cancelled) {
+          setDetectedAssets(Array.isArray(data.files) ? data.files : []);
+          setAssetsError(null);
+        }
+      })
+      .catch((error: unknown) => {
+        if (!cancelled) {
+          setAssetsError(
+            error instanceof Error ? error.message : String(error),
+          );
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setAssetsLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  // Must depend on detectedAssets: it now arrives asynchronously from the
-  // fetch above, not synchronously from import.meta.glob like before — an
-  // empty dependency array would freeze this at the first render's "[]".
-  const largeAssets = useMemo(
-    () =>
-      detectedAssets.filter((f) =>
-        KNOWN_EXTENSIONS.some((ext) => f.toLowerCase().endsWith(ext)),
-      ),
-    [detectedAssets],
-  );
+  const visibleAssets = useMemo(() => {
+    const query = assetNameFilter.trim().toLocaleLowerCase();
+    const minBytes = minimumAssetSizeMb * 1024 * 1024;
 
-  function toggleSet(
-    set: Set<string>,
-    setSet: (s: Set<string>) => void,
-    value: string,
-  ) {
-    const next = new Set(set);
-    next.has(value) ? next.delete(value) : next.add(value);
-    setSet(next);
-  }
+    return detectedAssets
+      .filter((asset) => asset.path.toLocaleLowerCase().includes(query))
+      .filter((asset) => asset.size >= minBytes)
+      .sort(
+        (a, b) =>
+          b.size - a.size || a.path.localeCompare(b.path),
+      );
+  }, [assetNameFilter, detectedAssets, minimumAssetSizeMb]);
 
   async function handleExport() {
     setIsExporting(true);
     setResult(null);
+
     try {
-      const res = await fetch("/api/export", {
+      const response = await fetch("/api/export", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           mode,
           excludeExtensions: Array.from(excludedExt),
           maxImageWidth,
+          maxAssetSizeMb,
           excludeFiles: Array.from(excludedFiles),
         }),
       });
-      const data: ExportResult = await res.json();
-      setResult(data);
-    } catch (err) {
+
+      if (!response.ok) {
+        throw new Error(`Export failed (${response.status}).`);
+      }
+
+      setResult((await response.json()) as ExportResult);
+    } catch (error) {
       setResult({
         ok: false,
-        log: err instanceof Error ? err.message : String(err),
+        log: error instanceof Error ? error.message : String(error),
         outDir: "",
       });
     } finally {
@@ -119,112 +131,58 @@ export function ExportPanel() {
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         title="Export report"
+        maxWidth="46rem"
         footer={
           <>
-            <Panel.Button variant="secondary" onClick={() => setIsOpen(false)}>
+            <Panel.Button
+              variant="secondary"
+              onClick={() => setIsOpen(false)}
+            >
               Close
             </Panel.Button>
-            <Panel.Button onClick={handleExport} disabled={isExporting}>
+
+            <Panel.Button
+              onClick={handleExport}
+              disabled={isExporting}
+            >
               {isExporting ? "Building…" : "Export"}
             </Panel.Button>
           </>
         }
       >
-        <Panel.Section legend="Build mode">
-          {MODE_INFO.map((m) => (
-            <label
-              key={m.value}
-              className={styles.radio}
-            >
-              <input
-                className={styles.radioInput}
-                type="radio"
-                name="report-export-mode"
-                value={m.value}
-                checked={mode === m.value}
-                onChange={() => setMode(m.value)}
-              />
-              <span className={styles.radioText}>
-                <strong>{m.label}</strong>
-                <small className={styles.description}>{m.description}</small>
-              </span>
-            </label>
-          ))}
-        </Panel.Section>
+        <BuildModeSelector value={mode} onChange={setMode} />
 
         {mode === "hybrid" && (
-          <Panel.Section legend="Keep external (don't inline)">
-
-            <div className={styles.checkboxRow}>
-              {KNOWN_EXTENSIONS.map((ext) => (
-                <label
-                  key={ext}
-                  className={styles.checkbox}
-                >
-                  <input
-                    type="checkbox"
-                    checked={excludedExt.has(ext)}
-                    onChange={() => toggleSet(excludedExt, setExcludedExt, ext)}
-                  />
-                  all {ext} files
-                </label>
-              ))}
-            </div>
-
-            <label className={styles.widthRow}>
-              Exclude images wider than
-              <input
-                className={styles.widthInput}
-                type="number"
-                min={0}
-                step={100}
-                value={maxImageWidth}
-                onChange={(e) => setMaxImageWidth(Number(e.target.value))}
-              />
-              px
-            </label>
-
-            {largeAssets.length > 0 && (
-              <>
-                <p className={styles.assetsHint}>
-                  Detected gif/video assets — exclude individually:
-                </p>
-                <div className={styles.assetList}>
-                  {largeAssets.map((f) => (
-                    <label
-                      key={f}
-                      className={styles.checkbox}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={excludedFiles.has(f)}
-                        onChange={() =>
-                          toggleSet(excludedFiles, setExcludedFiles, f)
-                        }
-                      />
-                      {f}
-                    </label>
-                  ))}
-                </div>
-              </>
-            )}
-          </Panel.Section>
+          <HybridAssetOptions
+            extensions={SUPPORTED_ASSET_EXTENSIONS}
+            excludedExtensions={excludedExt}
+            onToggleExtension={(extension) =>
+              setExcludedExt((current) =>
+                toggleValue(current, extension),
+              )
+            }
+            maxImageWidth={maxImageWidth}
+            onMaxImageWidthChange={setMaxImageWidth}
+            maxAssetSizeMb={maxAssetSizeMb}
+            onMaxAssetSizeMbChange={setMaxAssetSizeMb}
+            assets={visibleAssets}
+            totalAssets={detectedAssets.length}
+            nameFilter={assetNameFilter}
+            onNameFilterChange={setAssetNameFilter}
+            minimumSizeMb={minimumAssetSizeMb}
+            onMinimumSizeMbChange={setMinimumAssetSizeMb}
+            excludedFiles={excludedFiles}
+            onToggleFile={(file) =>
+              setExcludedFiles((current) =>
+                toggleValue(current, file),
+              )
+            }
+            loading={assetsLoading}
+            error={assetsError}
+          />
         )}
 
-        {result && (
-          <div
-            className={`${styles.result} ${result.ok ? styles.ok : styles.error}`}
-          >
-            <p>
-              {result.ok ? `✓ Built to ${result.outDir}/` : "✗ Build failed"}
-            </p>
-            {result.log && (
-              <pre className={styles.log}>
-                {result.log}
-              </pre>
-            )}
-          </div>
-        )}
+        <ExportFeedback result={result} />
       </Panel>
     </>
   );

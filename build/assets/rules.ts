@@ -1,41 +1,75 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import { imageSize } from 'image-size';
-import { resolvePath } from '../paths.ts';
+import { imageSize } from "image-size";
+import fs from "node:fs";
+import path from "node:path";
+import { KNOWN_EXTENSIONS } from "../../src/core/types/extensions.ts";
+import { resolvePath } from "../paths.ts";
 
 export interface AssetExclusionConfig {
-  /** File extensions that always stay external, regardless of size, e.g. video/gif */
   excludeExtensions: string[];
-  /** Images wider than this (px) are treated as "large" and kept external */
   maxImageWidth: number;
-  /** Explicit relative paths the user checked off in the export UI */
+  maxAssetSizeMb: number;
   excludeFiles: string[];
 }
 
-const CONFIG_PATH = resolvePath('assetsConfig');
+const CONFIG_PATH = resolvePath("assetsConfig");
 
 export const DEFAULT_ASSET_CONFIG: AssetExclusionConfig = {
-  excludeExtensions: ['.mp4', '.mov', '.webm', '.gif'],
+  excludeExtensions: [...KNOWN_EXTENSIONS],
   maxImageWidth: 3000,
+  maxAssetSizeMb: 5,
   excludeFiles: [],
 };
 
+function normalizeConfig(
+  user: Partial<AssetExclusionConfig>,
+): AssetExclusionConfig {
+  return {
+    excludeExtensions: Array.isArray(user.excludeExtensions)
+      ? user.excludeExtensions.filter(
+        (value): value is string => typeof value === "string",
+      )
+      : DEFAULT_ASSET_CONFIG.excludeExtensions,
+
+    maxImageWidth:
+      typeof user.maxImageWidth === "number" &&
+        Number.isFinite(user.maxImageWidth)
+        ? Math.max(0, user.maxImageWidth)
+        : DEFAULT_ASSET_CONFIG.maxImageWidth,
+
+    maxAssetSizeMb:
+      typeof user.maxAssetSizeMb === "number" &&
+        Number.isFinite(user.maxAssetSizeMb)
+        ? Math.max(0, user.maxAssetSizeMb)
+        : DEFAULT_ASSET_CONFIG.maxAssetSizeMb,
+
+    excludeFiles: Array.isArray(user.excludeFiles)
+      ? user.excludeFiles.filter(
+        (value): value is string => typeof value === "string",
+      )
+      : DEFAULT_ASSET_CONFIG.excludeFiles,
+  };
+}
+
 export function loadAssetConfig(): AssetExclusionConfig {
-  if (!fs.existsSync(CONFIG_PATH)) return DEFAULT_ASSET_CONFIG;
+  if (!fs.existsSync(CONFIG_PATH)) {
+    return DEFAULT_ASSET_CONFIG;
+  }
+
   try {
-    const user = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf-8'));
-    return { ...DEFAULT_ASSET_CONFIG, ...user };
+    const user = JSON.parse(
+      fs.readFileSync(CONFIG_PATH, "utf-8"),
+    ) as Partial<AssetExclusionConfig>;
+
+    return normalizeConfig(user);
   } catch {
-    console.warn('[report-maker] Could not parse report.assets.config.json — using defaults.');
+    console.warn(
+      "[report-maker] Could not parse report.assets.config.json — using defaults.",
+    );
+
     return DEFAULT_ASSET_CONFIG;
   }
 }
 
-/**
- * Used as Vite's `build.assetsInlineLimit` function in "hybrid" mode.
- * Return false to force the asset to be emitted as a separate file in
- * dist/<mode>/assets/ instead of being base64-inlined into the bundle.
- */
 export function shouldInlineAsset(
   filePath: string,
   content: Buffer,
@@ -43,15 +77,29 @@ export function shouldInlineAsset(
 ): boolean {
   const ext = path.extname(filePath).toLowerCase();
 
-  if (config.excludeFiles.some((f) => filePath.endsWith(f))) return false;
-  if (config.excludeExtensions.includes(ext)) return false;
+  if (config.excludeFiles.some((file) => filePath.endsWith(file))) {
+    return false;
+  }
 
-  if (['.png', '.jpg', '.jpeg', '.webp'].includes(ext)) {
+  if (config.excludeExtensions.includes(ext)) {
+    return false;
+  }
+
+  const maxBytes = config.maxAssetSizeMb * 1024 * 1024;
+
+  if (content.byteLength > maxBytes) {
+    return false;
+  }
+
+  if ([".png", ".jpg", ".jpeg", ".webp"].includes(ext)) {
     try {
       const { width } = imageSize(content);
-      if (width && width > config.maxImageWidth) return false;
+
+      if (width && width > config.maxImageWidth) {
+        return false;
+      }
     } catch {
-      // Couldn't read dimensions (corrupt/odd file) — fall through and let it inline.
+      // Si les dimensions sont illisibles, la limite de poids reste appliquée.
     }
   }
 
