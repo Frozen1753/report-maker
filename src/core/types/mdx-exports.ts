@@ -3,6 +3,8 @@
  * MDX module: `export const toc` and `export const figures`.
  */
 
+import type { ComponentType } from "react";
+
 export interface TocEntry {
   id: string;
   depth: number;
@@ -17,4 +19,12 @@ export interface FigureEntry {
   number: string;
   /** Plain-text caption ("" if none) */
   caption: string;
+}
+
+export type MDXType = ComponentType<Record<string, unknown>>;
+
+export type MDXModule = {
+  toc: TocEntry[]
+  figures: FigureEntry[]
+  default: MDXType
 }

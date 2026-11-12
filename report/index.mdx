@@ -207,7 +207,7 @@ Every `<hX>` you write gets numbered and anchored automatically — that's what 
 The same mechanism exports a `toc` array from your compiled MDX module, so the table of contents builds itself from whatever headings actually exist in the file — add, remove, or reorder headings in `report.mdx` and it follows, nothing to update by hand:
 
 ```tsx bar name="src/app/App.tsx"
-import Report, { figures, toc } from "../../report/report.mdx";
+import Report, { figures, toc } from "../../report/index.mdx";
 
 <TableOfContent items={toc} />
 <ListOfFigures items={figures} />
@@ -1084,7 +1084,7 @@ node build/check-boundaries.mjs
 # Conclusion
 
 :::callout{type="note" title="Wrap-up"}
-Clone, `npm install`, `npm run dev`, write `report/report.mdx` with the components above, set your title and authors in `report/report.config.tsx`, pick a build mode when you're done. That's the whole workflow — everything else is detail you can come back to from this guide when you need it.
+Clone, `npm install`, `npm run dev`, write `report/index.mdx` with the components above, set your title and authors in `report/report.config.tsx`, pick a build mode when you're done. That's the whole workflow — everything else is detail you can come back to from this guide when you need it.
 :::
 
 ## A Note From the Author

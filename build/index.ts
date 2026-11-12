@@ -44,7 +44,12 @@ export function reportMaker(): UserConfig {
   return {
     base: buildMode === "folder" ? "/" : "./",
 
-    resolve: { alias: { "report-maker": path.resolve(process.cwd(), "src/core/mdx.ts") } },
+    resolve: {
+      alias: {
+        "report-maker": path.resolve(process.cwd(), "src/core/mdx.ts"),
+        "report": path.join(process.cwd(), "report")
+      }
+    },
 
     plugins: [
       // Must run before @vitejs/plugin-react transforms the JSX MDX compiles down to.
