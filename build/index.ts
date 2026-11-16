@@ -9,7 +9,6 @@ import remarkDirectiveRehype from "remark-directive-rehype";
 import remarkFrontmatter from 'remark-frontmatter';
 import remarkGfm from "remark-gfm";
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter';
-import { visualizer } from "rollup-plugin-visualizer";
 import type { PluginOption, UserConfig } from "vite";
 import { viteSingleFile } from "vite-plugin-singlefile";
 import svgr from "vite-plugin-svgr";
@@ -19,6 +18,7 @@ import { exportServerPlugin } from "./export/server.ts";
 import { inlineFaviconPlugin } from "./favicon/plugin.ts";
 import remarkFigures from "./mdx/remark-figures.ts";
 import remarkHeadingNumbers from "./mdx/remark-heading-numbers.ts";
+import remarkInclude from "./mdx/remark-include.ts";
 import { mermaidPlugin } from "./mermaid/plugin.ts";
 import { currentBuildMode } from "./modes.ts";
 import { pagesPlugin } from "./pages/plugin.ts";
@@ -36,13 +36,15 @@ export function reportMaker(): UserConfig {
 
   // Shared by mdx() and shikiPlugin(): the report is parsed by both.
   const remarkPlugins: MdxOptions["remarkPlugins"] = [
+    /* do NOT touch the order */
+    remarkFrontmatter,
+    [remarkMdxFrontmatter, { name: "frontmatter" }],
     remarkGfm,
+    remarkInclude,
     remarkHeadingNumbers,
     remarkFigures,
     remarkDirective,
-    remarkDirectiveRehype,
-    remarkFrontmatter,
-    remarkMdxFrontmatter,
+    remarkDirectiveRehype
   ];
 
   return {
@@ -108,6 +110,7 @@ export function reportMaker(): UserConfig {
           comments: false,
         },
       },
+      /*
       rolldownOptions: {
         plugins: [
           visualizer({
@@ -118,6 +121,7 @@ export function reportMaker(): UserConfig {
           }),
         ],
       },
+      */
     },
   };
 }

@@ -1,4 +1,5 @@
 import type { ComponentType, ElementType } from "react";
+import type { PageFrontmatter } from "./frontmatter";
 
 /**
  * Shapes of the data the remark plugins (build/mdx) inject into the compiled
@@ -21,19 +22,7 @@ export interface FigureEntry {
   caption: string;
 }
 
-/** The YAML frontmatter a page may start with. Every field is optional. */
-export interface PageFrontmatter {
-  /** Browser tab title: "<title> · <report title>". */
-  title?: string;
-  /** Show the cover page. Default: only on the home page. */
-  cover?: boolean;
-  /** Show the table of contents. Default: true. */
-  toc?: boolean;
-  /** Show the list of figures. Default: true. */
-  figures?: boolean;
-}
-
-/** What importing a compiled .mdx page gives. */
+/** What importing a compiled .page.mdx gives. */
 export interface MDXModule {
   default: ComponentType<{ components?: Record<string, ElementType> }>;
   toc: TocEntry[];

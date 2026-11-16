@@ -1,13 +1,16 @@
-import { use, useEffect, useRef } from "react";
+import { use, useEffect, useMemo, useRef } from "react";
 import { useLocation } from "react-router";
 import type { PageEntry } from "virtual:report-pages";
 import config from "../../../report/report.config";
 import { ListOfFigures } from "../../core/components/toc/ListOfFigures";
 import { TableOfContent } from "../../core/components/toc/TableOfContent";
 import type { MDXModule } from "../../core/types/mdx-exports";
+import { resolvePageConfig } from "../../core/utils/page/resolve-page-config";
 import { CoverPage } from "../components/cover-page/CoverPage";
 import { mdxComponents } from "../overrides";
+import { useSetHeader } from "./header-context";
 
+// One load per page, whatever the number of renders: `use` needs a stable promise.
 const loading = new Map<string, Promise<MDXModule>>();
 
 function load(entry: PageEntry): Promise<MDXModule> {
@@ -23,26 +26,26 @@ function load(entry: PageEntry): Promise<MDXModule> {
 export function PageRoute({ entry }: { entry: PageEntry }) {
   // Static builds already have the module; lazy ones suspend until it is loaded.
   const mdx = entry.module ?? use(load(entry));
-  const frontmatter = mdx.frontmatter ?? {};
-  console.log(frontmatter);
   const Content = mdx.default;
 
+  // Memoized on purpose: the header object goes into an effect below, a new one at each render would loop.
+  const page = useMemo(
+    () => resolvePageConfig(config, mdx.frontmatter, entry.route === "/"),
+    [mdx, entry.route],
+  );
+
+  const setHeader = useSetHeader();
   const { pathname, hash } = useLocation();
   const previousPath = useRef<string | null>(null);
 
-  const title = frontmatter.title ?
-    (frontmatter.title.value ?
-      (frontmatter.title.concatenate ?
-        `${config.title} - ${frontmatter.title.value}`
-        : `${frontmatter.title.value}`
-      )
-      : `${config.title} - ${frontmatter.title}`
-    )
-    : config.title;
+  useEffect(() => {
+    document.title = page.documentTitle;
+  }, [page.documentTitle]);
 
   useEffect(() => {
-    document.title = title;
-  }, [title]);
+    setHeader(page.header);
+    return () => setHeader(null);
+  }, [setHeader, page.header]);
 
   useEffect(() => {
     // Hash router: the route and the in-page anchor both live after the first "#"
@@ -60,18 +63,9 @@ export function PageRoute({ entry }: { entry: PageEntry }) {
 
   return (
     <>
-      {(frontmatter.cover ?? entry.route === "/") && (
-        <CoverPage
-          title={config.cover?.title ?? config.title}
-          coverMedia={config.cover?.media}
-          date={config.cover?.date}
-          authors={config.cover?.authors}
-          affiliations={config.cover?.affiliations}
-        />
-      )}
-
-      {(frontmatter.toc ?? true) && mdx.toc.length > 0 && <TableOfContent items={mdx.toc} />}
-      {(frontmatter.lof ?? true) && <ListOfFigures items={mdx.figures} />}
+      {page.cover && <CoverPage {...page.cover} />}
+      {page.toc && mdx.toc.length > 0 && <TableOfContent items={mdx.toc} />}
+      {page.lof && <ListOfFigures items={mdx.figures} />}
 
       <Content components={mdxComponents} />
     </>
