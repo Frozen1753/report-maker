@@ -1,4 +1,5 @@
 import { Children, type ComponentProps, type ReactElement, type ReactNode } from "react";
+import { terms } from "../../report/custom/glossary";
 import {
   Callout,
   Code,
@@ -10,9 +11,8 @@ import {
   type CalloutProps,
   type GlossaryTermProps,
   type LinkProps,
-  type SeparatorProps,
+  type SeparatorProps
 } from "../core/components";
-import { terms } from "../../report/custom/glossary";
 
 function Pre({ children, ...meta }: ComponentProps<"pre">) {
   const child = Children.only(children) as ReactElement<{

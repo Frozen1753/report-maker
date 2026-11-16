@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Link as RouterLink } from "react-router";
 import ReportMakerLogo from "../../assets/report-maker_logo.svg?react";
 import styles from "./Header.module.css";
 
@@ -15,7 +16,9 @@ export function Header({
 }: HeaderProps) {
   return (
     <header className={styles.header}>
-      <span className={styles.title}>{title}</span>
+      <RouterLink to="/" className={styles.title}>
+        {title}
+      </RouterLink>
 
       <div
         className={styles.logo}

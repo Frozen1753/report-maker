@@ -1,3 +1,4 @@
+import { Link as RouterLink } from "react-router";
 import type { FigureEntry } from "../../types/mdx-exports";
 import styles from "./toc.module.css";
 
@@ -18,10 +19,10 @@ export function ListOfFigures({ title = 'Liste des figures', items }: ListOfFigu
                     {items.map((item) => (
                         <li key={item.id} className={styles.item}>
                             <div className={styles.row}>
-                                <a href={`#${item.id}`} className={styles.link}>
+                                <RouterLink to={{ hash: `#${item.id}` }} className={styles.link}>
                                     <span className={styles.number}>Figure {item.number} :</span>
                                     {item.caption && <span>{item.caption}</span>}
-                                </a>
+                                </RouterLink>
                             </div>
                         </li>
                     ))}

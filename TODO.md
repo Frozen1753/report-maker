@@ -16,7 +16,11 @@
   - [X] `<ExportPanel/>` :
   - [ ] `<ThemePanel/>` :
 - [ ] MDX files
-  - [ ] multiple pages
+  - [X] multiple pages
+  - [ ] ::include{src="./partie.mdx"} directive
+  - [ ] automate page pre-rendering (npm run render)
+  - [ ] frontmatter node et resolver de config
+  - [ ] plugin d'assets du frontmatter
 - [ ] Responsive
 
 ## Bugfixes
@@ -24,3 +28,4 @@
 - [ ] nested `<Collapsible />` inner collapsible arrow animation not working
 - [ ] `<ThemeToggle>` stops working after theme edition preview
 - [ ] Build time in hybrid increases with lower image width filter
+- [ ] Default date in cover page alwways display Date.now() and not build date

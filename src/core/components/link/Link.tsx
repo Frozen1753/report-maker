@@ -1,5 +1,6 @@
 import { ExternalLinkIcon, LinkIcon } from "lucide-react";
 import type { AnchorHTMLAttributes } from "react";
+import { Link as RouterLink } from "react-router";
 import styles from "./Link.module.css";
 
 export type LinkProps = Omit<
@@ -24,7 +25,27 @@ function isExternalLink(href: string): boolean {
     }
 }
 
+/** "/docs/callout" or "/docs#intro": a page of the report (not "//host/..."). */
+function isPageLink(href: string): boolean {
+    return href.startsWith("/") && !href.startsWith("//");
+}
+
 export function Link({ href, children, icon, ...props }: LinkProps) {
+    // Pages and in-page anchors go through the router: with a hash router, a bare
+    // <a href="#section"> would be read as the route "/section".
+    if (isPageLink(href) || href.startsWith("#")) {
+        return (
+            <RouterLink
+                to={href.startsWith("#") ? { hash: href } : href}
+                className={styles.link}
+                {...props}
+            >
+                {children}
+                {icon && <LinkIcon />}
+            </RouterLink>
+        );
+    }
+
     const external = isExternalLink(href);
 
     return (

@@ -2,6 +2,7 @@ import styles from "./toc.module.css";
 
 import { ChevronRight } from 'lucide-react';
 import { useState } from 'react';
+import { Link as RouterLink } from "react-router";
 import type { TocEntry } from "../../types/mdx-exports";
 
 type TocEntryWithChildren = TocEntry & {
@@ -71,10 +72,10 @@ function TocItem({ item, expandedItems, toggleItem }: TocItemProps) {
           <span className={styles.togglePlaceholder} aria-hidden="true" />
         )}
 
-        <a href={`#${item.id}`} className={styles.link}>
+        <RouterLink to={{ hash: `#${item.id}` }} className={styles.link}>
           <span className={styles.number}>{item.number}</span>
           <span>{item.text}</span>
-        </a>
+        </RouterLink>
       </div>
 
       {hasChildren && isExpanded && (

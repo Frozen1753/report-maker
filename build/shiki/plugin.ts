@@ -1,15 +1,15 @@
-import { createProcessor } from '@mdx-js/mdx'
 import fs from 'node:fs'
 import postcss from 'postcss'
 import type { Plugin } from 'vite'
 import { resolvePath } from '../paths.ts'
+import { parsePages, type MdxOptions } from '../pages/parse.ts'
 import { normalizeCode, shikiKey } from '../../src/core/utils/shared/shiki-shared.ts'
-import { collectCodeBlocks } from './extract.ts'
+import { collectCodeBlocks, type CodeBlock } from './extract.ts'
 
 /**
  * Shiki pre-highlighting.
  *
- * build : buildStart parses src/report.mdx, finds every <Code type="bloc">, and
+ * build : buildStart parses every page of the report (see pages/scan.ts), finds every <Code type="bloc">, and
  *         highlights it in Node with BOTH themes in a single HTML (CSS variables
  *         --shiki-light / --shiki-dark, switched by CSS on :root[data-theme]).
  *         `virtual:shiki-runtime` then resolves to a stub holding only that
@@ -20,8 +20,6 @@ import { collectCodeBlocks } from './extract.ts'
  * A virtual module (instead of `if (import.meta.env.DEV)`) guarantees the
  * bundler never sees the `shiki` import in a build — no reliance on tree-shaking.
  */
-
-type MdxOptions = NonNullable<Parameters<typeof createProcessor>[0]>
 
 export interface ShikiPluginOptions {
   /**
@@ -60,27 +58,21 @@ async function precompute(
   remarkPlugins: MdxOptions['remarkPlugins'],
   warn: (message: string) => void,
 ): Promise<Map<string, string>> {
-  const mdxPath = resolvePath('report', root)
   const cssPath = resolvePath('baselineCss', root)
   const result = new Map<string, string>()
 
-  // Parse only (no transform): we just need the syntax tree.
-  let tree
-  try {
-    tree = createProcessor({ remarkPlugins }).parse(fs.readFileSync(mdxPath, 'utf-8'))
-  } catch (error) {
-    throw new Error(
-      "[shiki] couldn't parse src/report.mdx — pass the same remarkPlugins as mdx() to shikiPlugin({ remarkPlugins }). " +
-      (error instanceof Error ? error.message : String(error)),
-    )
-  }
-  const { blocks, unresolved } = collectCodeBlocks(tree as unknown as Record<string, unknown>)
-
-  for (const line of unresolved) {
-    warn(
-      `[shiki] <Code type="bloc"> near line ${line} has a lang or content that isn't a static string ` +
-      '(use a literal, or {`…`} without ${}) — it will render unhighlighted.',
-    )
+  // Every page of the build: parsed only (no transform), we just need the syntax trees.
+  const pages = parsePages(root, remarkPlugins)
+  const blocks: Array<CodeBlock & { page: string }> = []
+  for (const page of pages) {
+    const { blocks: found, unresolved } = collectCodeBlocks(page.tree as unknown as Record<string, unknown>)
+    for (const line of unresolved) {
+      warn(
+        `[shiki] <Code type="bloc"> in ${page.label} near line ${line} has a lang or content that isn't a static string ` +
+        '(use a literal, or {`…`} without ${}) — it will render unhighlighted.',
+      )
+    }
+    blocks.push(...found.map((block) => ({ ...block, page: page.label })))
   }
 
   const { codeToHtml, bundledLanguagesInfo, bundledThemesInfo } = await import('shiki')
@@ -106,7 +98,7 @@ async function precompute(
     if (!BUILTIN_LANGS.has(lang) && !validLangs.has(lang)) {
       if (!warnedLangs.has(lang)) {
         warnedLangs.add(lang)
-        warn(`[shiki] "${lang}" (near line ${block.line}) isn't a known Shiki language or alias — it will render unhighlighted. Typo?`)
+        warn(`[shiki] "${lang}" (${block.page}, line ${block.line}) isn't a known Shiki language or alias — it will render unhighlighted. Typo?`)
       }
       lang = 'text'
     }
@@ -116,7 +108,7 @@ async function precompute(
   }
 
   console.log(
-    `[shiki] ${result.size} block(s) pre-highlighted (${[...usedLangs].join(', ') || 'none'}) · ${themes.light} / ${themes.dark} · no shiki in the bundle`,
+    `[shiki] ${result.size} block(s) from ${pages.length} page(s) pre-highlighted (${[...usedLangs].join(', ') || 'none'}) · ${themes.light} / ${themes.dark} · no shiki in the bundle`,
   )
   return result
 }

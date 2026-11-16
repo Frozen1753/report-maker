@@ -6,7 +6,9 @@ import rehypeMdxCodeProps from "rehype-mdx-code-props";
 import rehypeMdxImportMedia from "rehype-mdx-import-media";
 import remarkDirective from "remark-directive";
 import remarkDirectiveRehype from "remark-directive-rehype";
+import remarkFrontmatter from 'remark-frontmatter';
 import remarkGfm from "remark-gfm";
+import remarkMdxFrontmatter from 'remark-mdx-frontmatter';
 import { visualizer } from "rollup-plugin-visualizer";
 import type { PluginOption, UserConfig } from "vite";
 import { viteSingleFile } from "vite-plugin-singlefile";
@@ -17,8 +19,9 @@ import { exportServerPlugin } from "./export/server.ts";
 import { inlineFaviconPlugin } from "./favicon/plugin.ts";
 import remarkFigures from "./mdx/remark-figures.ts";
 import remarkHeadingNumbers from "./mdx/remark-heading-numbers.ts";
-import { mermaidPlugin, remarkMermaidCollect } from "./mermaid/plugin.ts";
+import { mermaidPlugin } from "./mermaid/plugin.ts";
 import { currentBuildMode } from "./modes.ts";
+import { pagesPlugin } from "./pages/plugin.ts";
 import { shikiPlugin } from "./shiki/plugin.ts";
 import { shikiThemesServerPlugin } from "./shiki/themes-server.ts";
 import { themeServerPlugin } from "./theme/server.ts";
@@ -38,7 +41,8 @@ export function reportMaker(): UserConfig {
     remarkFigures,
     remarkDirective,
     remarkDirectiveRehype,
-    remarkMermaidCollect,
+    remarkFrontmatter,
+    remarkMdxFrontmatter,
   ];
 
   return {
@@ -48,22 +52,27 @@ export function reportMaker(): UserConfig {
 
     plugins: [
       // Must run before @vitejs/plugin-react transforms the JSX MDX compiles down to.
+
       {
         enforce: "pre",
         ...mdx({ remarkPlugins, rehypePlugins: [rehypeMdxCodeProps, rehypeMdxImportMedia] }),
       },
-      shikiPlugin({ remarkPlugins }),
 
-      react({ include: /\.(jsx|js|mdx|md|tsx|ts)$/ }),
+      shikiPlugin({ remarkPlugins }),
+      pagesPlugin({
+        eager: buildMode !== "folder",
+      }),
+
+      react({ include: /\.\**(jsx|js|mdx|md|tsx|ts)$/ }),
 
       svgr(),
 
-      // Dev-only endpoints for the panels (all `apply: "serve"`).
       exportServerPlugin(),
       themeServerPlugin(),
       assetsServerPlugin(),
       shikiThemesServerPlugin(),
-      mermaidPlugin(),
+
+      mermaidPlugin({ remarkPlugins }),
 
       buildMode !== "folder" && inlineFaviconPlugin(),
 
