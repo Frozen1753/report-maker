@@ -177,7 +177,7 @@ th {
    RESPONSIVE
    ========================================================== */
 
-@media (max-width: 700px) {
+@media (max-width: 768px) {
   main {
     width: 100%;
     padding: var(--space-4) var(--space-5) 60px;
