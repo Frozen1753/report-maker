@@ -23,6 +23,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-src/generated/*
+**/generated/*
 stats.html
 *.vbs
