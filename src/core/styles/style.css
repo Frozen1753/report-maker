@@ -178,8 +178,64 @@ th {
    ========================================================== */
 
 @media (max-width: 768px) {
+  body {
+    font-size: calc(var(--text-body) * 0.8);
+  }
+
+
   main {
     width: 100%;
     padding: var(--space-4) var(--space-5) 60px;
+  }
+
+  /* ==========================================================
+     TITLES
+     ========================================================== */
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin: 1.75rem 0 0.8em;
+  }
+
+  h1 {
+    padding: 0.875rem 1.25rem;
+    border-radius: 1rem;
+    font-size: calc(var(--text-h1) * 0.75);
+  }
+
+  h2 {
+    font-size: calc(var(--text-h2) * 0.75);
+  }
+
+  h3 {
+    font-size: calc(var(--text-h3) * 0.75);
+  }
+
+  h4 {
+    font-size: calc(var(--text-h4) * 0.75);
+  }
+
+  h5 {
+    font-size: calc(var(--text-h5) * 0.75);
+  }
+
+  h6 {
+    font-size: calc(var(--text-h6) * 0.75);
+  }
+
+  h2,
+  h3 {
+    padding: 0.625rem 1rem;
+    border-radius: 0.75rem;
+  }
+
+  h4,
+  h5 {
+    text-decoration-thickness: 3px;
+    text-underline-offset: 4px;
   }
 }
