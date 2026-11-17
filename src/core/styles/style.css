@@ -226,16 +226,4 @@ th {
   h6 {
     font-size: calc(var(--text-h6) * 0.75);
   }
-
-  h2,
-  h3 {
-    padding: 0.625rem 1rem;
-    border-radius: 0.75rem;
-  }
-
-  h4,
-  h5 {
-    text-decoration-thickness: 3px;
-    text-underline-offset: 4px;
-  }
 }
