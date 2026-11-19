@@ -12,7 +12,7 @@
     "build:singlefile": "node build/build-report.mjs singlefile",
     "build:hybrid": "node build/build-report.mjs hybrid",
     "check:boundaries": "node build/check-boundaries.mjs",
-    "deploy": "gh-pages -d dist/singlefile"
+    "deploy": "npm run build:singlefile && gh-pages -d dist/singlefile"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.20",
