@@ -9,7 +9,7 @@
   overflow: hidden;
 
   border: 1px solid var(--collapsible-border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-7);
   background: var(--c-bg-surface);
 
   transition:

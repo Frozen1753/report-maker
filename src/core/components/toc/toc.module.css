@@ -5,7 +5,7 @@
   text-align: left;
 
   border: 1px solid var(--c-border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-7);
 
   background: var(--c-bg-soft);
 }
@@ -63,7 +63,7 @@
   padding: 0;
 
   border: 0;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-3);
 
   background: transparent;
   color: var(--c-primary);

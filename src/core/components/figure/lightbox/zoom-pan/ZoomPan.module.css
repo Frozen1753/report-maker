@@ -4,7 +4,7 @@
 
   overflow: hidden;
 
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-7);
 
   touch-action: none;
 }
@@ -29,7 +29,7 @@
   display: block;
   max-width: 90vw;
   max-height: 90vh;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-7);
   box-shadow: var(--shadow-medium);
 }
 
@@ -48,7 +48,7 @@
   margin: 0;
   padding: 0.3rem 0.75rem;
 
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-full);
 
   background: rgb(20 12 9 / 65%);
   color: var(--c-text-on-accent);

@@ -20,11 +20,11 @@ body {
 
 main {
   box-sizing: border-box;
-  width: calc(100% - 2rem);
+  width: calc(100% - var(--size-8));
   max-width: 75rem;
   min-height: 100vh;
   margin-inline: auto;
-  padding: 1.25rem 3.75rem 3.75rem;
+  padding: var(--size-5) var(--size-15) var(--size-15);
 
   background-color: var(--c-bg-surface);
   color: var(--c-text);
@@ -120,12 +120,12 @@ h6[id] {
 
 ul,
 ol {
-  padding-left: 3rem;
+  padding-left: var(--size-12);
 }
 
 ul > li,
 ol > li {
-  padding-left: 0.75rem;
+  padding-left: var(--size-3);
 }
 
 ul {
@@ -169,7 +169,7 @@ th {
   padding: var(--size-4) var(--size-5);
 
   border: 1px solid var(--c-border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-7);
   background: var(--c-bg-soft);
 }
 
@@ -205,8 +205,8 @@ th {
   }
 
   h1 {
-    padding: 0.875rem 1.25rem;
-    border-radius: 1rem;
+    padding: calc(var(--size-3) + var(--size-0\.5)) var(--size-5);
+    border-radius: var(--radius-7);
     font-size: calc(var(--text-h1) * 0.75);
   }
 
@@ -236,11 +236,11 @@ th {
 
   ul,
   ol {
-    padding-left: 1.5rem;
+    padding-left: var(--size-6);
   }
 
   ul > li,
   ol > li {
-    padding-left: 0.5rem;
+    padding-left: var(--size-2);
   }
 }

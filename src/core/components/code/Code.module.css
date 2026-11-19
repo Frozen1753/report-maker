@@ -6,7 +6,7 @@
   margin: 0 2px;
 
   border: 1px solid var(--c-border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-3);
 
   background: var(--c-bg-soft);
   color: var(--c-primary);
@@ -21,7 +21,7 @@
   position: relative;
   overflow: hidden;
   margin: var(--size-4) 0;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-7);
 }
 
 .bar {
@@ -58,7 +58,7 @@
   padding: 0.15rem 0.45rem;
 
   border: 1px solid var(--c-border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-3);
   background-color: var(--c-bg-soft);
 
   color: var(--c-secondary);
@@ -70,7 +70,7 @@
 .copyButton,
 .copyButtonNoBar {
   border: 1px solid var(--c-border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-3);
   font-size: small;
 
   background: var(--c-bg-soft);

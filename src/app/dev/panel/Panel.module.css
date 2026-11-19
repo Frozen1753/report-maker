@@ -76,7 +76,7 @@
   padding: 0.75rem 1rem 1rem;
 
   border: 1px solid var(--c-border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-7);
 }
 
 .section > legend {
@@ -93,7 +93,7 @@
   padding: 0.5rem 1rem;
 
   border: 1px solid currentcolor;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-3);
 
   cursor: pointer;
   font-size: 0.875rem;

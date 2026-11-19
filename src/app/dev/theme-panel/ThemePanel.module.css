@@ -65,7 +65,7 @@
 .swatch {
   width: 2rem;
   height: 2rem;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-3);
   cursor: pointer;
 }
 
@@ -80,7 +80,7 @@
   min-width: 0;
   padding: 0.25rem 0.5rem;
   border: 1px solid var(--c-border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-3);
   font-size: 0.875rem;
   line-height: 1.4286;
 }
@@ -113,7 +113,7 @@
 
 .message {
   padding: 0.625rem 0.875rem;
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-7);
   font-size: 0.875rem;
   line-height: 1.4286;
 }

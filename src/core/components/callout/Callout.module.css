@@ -10,7 +10,7 @@
 
   border: 1px solid color-mix(in srgb, var(--callout-color) 30%, transparent);
   border-left: 6px solid var(--callout-color);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-7);
 
   background: var(--callout-background);
   color: var(--c-text);
