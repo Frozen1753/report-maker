@@ -11,7 +11,7 @@
   color: var(--c-primary);
 
   font-family: var(--font-code);
-  font-size: 0.9em !important;
+  font-size: calc(var(--text-body) * 0.73) !important;
 }
 
 /* block */
@@ -47,7 +47,7 @@
 .name {
   overflow: hidden;
 
-  font-size: 0.9rem;
+  font-size: calc(var(--text-body) * 0.75);
   font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -62,7 +62,7 @@
 
   color: var(--c-secondary);
   font-family: var(--font-code);
-  font-size: 0.75rem;
+  font-size: calc(var(--text-body) * 0.625);
   text-transform: lowercase;
 }
 
@@ -80,6 +80,15 @@
     background-color var(--transition-fast),
     border-color var(--transition-fast),
     color var(--transition-fast);
+
+  &:hover {
+    border-color: var(--c-border-strong);
+    background: var(--c-bg-muted);
+  }
+
+  &.copied {
+    color: #9bcf78;
+  }
 }
 
 .copyButton {
@@ -104,36 +113,42 @@
   padding: 0.4rem;
 }
 
-.copyButton:hover,
-.copyButtonNoBar:hover {
-  border-color: var(--c-border-strong);
-  background: var(--c-bg-muted);
-}
-
-.copyButton.copied,
-.copyButtonNoBar.copied {
-  color: #9bcf78;
-}
-
 /* highlighted code (Shiki) */
 
 .highlighted {
   overflow-x: auto;
-}
 
-.highlighted pre {
-  margin: 0;
-  padding: var(--space-4);
+  pre {
+    margin: 0;
+    padding: var(--space-4);
 
-  overflow-x: auto;
+    overflow-x: auto;
 
-  background: #171311;
-  font-size: 15px;
-  line-height: 1.6;
-}
+    background: #171311;
+    font-size: calc(var(--text-body) * 0.8);
+    line-height: 1.6;
+  }
 
-.highlighted code {
-  font-family: var(--font-code);
+  code {
+    font-family: var(--font-code);
+  }
+
+  /*
+   * Shiki emits <pre class="shiki"> and tokens carrying --shiki-light / --shiki-dark:
+   * `.shiki` is Shiki's own class, hence :global. The theme is picked here, so
+   * switching light/dark never re-highlights anything.
+   */
+  :global(.shiki) {
+    color: var(--shiki-light);
+    background-color: var(--shiki-light-bg);
+
+    span {
+      color: var(--shiki-light);
+      font-style: var(--shiki-light-font-style);
+      font-weight: var(--shiki-light-font-weight);
+      text-decoration: var(--shiki-light-text-decoration);
+    }
+  }
 }
 
 .wrapper:not(.hasBar) .highlighted pre {
@@ -144,26 +159,16 @@
   border-radius: 0;
 }
 
-/*
- * Shiki emits <pre class="shiki"> and tokens carrying --shiki-light / --shiki-dark:
- * `.shiki` is Shiki's own class, hence :global. The theme is picked here, so
- * switching light/dark never re-highlights anything.
- */
-.highlighted :global(.shiki) {
-  color: var(--shiki-light);
-  background-color: var(--shiki-light-bg);
-}
-
-.highlighted :global(.shiki) span {
-  color: var(--shiki-light);
-  font-style: var(--shiki-light-font-style);
-  font-weight: var(--shiki-light-font-weight);
-  text-decoration: var(--shiki-light-text-decoration);
-}
-
 :global(:root.dark) .highlighted :global(.shiki) {
   color: var(--shiki-dark);
   background-color: var(--shiki-dark-bg);
+
+  span {
+    color: var(--shiki-dark);
+    font-style: var(--shiki-dark-font-style);
+    font-weight: var(--shiki-dark-font-weight);
+    text-decoration: var(--shiki-dark-text-decoration);
+  }
 }
 
 :global(:root.dark) .highlighted :global(.shiki) span {
