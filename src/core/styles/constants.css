@@ -27,10 +27,18 @@
   --size-6: 1.5rem;
   --size-7: 1.75rem;
   --size-8: 2rem;
-  --size-9: 2.5rem;
-  --size-10: 3rem;
-  --size-11: 4rem;
-  --size-12: 5rem;
+  --size-9: 2.25rem;
+  --size-10: 2.5rem;
+  --size-11: 2.75rem;
+  --size-12: 3rem;
+  --size-13: 3.25rem;
+  --size-14: 3.5rem;
+  --size-15: 3.75rem;
+  --size-16: 4rem;
+  --size-17: 4.25rem;
+  --size-18: 4.5rem;
+  --size-19: 4.75rem;
+  --size-20: 5rem;
 
   --transition-fast: 150ms ease;
   --transition-normal: 200ms ease;

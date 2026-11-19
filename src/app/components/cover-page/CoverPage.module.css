@@ -22,7 +22,7 @@
   justify-content: center;
 
   max-width: 700px;
-  margin: var(--size-9) auto;
+  margin: var(--size-10) auto;
 
   a {
     display: inline-flex;
