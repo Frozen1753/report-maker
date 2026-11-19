@@ -33,7 +33,7 @@ main {
 }
 
 :focus-visible {
-  border-radius: 0.125rem;
+  border-radius: var(--radius-1);
   outline: 3px solid var(--c-secondary);
   outline-offset: 3px;
 }
@@ -54,20 +54,20 @@ h6 {
 }
 
 h1 {
-  padding: 0.875rem 1.25rem;
-  border-radius: 1rem;
+  padding: calc(var(--size-0\.5) + var(--size-3)) var(--size-5);
+  border-radius: var(--radius-8);
   background-color: var(--c-primary);
   color: var(--c-text-on-accent);
   font-size: var(--text-h1);
 }
 
 h2 {
-  border-left: 6px solid var(--c-primary);
+  border-left: calc(var(--size-0\.5) + var(--size-1)) solid var(--c-primary);
   font-size: var(--text-h2);
 }
 
 h3 {
-  border-left: 6px solid var(--c-secondary);
+  border-left: calc(var(--size-0\.5) + var(--size-1)) solid var(--c-secondary);
   font-size: var(--text-h3);
 }
 
@@ -85,8 +85,8 @@ h6 {
 
 h2,
 h3 {
-  padding: 0.625rem 1rem;
-  border-radius: 0.75rem;
+  padding: calc(var(--size-0\.5) + var(--size-2)) var(--size-4);
+  border-radius: var(--radius-6);
   background-color: var(--c-bg-soft);
   color: var(--c-text);
 }
@@ -201,7 +201,7 @@ th {
   h4,
   h5,
   h6 {
-    margin: 1.75rem 0 0.8em;
+    margin: var(--size-7) 0 0.8em;
   }
 
   h1 {
