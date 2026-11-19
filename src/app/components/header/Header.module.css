@@ -30,7 +30,7 @@
 
 @media (max-width: 768px) {
   .header {
-    padding: var(--space-3) var(--space-5);
+    padding: var(--size-3) var(--size-5);
   }
 
   .title {

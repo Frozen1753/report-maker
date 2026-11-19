@@ -1,5 +1,5 @@
 hr.separator {
-  margin: var(--space-10) 0;
+  margin: var(--size-9) 0;
   border: 0;
   border-top: 1px solid var(--c-border);
 }
@@ -7,8 +7,8 @@ hr.separator {
 .separator-labeled {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
-  margin: var(--space-10) 0;
+  gap: var(--size-4);
+  margin: var(--size-9) 0;
 }
 
 .separator-line {

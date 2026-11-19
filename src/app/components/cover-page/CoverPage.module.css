@@ -22,7 +22,7 @@
   justify-content: center;
 
   max-width: 700px;
-  margin: var(--space-10) auto;
+  margin: var(--size-9) auto;
 
   a {
     display: inline-flex;
@@ -45,7 +45,7 @@
 .cover-authors {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--size-2);
   text-align: center;
 
   .info-line {
@@ -78,7 +78,7 @@
 
   .cover-media {
     max-width: 700px;
-    margin: var(--space-8) auto;
+    margin: var(--size-8) auto;
 
     a {
       justify-content: center;
@@ -93,6 +93,6 @@
   .cover-authors {
     width: 70%;
     margin: auto;
-    gap: var(--space-1);
+    gap: var(--size-1);
   }
 }

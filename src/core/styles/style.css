@@ -1,3 +1,4 @@
+@import "./constants.css";
 @import "./reset.css";
 @import "./tokens.css";
 
@@ -150,7 +151,7 @@ table {
 
 th,
 td {
-  padding: var(--space-3);
+  padding: var(--size-3);
   border: 1px solid var(--c-border);
 }
 
@@ -164,8 +165,8 @@ th {
    ========================================================== */
 
 .success {
-  margin: var(--space-5) 0;
-  padding: var(--space-4) var(--space-5);
+  margin: var(--size-5) 0;
+  padding: var(--size-4) var(--size-5);
 
   border: 1px solid var(--c-border);
   border-radius: var(--radius-lg);
@@ -185,10 +186,9 @@ th {
     font-size: calc(var(--text-body) * 0.8);
   }
 
-
   main {
     width: 100%;
-    padding: var(--space-4) var(--space-5) 60px;
+    padding: var(--size-4) var(--size-5) 60px;
   }
 
   /* ==========================================================

@@ -20,7 +20,7 @@
 .wrapper {
   position: relative;
   overflow: hidden;
-  margin: var(--space-4) 0;
+  margin: var(--size-4) 0;
   border-radius: var(--radius-lg);
 }
 
@@ -28,10 +28,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-4);
+  gap: var(--size-4);
 
   min-height: 42px;
-  padding: 0.45rem 0.65rem 0.45rem var(--space-4);
+  padding: 0.45rem 0.65rem 0.45rem var(--size-4);
 
   border-bottom: 1px solid var(--c-accent-soft);
   background: var(--c-bg-page);
@@ -41,7 +41,7 @@
 .info {
   display: flex;
   align-items: center;
-  gap: var(--space-3);
+  gap: var(--size-3);
   min-width: 0;
 }
 
@@ -121,7 +121,7 @@
 
   pre {
     margin: 0;
-    padding: var(--space-4);
+    padding: var(--size-4);
 
     overflow-x: auto;
 

@@ -3,10 +3,10 @@
   --callout-background: var(--c-bg-soft);
 
   display: grid;
-  gap: var(--space-2);
+  gap: var(--size-2);
 
-  margin: var(--space-5) 0;
-  padding: var(--space-4) var(--space-5);
+  margin: var(--size-5) 0;
+  padding: var(--size-4) var(--size-5);
 
   border: 1px solid color-mix(in srgb, var(--callout-color) 30%, transparent);
   border-left: 6px solid var(--callout-color);
@@ -19,7 +19,7 @@
 .callout-heading {
   display: flex;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--size-2);
 
   color: var(--callout-color);
 }

@@ -33,36 +33,16 @@
   --shadow-soft: 0 4px 14px var(--c-shadow);
 
   /* Not theme-dependent */
-  --text-body: 1.2rem;
-  --text-h1: 1.8rem;
-  --text-h2: 1.6rem;
-  --text-h3: 1.5rem;
-  --text-h4: 1.4rem;
-  --text-h5: 1.35rem;
-  --text-h6: 1.3rem;
+  --text-body: var(--font-size-3);
+  --text-h1: var(--font-size-8);
+  --text-h2: var(--font-size-6);
+  --text-h3: var(--font-size-5);
+  --text-h4: var(--font-size-4);
+  --text-h5: var(--font-size-3);
+  --text-h6: var(--font-size-3);
 
   --font-body: "Segoe UI", sans-serif;
   --font-code: "Fira Code", "Consolas", monospace;
-
-  --shadow-medium: 0 10px 40px rgb(74 42 29 / 22%);
-
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-pill: 999px;
-
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-8: 32px;
-  --space-10: 40px;
-  --space-12: 48px;
-
-  --transition-fast: 150ms ease;
-  --transition-normal: 200ms ease;
 
   /* Shiki themes. No !important: it would make vars.css unable to override them. */
   --code-theme-light: catppuccin-latte;
