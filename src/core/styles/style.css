@@ -143,6 +143,9 @@ table {
   width: 100%;
   margin: 30px 0;
   border-collapse: collapse;
+
+  display: block;
+  overflow-x: scroll;
 }
 
 th,
@@ -225,5 +228,19 @@ th {
 
   h6 {
     font-size: calc(var(--text-h6) * 0.75);
+  }
+
+  /* ==========================================================
+     LISTS
+     ========================================================== */
+
+  ul,
+  ol {
+    padding-left: 1.5rem;
+  }
+
+  ul > li,
+  ol > li {
+    padding-left: 0.5rem;
   }
 }
