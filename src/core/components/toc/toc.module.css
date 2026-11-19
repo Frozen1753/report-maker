@@ -2,6 +2,8 @@
   margin: var(--space-10) 0;
   padding: 15px 25px;
 
+  text-align: left;
+
   border: 1px solid var(--c-border);
   border-radius: var(--radius-lg);
 
