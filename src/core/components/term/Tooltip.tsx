@@ -28,6 +28,7 @@ import {
   type ReactNode,
 } from 'react';
 import styles from './Tooltip.module.css';
+import { useClick } from '@floating-ui/react';
 
 const DEFAULT_OPEN_DELAY_MS = 300;
 const DEFAULT_CLOSE_DELAY_MS = 100;
@@ -128,6 +129,9 @@ function TooltipNode({
       move: false,
       delay: { open: openDelay, close: closeDelay },
       handleClose: safePolygon(),
+    }),
+    useClick(context, {
+      ignoreMouse: true
     }),
     useFocus(context),
     useDismiss(context, {
