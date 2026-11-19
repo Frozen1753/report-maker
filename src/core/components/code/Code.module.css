@@ -171,9 +171,8 @@
   }
 }
 
-:global(:root.dark) .highlighted :global(.shiki) span {
-  color: var(--shiki-dark);
-  font-style: var(--shiki-dark-font-style);
-  font-weight: var(--shiki-dark-font-weight);
-  text-decoration: var(--shiki-dark-text-decoration);
+@media (max-width: 768px) {
+  .highlighted pre {
+    font-size: calc(var(--text-body) * 0.7);
+  }
 }
