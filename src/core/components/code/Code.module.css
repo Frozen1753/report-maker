@@ -3,6 +3,7 @@
 .inline {
   display: inline-block;
   padding: 1px 5px;
+  margin: 0 2px;
 
   border: 1px solid var(--c-border);
   border-radius: var(--radius-sm);
