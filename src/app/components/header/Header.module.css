@@ -22,13 +22,18 @@
 }
 
 .logo {
-  height: 2.5rem;
+  display: flex;
+  flex-direction: row-reverse;
   align-content: center;
   color: var(--c-text-on-accent);
 }
 
-@media (max-width: 700px) {
+@media (max-width: 768px) {
   .header {
     padding: var(--space-3) var(--space-5);
+  }
+
+  .title {
+    font-size: 1rem;
   }
 }
