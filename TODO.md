@@ -36,7 +36,6 @@
   - [ ] Panels
   - [ ] index (intro, getting started, ->docs, author's note)
   - [ ] FR/EN
-- [ ] LICENSE / README / THIRD-PARTY-LICENSES
 
 ## Bugfixes
 
@@ -45,3 +44,4 @@
 - [ ] Build time in hybrid increases with lower image width filter
 - [ ] Default date in cover page always display Date.now() and not build date
 - [ ] check-boundaries.mjs doesn't work without .git
+- [ ] horizontal scroll bar seems to appear on some instance of a table
