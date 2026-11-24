@@ -1,6 +1,7 @@
 {
   "name": "report-maker",
   "version": "0.0.0",
+  "license": "MIT",
   "private": true,
   "type": "module",
   "scripts": {
@@ -14,7 +15,9 @@
     "check:boundaries": "node build/check-boundaries.mjs",
     "deploy:folder": "npm run build:folder && gh-pages -d dist/folder",
     "deploy:singlefile": "npm run build:singlefile && gh-pages -d dist/singlefile",
-    "deploy:hybrid": "npm run build:hybrid && gh-pages -d dist/hybrid"
+    "deploy:hybrid": "npm run build:hybrid && gh-pages -d dist/hybrid",
+    "licenses": "node build/licenses.mjs",
+    "licenses:check": "node build/licenses.mjs --check"
   },
   "dependencies": {
     "@floating-ui/react": "^0.27.20",

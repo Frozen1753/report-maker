@@ -36,6 +36,7 @@
   - [ ] Panels
   - [ ] index (intro, getting started, ->docs, author's note)
   - [ ] FR/EN
+- [ ] LICENSE / README / THIRD-PARTY-LICENSES
 
 ## Bugfixes
 
@@ -43,3 +44,4 @@
 - [ ] `<ThemeToggle>` stops working after theme edition preview
 - [ ] Build time in hybrid increases with lower image width filter
 - [ ] Default date in cover page always display Date.now() and not build date
+- [ ] check-boundaries.mjs doesn't work without .git
