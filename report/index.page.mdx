@@ -14,32 +14,32 @@ cover:
     affiliations:
     -   "Programmers, deadline rushers and over-optimizers"
 ---
-
-# Introduction
-
-Report Maker is a project that allows you to create a report using MDX file: plain Markdown for the text, real React components wherever Markdown alone isn't enough. Headings number themselves, a table of contents builds itself, and the whole thing can compile down to a single `index.html` (just like a pdf) with no extra runtime.
-
-:::callout{type="info" title="How to read this guide"}
-This document is itself a Report Maker report — every component shown below is demonstrated
-live, not just described. Open its source file alongside this rendered version if you want to
-see the exact MDX behind each example.
-:::
-
-In this report, we'll go over what Report Maker needs to run on your machine, how to use it, and everything that can be done with it (spoiler: basically **anything**).
-
-
 import {
     Collapsible,
     Tabs
 } from "report-maker";
+
+# Introduction
+
+Report Maker is a project that allows you to create a report using MDX file: plain Markdown for the text, real React components wherever Markdown alone isn't enough.
+Headings number themselves, a table of contents builds itself, and the whole thing can compile down to a single `index.html` (just like a pdf) with no extra runtime.
+
+:::callout{type="info" title="How to read this guide"}
+This document is in itself a Report Maker report.
+Every component shown below is demonstrated live, not just described.
+Open its source file alongside the rendered version to see the MDX behind each example.
+:::
+
+In this report, we'll go over what Report Maker needs to run on your machine, how to use it,
+and the documentation on everything that can be done with it (spoiler: basically **anything**).
 
 # Getting Started
 
 ## Prerequisites
 
 - **Node.js 20.19+ or 22.12+** (the minimum of Vite 8, which builds your report)
-- **npm** (or an equivalent package manager — examples below use npm)
-- A code editor with TypeScript/MDX support (most modern editors handle both out of the box)
+- **npm** (or an equivalent package manager; examples below use npm)
+- A code editor with TypeScript/MDX support (most modern editors handle both out of the box or with a few plugins)
 
 <Collapsible title="Why these specific versions?">
     Vite 8 (built on Rolldown) and the MDX/rehype toolchain used here rely on modern ESM resolution.
@@ -73,20 +73,21 @@ npm run dev
 ```
 
 <Collapsible title="Starting a report without keeping this repo's history">
-Use `degit` to copy the files without any git history:
+Simply remove the `.git` folder or use `degit` to copy the files without any git history:
 
 ```bash copy
 npx degit Frozen1753/report-maker my-report
 ```
 
-Or click `Use this template` on the GitHub repository page — it creates a fresh repo with the same starting files.
+Or click `Use this template` on the GitHub repository page to it creates a fresh repo with the same starting files.
 
 Either way, you won't have a path back to this repo's future updates. If you'd rather keep that option open, clone or fork instead (see below).
 
 </Collapsible>
 
 <Collapsible title="Pulling in updates later">
-  If you forked the repo on GitHub, its `Sync fork` button handles it for you. If you cloned it directly, add this repo as a second remote once, then rebase onto it whenever you want the latest fixes:
+
+If you forked the repo on GitHub, its `Sync fork` button handles it for you. If you cloned it directly, add this repo as a second remote once, then rebase onto it whenever you want the latest fixes:
 
 ```bash bar copy name="terminal"
 git remote add upstream https://github.com/Frozen1753/report-maker.git
@@ -94,7 +95,7 @@ git fetch upstream
 git rebase upstream/main
 ```
 
-A `degit` copy or a repo created from `Use this template` has no shared history with this one, so neither option above applies to it — you'd be copying changes over by hand.
+A `degit` copy or a repo created from `Use this template` has no shared history with this one, so neither option above applies to it : you'd be copying changes over by hand.
 
 </Collapsible>
 
@@ -109,18 +110,26 @@ A `degit` copy or a repo created from `Use this template` has no shared history 
 7. [Building & Exporting](/docs/building): folder, singlefile and hybrid builds.
 8. [Extending Report Maker](/docs/extending): your own components and the public API.
 
-# Conclusion
+# TL;DR
 
 :::callout{type="note" title="Wrap-up"}
-Clone, `npm install`, `npm run dev`, write `report/report.mdx` with the components above, set your title and authors in `report/report.config.tsx`, pick a build mode when you're done. That's the whole workflow — everything else is detail you can come back to from this guide when you need it.
+Clone, `npm install`, `npm run dev`, write `report/index.page.mdx` with the components above,
+set your title and authors in `report/report.config.tsx`, pick a build mode when you're done.
+That's the whole workflow, everything else is detail you can come back to this guide when you need it.
 :::
 
-## A Note From the Author
+# A Note From the Author
 
-I built Report Maker after a friend and I wrote a report by hand last year, in raw HTML and Markdown glued together — the result was genuinely great, but getting there was not an experience I'd wish on anyone. This project is the "never again" version of that.
+I built Report Maker after a friend and I wrote a report by hand last year, in raw HTML and Markdown glued together.
+The result was genuinely great, but getting there was not an experience I'd wish on anyone. This project is the "never again" version of that.
+<br/>
 
-If you ended up here because someone pointed you at the repo, or because you just stumbled onto it: use it, fork it, strip out whatever you don't need, build your own components on top of it. It's licensed under `MIT` — do basically anything with it, including in things you sell, just keep the license notice around.
+If you ended up here because someone pointed you at the repo, or because you just stumbled onto it:
+use it, fork it, strip out whatever you don't need, build your own components on top of it.
+It's licensed under `MIT` so do basically anything with it, including in things you sell, just keep the license notice around.
+<br/>
 
-If you build something with it, improve on it, or find something I got wrong, I'd like to hear about it — open an issue or a PR on <a href="https://github.com/Frozen1753/report-maker" target="_blank" rel="noopener noreferrer">the repo</a>.
+If you build something with it, improve on it, or find something I got wrong,
+I'd like to hear about it : open an issue or a PR on :link[the repo]{href="https://github.com/Frozen1753/report-maker" icon=true}.
 
 ::separator{label="THE END"}
