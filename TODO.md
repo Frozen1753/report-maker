@@ -20,12 +20,26 @@
   - [X] ::include{src="./part.mdx"} directive
   - [X] automate page pre-rendering
   - [X] frontmatter node et resolver de config
-  - [ ] plugin d'assets du frontmatter
-- [ ] Responsive
+  - [ ] asset plugin for frontmatter
+  - [ ] toc / tof title property frontmatter
+- [X] Responsive
+- [ ] Docs
+  - [ ] Components
+  - [ ] Frontmatter
+  - [ ] Header
+  - [ ] CoverPage
+  - [ ] report.config
+  - [ ] TOC
+  - [ ] LOF
+  - [ ] Pages
+  - [ ] Build
+  - [ ] Panels
+  - [ ] index (intro, getting started, ->docs, author's note)
+  - [ ] FR/EN
 
 ## Bugfixes
 
 - [ ] nested `<Collapsible />` inner collapsible arrow animation not working
 - [ ] `<ThemeToggle>` stops working after theme edition preview
 - [ ] Build time in hybrid increases with lower image width filter
-- [ ] Default date in cover page alwways display Date.now() and not build date
+- [ ] Default date in cover page always display Date.now() and not build date
