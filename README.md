@@ -66,20 +66,6 @@ npm run build:hybrid      # one index.html, large assets stay external
 
 The result lands in `dist/<mode>/`. In `hybrid` mode, `report/assets.config.json` decides which assets stay external.
 
-### About Mermaid diagrams
-
-Diagrams are **SVG files** generated once and saved in `report/generated/mermaid/`; a build only embeds the ones your pages use. Missing SVGs are rendered automatically when `npm run dev` starts, when an `.mdx` file changes, and at the start of a build.
-
-Rendering needs a **Chrome, Edge or Chromium already installed** on the machine (nothing is downloaded). It is found automatically; to point to one yourself, set the `REPORT_MERMAID_BROWSER` environment variable. Commit `report/generated/mermaid/`: with the SVGs in the repository, a browser is only needed to add or change a diagram.
-
-## Project rules
-
-Dependencies go one way: `report/` → `src/app` → `src/core`. A small script checks it:
-
-```sh
-node build/check-boundaries.mjs
-```
-
 ## License
 
 Report Maker is released under the [MIT License](LICENSE).
