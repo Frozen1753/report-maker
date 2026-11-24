@@ -28,6 +28,7 @@ const BROWSER_CANDIDATES: string[] = [
   '/usr/bin/chromium',
   '/usr/bin/chromium-browser',
   '/usr/bin/microsoft-edge',
+  '/usr/bin/firefox'
 ]
 
 /** The executable to launch: `explicit`, then the environment, then the usual install locations. */

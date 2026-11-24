@@ -1,4 +1,4 @@
-import type { Browser } from 'puppeteer-core'
+import type { Browser, SupportedBrowser } from 'puppeteer-core'
 import path from 'node:path'
 import { MERMAID_CONFIG } from '../../src/core/utils/shared/mermaid-shared.ts'
 import { BROWSER_HINT, findBrowser, resolveMermaidBundle } from './browser.ts'
@@ -73,7 +73,7 @@ export function prerenderMissing(
     let browser: Browser | undefined
     try {
       const { launch } = await import('puppeteer-core')
-      browser = await launch({ executablePath, headless: true })
+      browser = await launch({ executablePath, headless: true, browser: path.basename(executablePath).toLowerCase().includes("firefox") ? "firefox" : "chrome" })
       const page = await browser.newPage()
       await page.setContent('<!doctype html><html><body></body></html>')
       await page.addScriptTag({ path: resolveMermaidBundle(root) })
