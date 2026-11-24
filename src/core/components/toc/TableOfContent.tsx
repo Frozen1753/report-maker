@@ -94,7 +94,7 @@ function TocItem({ item, expandedItems, toggleItem }: TocItemProps) {
   );
 }
 
-export function TableOfContent({ title = 'Sommaire', items }: TableOfContentProps) {
+export function TableOfContent({ title = 'Table of Content', items }: TableOfContentProps) {
   const tree = buildTocTree(items);
 
   // Les h1 sont ouverts, mais les h2 sont fermés par défaut.

@@ -7,7 +7,7 @@ type ListOfFiguresProps = {
     items: FigureEntry[];
 };
 
-export function ListOfFigures({ title = 'Liste des figures', items }: ListOfFiguresProps) {
+export function ListOfFigures({ title = 'List of figures', items }: ListOfFiguresProps) {
     if (items.length === 0) return null;
 
     return (

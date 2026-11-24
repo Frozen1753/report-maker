@@ -10,7 +10,7 @@ type CollapsibleProps = {
 };
 
 export function Collapsible({
-  title = "Voir plus d'informations",
+  title = "See more details",
   open = false,
   children,
 }: CollapsibleProps) {
