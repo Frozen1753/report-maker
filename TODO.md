@@ -17,8 +17,8 @@
   - [ ] `<ThemePanel/>` :
 - [ ] MDX files
   - [X] multiple pages
-  - [X] ::include{src="./partie.mdx"} directive
-  - [ ] automate page pre-rendering (npm run render)
+  - [X] ::include{src="./part.mdx"} directive
+  - [X] automate page pre-rendering
   - [X] frontmatter node et resolver de config
   - [ ] plugin d'assets du frontmatter
 - [ ] Responsive

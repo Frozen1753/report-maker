@@ -1,202 +1,45 @@
-import type { Root } from 'mdast'
-import fs from 'node:fs'
-import path from 'node:path'
-import { visit } from 'unist-util-visit'
 import type { Plugin } from 'vite'
-import { PATHS } from '../paths.ts'
-import { parsePages, type MdxOptions } from '../pages/parse.ts'
-import { mermaidKey, normalizeChart } from '../../src/core/utils/shared/mermaid-shared.ts'
+import type { MdxOptions } from '../pages/parse.ts'
+import { collectReferenced, type Diagram, type DynamicChart } from './collect.ts'
+import { mermaidSvgEndpoint } from './dev-api.ts'
+import { prerenderOnChange } from './dev-watch.ts'
+import { prerenderMissing } from './render.ts'
+import { reportBuild } from './report.ts'
+import { buildRuntime, DEV_RUNTIME, RESOLVED_ID, VIRTUAL_ID } from './runtime.ts'
+
+// Re-exported: other build plugins may import it from here.
+export { collectMermaid } from './collect.ts'
 
 /**
- * Mermaid pre-rendering.
+ * Mermaid pre-rendering: the Vite plugin only wires the pieces together.
  *
- * dev   : Mermaid.tsx renders live with the real `mermaid` package (so syntax
- *         errors show up while you edit) and POSTs each resulting SVG to
- *         /api/mermaid-svg, which saves it as src/generated/mermaid/<key>.svg.
- * build : the `mermaid` package is never imported. `virtual:mermaid-runtime`
- *         resolves to a stub that only contains the SVGs of the diagrams the
- *         pages actually use (found by parsing every page, see pages/scan.ts).
+ *   collect.ts    finds the diagrams in the pages (and their partials)
+ *   svg-store.ts  the folder of pre-rendered SVGs
+ *   browser.ts    which browser / which mermaid bundle
+ *   render.ts     renders the missing SVGs (puppeteer-core)
+ *   runtime.ts    the virtual module Mermaid.tsx imports (dev: live, build: SVGs)
+ *   dev-api.ts    POST /api/mermaid-svg: the dev renderer saves its SVGs
+ *   dev-watch.ts  dev: pre-render at start and on every .mdx change
+ *   report.ts     build: warnings and summary
  *
- * The virtual module (instead of `if (import.meta.env.DEV)`) guarantees the
- * bundler never even sees the `mermaid` import in a build — no reliance on
- * tree-shaking.
+ * dev   : missing SVGs are rendered at start and on every .mdx change; Mermaid.tsx
+ *         still renders live (syntax errors show up while you edit).
+ * build : missing SVGs are rendered first, then the runtime only contains the
+ *         SVGs the pages use. The `mermaid` package is never in the bundle.
  */
-
-const VIRTUAL_ID = 'virtual:mermaid-runtime'
-const RESOLVED_ID = '\0' + VIRTUAL_ID
-const SVG_DIR = PATHS.mermaidSvgs
-const KEY_RE = /^[0-9a-f]{14}$/
-
-// ---------------------------------------------------------------------------
-// remark plugin: lists the diagrams of report.mdx, so the build can tell which
-// SVGs are missing. Runs inside the MDX compilation (see vite.config.ts).
-// ---------------------------------------------------------------------------
-
-// Diagram collection: run on the syntax tree of each page (see buildStart).
-
-interface EstreeExpression {
-  type: string
-  value?: unknown
-  expressions?: unknown[]
-  quasis?: { value: { cooked?: string | null } }[]
-}
-interface LooseAttr {
-  type: string
-  name?: string
-  value?:
-  | string
-  | { type: string; value: string; data?: { estree?: { body?: { expression?: EstreeExpression }[] } } }
-  | null
-}
-interface LooseNode {
-  type: string
-  lang?: string | null
-  value?: string
-  name?: string | null
-  attributes?: LooseAttr[]
-  position?: { start: { line: number } }
-}
-
-/** The chart attribute as a string, or null if it isn't a static string. */
-function staticString(attr: LooseAttr): string | null {
-  const v = attr.value
-  if (typeof v === 'string') return v
-  if (!v) return null
-
-  const expr = v.data?.estree?.body?.[0]?.expression
-  if (expr?.type === 'Literal' && typeof expr.value === 'string') return expr.value
-  if (expr?.type === 'TemplateLiteral' && expr.expressions?.length === 0) {
-    return expr.quasis?.[0]?.value.cooked ?? null
-  }
-
-  // No estree available: accept a plain `...` template literal without escapes.
-  const raw = v.value.trim()
-  if (raw.startsWith('`') && raw.endsWith('`') && !raw.includes('${') && !raw.includes('\\')) {
-    return raw.slice(1, -1)
-  }
-  return null
-}
-
-/** Calls `onChart` for every static diagram of the tree, `onDynamic` for the ones that can't be read. */
-export function collectMermaid(
-  tree: Root,
-  onChart: (source: string) => void,
-  onDynamic: (line: number) => void,
-): void {
-  visit(tree, (node) => {
-    const n = node as unknown as LooseNode
-
-    // ```mermaid fences
-    if (n.type === 'code' && n.lang === 'mermaid' && typeof n.value === 'string') {
-      onChart(n.value)
-      return
-    }
-
-    // <Mermaid chart={`...`} />
-    if ((n.type === 'mdxJsxFlowElement' || n.type === 'mdxJsxTextElement') && n.name === 'Mermaid') {
-      const attr = n.attributes?.find((a) => a.type === 'mdxJsxAttribute' && a.name === 'chart')
-      const source = attr ? staticString(attr) : null
-      if (source !== null) onChart(source)
-      else onDynamic(n.position?.start.line ?? 0)
-    }
-  })
-}
-
-// ---------------------------------------------------------------------------
-// virtual module sources
-// ---------------------------------------------------------------------------
-
-const DEV_RUNTIME = `
-import mermaid from 'mermaid'
-
-let initialized = false
-const posted = new Set()
-
-// Always undefined in dev: diagrams are rendered live.
-export function peekMermaid() {
-  return undefined
-}
-
-export async function renderMermaid(chart, key, config) {
-  if (!initialized) {
-    mermaid.initialize(config)
-    initialized = true
-  }
-  // The id ends up inside the SVG (styles, markers): deriving it from the key
-  // keeps ids unique across diagrams once they are all inlined in one page.
-  const id = 'mermaid-' + key
-  let svg
-  try {
-    ;({ svg } = await mermaid.render(id, chart))
-  } catch (err) {
-    // On syntax errors mermaid leaves a temp element in <body>.
-    document.getElementById('d' + id)?.remove()
-    document.getElementById(id)?.remove()
-    throw err
-  }
-  if (!posted.has(key)) {
-    posted.add(key)
-    fetch('/api/mermaid-svg', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ key, svg }),
-    }).catch(() => posted.delete(key))
-  }
-  return svg
-}
-`
-
-function listSvgKeys(dir: string): Set<string> {
-  return new Set(
-    fs.existsSync(dir)
-      ? fs
-          .readdirSync(dir)
-          .filter((f) => f.endsWith('.svg'))
-          .map((f) => f.slice(0, -4))
-          .filter((k) => KEY_RE.test(k))
-      : [],
-  )
-}
-
-function buildRuntime(root: string, referenced: Map<string, Diagram>): string {
-  const available = listSvgKeys(path.resolve(root, SVG_DIR))
-  // Only the diagrams the pages use: an SVG nobody references is not worth bytes.
-  const keys = [...referenced.keys()].filter((k) => available.has(k))
-
-  // Root-relative ids: resolved the same way on every OS.
-  const imports = keys.map((k, i) => `import svg_${i} from ${JSON.stringify(`/${SVG_DIR}/${k}.svg?raw`)}`)
-  const entries = keys.map((k, i) => `${JSON.stringify(k)}: svg_${i}`)
-
-  return [
-    ...imports,
-    `const svgs = { ${entries.join(', ')} }`,
-    'export function peekMermaid(key) { return svgs[key] }',
-    'export async function renderMermaid(_chart, key) {',
-    "  throw new Error('Diagram not pre-rendered: ' + key + '.svg is missing. Run npm run dev, open the report so the diagram renders once, then rebuild.')",
-    '}',
-  ].join('\n')
-}
-
-// ---------------------------------------------------------------------------
-// the Vite plugin
-// ---------------------------------------------------------------------------
-
-interface Diagram {
-  chart: string
-  /** Pages using it, for messages. */
-  pages: Set<string>
-}
 
 export interface MermaidPluginOptions {
   /** The SAME remark plugins as mdx(): the pages are parsed here too (see pages/parse.ts). */
   remarkPlugins?: MdxOptions['remarkPlugins']
+  /** Path of the Chrome / Edge / Chromium executable. Found automatically when omitted. */
+  browserPath?: string
 }
 
-export function mermaidPlugin({ remarkPlugins }: MermaidPluginOptions = {}): Plugin {
+export function mermaidPlugin({ remarkPlugins, browserPath }: MermaidPluginOptions = {}): Plugin {
   let isBuild = false
   let root = process.cwd()
   let referenced = new Map<string, Diagram>() // key -> diagram used by at least one page
-  let dynamic: { page: string; line: number }[] = [] // <Mermaid chart={...}> that isn't a static string
+  let dynamic: DynamicChart[] = [] // <Mermaid chart={...}> that isn't a static string
 
   return {
     name: 'report-maker:mermaid',
@@ -216,22 +59,11 @@ export function mermaidPlugin({ remarkPlugins }: MermaidPluginOptions = {}): Plu
       if (id === VIRTUAL_ID) return RESOLVED_ID
     },
 
-    buildStart() {
+    async buildStart() {
       if (!isBuild) return
-      referenced = new Map()
-      dynamic = []
-      for (const page of parsePages(root, remarkPlugins)) {
-        collectMermaid(
-          page.tree,
-          (source) => {
-            const key = mermaidKey(source)
-            const known = referenced.get(key) ?? { chart: normalizeChart(source), pages: new Set<string>() }
-            known.pages.add(page.label)
-            referenced.set(key, known)
-          },
-          (line) => dynamic.push({ page: page.label, line }),
-        )
-      }
+        ; ({ referenced, dynamic } = collectReferenced(root, remarkPlugins, 'build'))
+      // Before load() builds the runtime: the SVGs rendered here are bundled.
+      await prerenderMissing(root, referenced, { info: (m) => console.log(m), warn: (m) => this.warn(m) }, browserPath)
     },
 
     load(id) {
@@ -240,66 +72,13 @@ export function mermaidPlugin({ remarkPlugins }: MermaidPluginOptions = {}): Plu
     },
 
     configureServer(server) {
-      const dir = path.resolve(root, SVG_DIR)
-
-      server.middlewares.use('/api/mermaid-svg', (req, res) => {
-        if (req.method !== 'POST') {
-          res.statusCode = 405
-          res.end()
-          return
-        }
-        const chunks: Buffer[] = []
-        req.on('data', (c: Buffer) => chunks.push(c))
-        req.on('end', () => {
-          try {
-            const { key, svg } = JSON.parse(Buffer.concat(chunks).toString('utf-8')) as {
-              key?: unknown
-              svg?: unknown
-            }
-            if (typeof key !== 'string' || !KEY_RE.test(key) || typeof svg !== 'string' || !svg.startsWith('<svg')) {
-              res.statusCode = 400
-              res.end('bad request')
-              return
-            }
-            const file = path.join(dir, `${key}.svg`)
-            fs.mkdirSync(dir, { recursive: true })
-            // Skip identical writes: no pointless file-watcher noise.
-            if (!fs.existsSync(file) || fs.readFileSync(file, 'utf-8') !== svg) fs.writeFileSync(file, svg)
-            res.statusCode = 204
-            res.end()
-          } catch {
-            res.statusCode = 400
-            res.end('bad request')
-          }
-        })
-      })
+      prerenderOnChange(server, root, remarkPlugins, browserPath)
+      server.middlewares.use('/api/mermaid-svg', mermaidSvgEndpoint(root))
     },
 
     buildEnd(error) {
       if (error || !isBuild) return
-
-      const available = listSvgKeys(path.resolve(root, SVG_DIR))
-      const preview = (chart: string) => chart.split('\n')[0].slice(0, 60)
-
-      let missing = 0
-      for (const [key, { chart, pages }] of referenced) {
-        if (available.has(key)) continue
-        missing++
-        this.warn(
-          `[mermaid] ${key}.svg could not be found for the diagram "${preview(chart)}…" (${[...pages].join(', ')}) — the report will show an error there. ` +
-          'Run `npm run dev`, open that page so the diagram renders once, then rebuild.',
-        )
-      }
-      for (const { page, line } of dynamic) {
-        this.warn(`[mermaid] <Mermaid chart={…}> in ${page} near line ${line} is not a static string and can't be pre-rendered.`)
-      }
-      for (const key of available) {
-        if (!referenced.has(key)) {
-          this.warn(`[mermaid] ${key}.svg isn't used by any page: it is not bundled (delete it to keep the folder clean).`)
-        }
-      }
-
-      console.log(`[mermaid] ${referenced.size - missing}/${referenced.size} diagram(s) pre-rendered, no mermaid.js in the bundle`)
+      reportBuild(root, referenced, dynamic, (m) => this.warn(m))
     },
   }
 }
