@@ -1,0 +1,79 @@
+---
+title: "Collapsible"
+cover: false
+---
+
+import {
+    Callout,
+    Collapsible,
+    Tabs
+} from "report-maker";
+
+# Collapsible
+
+Keeps optional detail out of the main reading flow — you've likely clicked a few already while reading this guide.
+
+<Collapsible title="Closed by default">
+    Stays collapsed until clicked. Good for methodology details, edge cases, or anything a skimming
+    reader can safely skip.
+</Collapsible>
+
+<Collapsible title="Open by default" open>
+    Pass the `open` prop to start expanded — for content that's optional to read in depth
+    but important enough that a reader shouldn't miss it exists.
+</Collapsible>
+
+<Collapsible>
+```mdx bar name="report.mdx"
+import { Collapsible } from "report-maker"
+```
+
+```tsx bar name="Collapsible.tsx"
+type CollapsibleProps = {
+    title?: string;       // shown as the clickable summary
+    open?: boolean;       // starts expanded when true (false by default)
+    children: ReactNode;  // anything — text, Markdown, or other components
+};
+```
+
+<Tabs>
+    <Tabs.Item label="Exemple">
+        <Collapsible title="My titled collapsible">
+            Any content works here.
+        </Collapsible>
+    </Tabs.Item>
+    <Tabs.Item label="Code">
+        ```mdx
+        <Collapsible title="My titled collapsible">
+            Any content works here.
+        </Collapsible>
+        ```
+    </Tabs.Item>
+</Tabs>
+
+Collapsibles accept any JSX too — including other components:
+
+<Tabs>
+    <Tabs.Item label="Exemple">
+        <Collapsible title="Complex collapsible">
+            More than simple `text`.
+            
+            <Callout type="tip">
+                Callouts nest fine too, since they're just JSX.
+            </Callout>
+        </Collapsible>
+    </Tabs.Item>
+    <Tabs.Item label="Code">
+        ```mdx
+        <Collapsible title="Complex collapsible">
+            More than simple `text`.
+            
+            <Callout type="tip">
+                Callouts nest fine too, since they're just JSX.
+            </Callout>
+        </Collapsible>
+        ```
+    </Tabs.Item>
+</Tabs>
+
+</Collapsible>

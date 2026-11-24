@@ -1,0 +1,60 @@
+---
+title: "Extending Report Maker"
+cover: false
+---
+
+import { Collapsible } from "report-maker";
+
+# Extending Report Maker
+
+The engine is meant to be extended from `report/`, without touching `src/`.
+
+## Your own components
+
+Import them at the top of `report.mdx`, like any React component:
+
+```mdx
+import MyChart from "./custom/MyChart";
+
+<MyChart title="Sales" />
+```
+
+To use one without any import — or to replace a built-in one — register it in `report/custom/mdx-components.ts`:
+
+```ts bar name="report/custom/mdx-components.ts"
+import type { ElementType } from "react";
+import { MyChart } from "./MyChart";
+
+export const components: Record<string, ElementType> = {
+  MyChart,         // <MyChart /> works everywhere, no import needed
+  chart: MyChart,  // lowercase names also work as directives: :::chart{title="Sales"}
+};
+```
+
+Built-in directives such as `callout`, `separator`, `link` and `term` work the same way. Directive attributes are strings; pass anything richer through JSX.
+
+## The public API
+
+Everything you can import from `"report-maker"` comes from `src/core/mdx.ts`: the components (`Callout`, `Code`, `Collapsible`, `Comparison`, `Figure`, `Link`, `Mermaid`, `Separator`, `Tabs`, `Term`, `GlossaryTerm`...) and `defineReport`.
+
+<Collapsible title="Keeping the engine clean">
+Dependencies go one way:
+
+```
+report/  ->  src/app  ->  src/core
+```
+
+`src/core` imports nothing from `src/app`, `report/` or `build/`; `src/app` assembles the engine and your report; and `report/` only talks to the engine through `"report-maker"`. A small script checks it:
+
+```bash bar copy name="terminal"
+node build/check-boundaries.mjs
+```
+</Collapsible>
+
+<Collapsible title="What is in build/">
+- `mdx/` — the heading numbering and the figure numbering.
+- `mermaid/` — diagram pre-rendering.
+- `shiki/` — code highlighting at build time.
+- `theme/`, `assets/`, `export/` — the dev-only endpoints behind the theme editor and the export panel.
+- `index.ts` — assembles the Vite configuration; `vite.config.ts` only calls it.
+</Collapsible>

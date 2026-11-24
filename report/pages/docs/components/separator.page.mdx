@@ -1,0 +1,52 @@
+---
+title: "Separator"
+cover: false
+---
+
+import {
+    Collapsible,
+    Tabs
+} from "report-maker";
+
+# Separator
+
+A plain rule (equivalent to `---` in Markdown), or a labeled break between sections.
+
+::separator{label="example"}
+
+<Collapsible>
+
+```mdx bar name="Separator.tsx"
+type SeparatorProps = {
+    label?: string;  // text shown between the two lines
+};
+```
+
+<Tabs>
+    <Tabs.Item label="Exemple">
+        ---
+    </Tabs.Item>
+    <Tabs.Item label="Code">
+       ```mdx
+       ---
+       ```
+    </Tabs.Item>
+</Tabs>
+
+<Tabs>
+    <Tabs.Item label="Exemple">
+        ::separator{label="my text here"}
+    </Tabs.Item>
+    <Tabs.Item label="Code">
+        ```mdx
+        ::separator{label="my text here"}
+        ```
+        **OR**
+        ```mdx
+        import { Separator } from "report-maker" {/* At the top */}
+
+        <Separator label="my text here" /> {/* Where you need it */}
+        ```
+    </Tabs.Item>
+</Tabs>
+</Collapsible>

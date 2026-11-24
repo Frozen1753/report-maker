@@ -1,0 +1,51 @@
+---
+title: "Tabs"
+cover: false
+---
+
+import {
+    Collapsible,
+    Tabs
+} from "report-maker";
+
+# Tabs
+
+Groups mutually-exclusive content — alternative commands, alternative approaches, anything where showing every option at once would be noise:
+
+<Tabs>
+    <Tabs.Item label="Option A">
+        Content for the first tab. Any JSX works here, not just text.
+    </Tabs.Item>
+    <Tabs.Item label="Option B">
+        ```bash copy
+        echo "tab content can be a whole code block"
+        ```
+    </Tabs.Item>
+</Tabs>
+
+<Collapsible>
+```mdx bar name="report.mdx"
+import { Tabs } from "report-maker"
+```
+
+```tsx bar name="Tabs.tsx"
+type TabsProps = {
+    children: ReactNode;      // <Tabs.Item> elements
+    defaultActive?: number;   // index of the tab opened first (0 by default)
+    className?: string;
+};
+
+type TabItemProps = {         // <Tabs.Item ...>
+    label: ReactNode;         // the tab's title
+    children: ReactNode;      // the panel content
+    disabled?: boolean;
+};
+```
+
+```mdx
+<Tabs>
+  <Tabs.Item label="Option A">Content for the first tab.</Tabs.Item>
+  <Tabs.Item label="Option B">Content for the second tab.</Tabs.Item>
+</Tabs>
+```
+</Collapsible>

@@ -1,0 +1,80 @@
+---
+title: "Writing Content in MDX"
+cover: false
+---
+
+import { Collapsible } from "report-maker";
+
+# Writing Content in MDX
+
+An `.mdx` file is Markdown that also understands JSX. Anything that isn't a component is just Markdown — headings, **bold**, _italics_, lists, tables, links, all of it.
+
+## Numbering & Table of Contents
+
+Every `<hX>` you write gets numbered and anchored automatically — that's what produces the "1.", "1.1", "2." numbering you see throughout this guide. You never write the numbers yourself:
+
+```mdx
+# Title One         <- becomes "1 Title One"
+## A sub-section    <- becomes "1.1 A sub-section"
+# Title Two         <- becomes "2 Title Two"
+```
+
+The same mechanism exports a `toc` array from your compiled MDX module, so the table of contents builds itself from whatever headings actually exist in the file — add, remove, or reorder headings in `report.mdx` and it follows, nothing to update by hand:
+
+```tsx bar name="src/app/App.tsx"
+import Report, { figures, toc } from "../../report/report.mdx";
+
+<TableOfContent items={toc} />
+<ListOfFigures items={figures} />
+```
+
+Figures work the same way: `<Figure>`s are numbered in reading order at compile time, and the `figures` export builds the list of figures, with nothing to configure either.
+
+<Collapsible title="How the numbering actually works">
+    A remark plugin walks the Markdown AST once per file, keeping a running counter per heading
+    depth. It resets deeper counters whenever a shallower heading appears (a new `h1`{" "}
+    resets `h2`/`h3`/... back to zero) and writes the computed number as a
+    slug + visible prefix directly on each heading — no manual bookkeeping, no renumbering when you
+    reorder sections.
+</Collapsible>
+
+---
+
+## Two Syntaxes
+
+Components can be written as JSX, or — for the ones that have a directive form — with colons, which reads closer to Markdown:
+
+| Kind        | Syntax                              | Example                              |
+| ----------- | ----------------------------------- | ------------------------------------ |
+| Block       | `:::name{attributes}` ... `:::`     | `:::callout{type="tip"}`             |
+| Single line | `::name{attributes}`                | `::separator{label="Chapter 2"}`     |
+| Inline      | `:name[text]{attributes}`           | `:link[docs]{href="#link"}`          |
+
+At the moment `callout`, `separator`, `link` and `term` have a directive form. Code and diagrams use plain Markdown fences, and everything else (`Tabs`, `Collapsible`, `Comparison`, `Figure`) is JSX. Directive attributes are always strings.
+
+:::callout{type="caution" title="A colon followed by a word is a directive"}
+Text like `note:foo` would be read as the directive `foo`. To write a literal colon-word, escape the colon: `\:foo`.
+:::
+
+---
+
+## Importing Assets
+
+Images, gifs, and videos are real imports, not plain string paths — that's what lets the build pipeline hash them, inline them in `singlefile` mode, or keep them external in `hybrid` mode:
+
+```mdx
+import myScreenshot from './assets/screenshot.png'
+
+<Figure caption="...">
+    <img src={myScreenshot} alt="..." />
+</Figure>
+```
+
+Feel free to organize the `assets/` folder however you like, grouping files into sub-folders or by naming convention — you just need the right path when importing them.
+
+:::callout{type="warning" title="Avoid plain string paths"}
+    Writing `src="./assets/screenshot.png"` directly (instead of importing it) means the
+    bundler never sees the file — it won't be hashed, won't be inlined in singlefile builds, and
+    will likely 404 once the report is actually deployed somewhere other than exactly where you
+    tested it.
+:::

@@ -1,0 +1,103 @@
+---
+title: "Project Layout"
+cover: false
+---
+
+import { Collapsible } from "report-maker";
+
+# Project Layout
+
+Everything you edit lives in one folder: `report/`. The rest of the project exists to turn it into a finished report — you can leave it alone until you want to build your own components or change how things compile.
+
+```
+report/                    <- YOUR zone. Everything you edit lives here.
+  report.mdx               <- your content. You'll live in this file.
+  report.config.tsx        <- title, cover page and header
+  assets/                  <- images, gifs, videos you import into report.mdx
+  custom/
+    glossary.tsx           <- the terms behind :term[...]
+    mdx-components.ts      <- optional: extra MDX components
+  theme.css                <- your color overrides (written by the theme editor)
+  assets.config.json       <- which assets stay external in "hybrid" builds
+  generated/mermaid/       <- pre-rendered diagrams. Commit them.
+  favicon.svg
+
+src/core/                  <- the engine: components, styles, utilities
+src/app/                   <- the page around your report: header, cover, buttons, dev panels
+build/                     <- Vite configuration and plugins (Mermaid, Shiki, theme, export...)
+```
+
+:::callout{type="tip"}
+`theme.css` and `assets.config.json` don't have to be edited by hand — both have a live panel in dev mode instead. See [the theme editor](/docs/theming) and [the export panel](/docs/building).
+:::
+
+## report.config.tsx
+
+The title, the cover page and the header are configured in one place, as plain data — there is no component to edit:
+
+```tsx bar name="report/report.config.tsx"
+import { defineReport } from "report-maker";
+import MyLogo from "./assets/logo.svg?react";
+
+export default defineReport({
+  title: "My report",
+
+  cover: {
+    media: {
+      content: <MyLogo width={256} height={256} />,
+      href: "https://github.com/your-org/your-repo",
+      ariaLabel: "Project logo",
+    },
+    date: "September 2026",
+    authors: [{ firstName: "Jane", lastName: "Doe", href: "https://github.com/..." }],
+    affiliations: ["Your team or organization"],
+  },
+});
+```
+
+Only `title` is required. It is the browser tab's title, and the default title of the header and of the cover page.
+
+### Cover page
+
+The title page rendered before your report's content: title, date, authors, and an optional piece of media (a logo, an icon, a cover image).
+
+<Collapsible>
+```tsx bar name="ReportConfig"
+type ReportConfig = {
+    title: string;
+    cover?: {
+        title?: string;       // the report title by default
+        media?: {
+            content: ReactNode;  // an image, icon, logo — anything
+            href?: string;       // wraps the media in a link, when set
+            ariaLabel?: string;
+        };
+        date?: string;         // today's date by default
+        authors?: {
+            firstName?: string;
+            lastName?: string;
+            alias?: string;      // shown in parentheses after the name
+            href?: string;       // wraps the author's name in a link
+        }[];
+        affiliations?: string[];
+    };
+    header?: { /* see below */ };
+};
+```
+</Collapsible>
+
+### Header
+
+The sticky bar shown above the report content. Without any configuration it shows the report title and the Report Maker logo.
+
+<Collapsible>
+```tsx bar name="report/report.config.tsx"
+header: {
+    title: "My report",    // the report title by default
+    logo: <MyLogo />,      // defaults to the Report Maker logo
+    logoAlt: "My logo",    // "Logo" by default — accessible label for the logo
+},
+```
+
+Pass your own `logo` once you no longer need the default Report Maker branding.
+</Collapsible>

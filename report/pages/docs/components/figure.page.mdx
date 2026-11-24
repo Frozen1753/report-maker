@@ -1,0 +1,57 @@
+---
+title: "Figure"
+cover: false
+---
+
+import {
+    Collapsible,
+    Figure
+} from "report-maker";
+
+# Figure
+
+An image, gif, or video with a numbered caption, and an optional lightbox (with pinch-to-zoom and drag-to-pan once opened):
+
+<Figure>
+    <Figure.Media>
+        ![A placeholder figure — click to open the lightbox.](../../../assets/guide-placeholder-figure.png)
+    </Figure.Media>
+    <Figure.Caption>
+        This is my caption
+    </Figure.Caption>
+    <Figure.Lightbox>
+        Anything can go here: a higher-resolution version, extra context...
+    </Figure.Lightbox>
+</Figure>
+
+<Collapsible>
+```mdx bar name="report.mdx"
+import { Figure } from "report-maker"
+```
+
+```tsx bar name="Figure.tsx"
+type FigureProps = {
+    children: ReactNode;  // <Figure.Media>, <Figure.Caption> and <Figure.Lightbox>
+    lightbox?: boolean;   // click-to-zoom on the media itself (false by default)
+    className?: string;
+};
+```
+
+`<Figure.Media>` is required; `<Figure.Caption>` and `<Figure.Lightbox>` are optional. Writing a `<Figure.Lightbox>` turns the lightbox on by itself, and what it contains is shown instead of the media — extra context, a higher-resolution version, or an entirely different element:
+
+```mdx
+<Figure>
+  <Figure.Media>
+    ![A thumbnail](./assets/thumb.png)
+  </Figure.Media>
+  <Figure.Caption>My **caption**, with `Markdown`</Figure.Caption>
+  <Figure.Lightbox>
+    ![The full-resolution version](./assets/full.png)
+  </Figure.Lightbox>
+</Figure>
+```
+
+Videos work the same way, just put a `<video controls>` in `<Figure.Media>` — captions and numbering behave identically.
+
+Figures are numbered at compile time, in reading order, so there is nothing to wrap in a provider. The same pass exports the `figures` array behind the list of figures at the top of this guide.
+</Collapsible>

@@ -1,0 +1,51 @@
+---
+title: "Building & Exporting"
+cover: false
+---
+
+# Building & Exporting
+
+A report compiles to one of three shapes, chosen with an npm script:
+
+| Mode         | Output                                                                | Best for                                                       |
+| ------------ | --------------------------------------------------------------------- | -------------------------------------------------------------- |
+| `folder`     | `index.html` + a separate `assets/` folder                            | hosting on a server, largest reports                           |
+| `singlefile` | one `index.html`, everything inlined (JS, CSS, every image/gif/video) | emailing, sharing a single file                                |
+| `hybrid`     | one `index.html`, but large assets stay external                      | single-file convenience without bloating it with a 40 MB video |
+
+```bash bar copy name="terminal"
+npm run build:folder
+npm run build:singlefile
+npm run build:hybrid
+```
+
+## Choosing What Stays External
+
+In `hybrid` mode, `report/assets.config.json` decides what gets excluded from the single file:
+
+```json bar name="report/assets.config.json"
+{
+  "excludeExtensions": [".mp4", ".mov", ".webm", ".gif"],
+  "maxImageWidth": 3000,
+  "excludeFiles": []
+}
+```
+
+Anything matching an excluded extension, or an image wider than `maxImageWidth`, is written to `dist/hybrid/assets/` instead of being base64-encoded into the HTML.
+
+## The Export Panel
+
+:::callout{type="important" title="Development only"}
+Like the theme editor, this panel is a dev tool — it never ships in a build.
+:::
+
+A second floating button runs an actual build without leaving the browser: pick a mode, check off any extensions or oversized images to keep external in `hybrid` mode, and it writes `report/assets.config.json` and runs the matching build script for you — the result lands in `dist/&lt;mode&gt;/` either way.
+
+## Why Builds Stay Small
+
+The two heaviest parts of a report are never shipped:
+
+- **Mermaid diagrams** are pre-rendered as SVG, so `mermaid.js` isn't in the build.
+- **Code blocks** are highlighted by Shiki while building, so neither Shiki nor its grammars are in the build.
+
+The price is a browser: Chrome, Edge or Chromium must be installed to render a new or changed diagram (nothing is downloaded, and diagrams that are already rendered need none). See [Mermaid](/docs/mermaid) and [Code](/docs/components/code).

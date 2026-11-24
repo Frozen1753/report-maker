@@ -1,0 +1,56 @@
+---
+title: "Comparison"
+cover: false
+---
+
+import {
+  Collapsible,
+  Comparison
+} from "report-maker";
+import guideAfter from "../../../assets/guide-placeholder-after.png";
+import guideBefore from "../../../assets/guide-placeholder-before.png";
+
+# Comparison
+
+A toggle between two states — screenshots, code, anything comparable. It's literally a 2-tab `Tabs` underneath, just make sure to wrap images/gifs in `<img>` and videos in `<video controls>`:
+
+<Comparison>
+  <Comparison.Left label="Before">
+    <img src={guideBefore} alt="" />
+  </Comparison.Left>
+
+  <Comparison.Right label="After">
+    <img src={guideAfter} alt="" />
+  </Comparison.Right>
+</Comparison>
+
+<Collapsible>
+```mdx bar name="report.mdx"
+import { Comparison } from "report-maker"
+```
+
+```tsx bar name="Comparison.tsx"
+export type ComparisonProps = {
+    children: ReactNode;
+};
+
+export type ComparisonItemProps = {
+    children: ReactNode;
+    label?: string;
+};
+```
+
+```tsx
+<Comparison>
+  <Comparison.Left label="Before">
+    <img src={guideBefore} alt="" />
+  </Comparison.Left>
+
+  <Comparison.Right label="After">
+    <img src={guideAfter} alt="" />
+  </Comparison.Right>
+</Comparison>
+```
+
+`<Comparison.Left>` and `<Comparison.Right>` accept any JSX, not just images (their labels default to `"Before"` and `"After"`) — a `Code` block on each side works just as well for comparing two versions of a snippet.
+</Collapsible>

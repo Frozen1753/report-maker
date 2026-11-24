@@ -1,0 +1,55 @@
+---
+title: "Theming"
+cover: false
+---
+
+# Theming
+
+## CSS Variables
+
+Everything visual is driven by CSS custom properties. The defaults live in `src/core/styles/tokens.css`; your own values live in `report/theme.css`, loaded after it, so anything you set there wins:
+
+```css bar name="report/theme.css"
+:root {
+  --c-primary: #0149ad;
+  --c-bg-surface: #fbfbfb;
+  --text-h1: 2rem;
+}
+
+.dark {
+  --c-primary: #6fa3ef;
+}
+```
+
+Colors are named `--c-*`; sizes and fonts use `--text-*`, `--font-*`, `--radius-*`, `--space-*` and `--transition-*`. Light values live in `:root`, dark values in `.dark`.
+
+:::callout{type="caution" title="A :root value also applies in dark mode"}
+`:root` and `.dark` have the same priority, and `report/theme.css` is loaded last. So a color you set in `:root` there also wins in dark mode, unless you set it in `.dark` too (and after `:root`). The theme editor handles this for you; if you edit the file by hand, set both.
+:::
+
+## Light / Dark Mode
+
+A theme button ships in the published report itself — it's not a dev tool, it's the one in the corner of this very page:
+
+It follows the reader's system preference until they click it once, then remembers their choice for next time.
+
+:::callout{type="note"}
+The very first paint is handled by a small inline script in `index.html`, before React even runs — without it, readers would see a flash of the wrong theme for a split second on every load.
+:::
+
+## Live Theme Editor
+
+:::callout{type="important" title="Development only"}
+Everything in this section is a dev tool — it appears while running `npm run dev` and is never included in a build. If you're reading a published report, you won't see it.
+:::
+
+A floating button opens a panel that writes `report/theme.css`, for both light and dark at once — and only the values that differ from the defaults, so emptying the file brings the default theme back:
+
+- **Colors** get a real color picker (hex, `rgb()`, `rgba()`, `hsl()` are all recognized) plus a separate opacity slider, since colors with transparency need one.
+- **Everything else** (sizes, generic values) gets a plain text field.
+- Switching the panel's own Light/Dark toggle lets you edit dark-mode overrides specifically — a reset button per row reverts a value back to "same as light."
+- Changes preview instantly in the page behind the panel; nothing is written to disk until you click **Save**.
+
+## Code Syntax Theme
+
+Still inside the live theme editor: two comboboxes pick which Shiki theme highlights `<Code type="bloc">` blocks, one for light mode and one for dark mode — independently, so you're not stuck pairing a light code theme with a light report theme. The choice is stored in `report/theme.css` with the rest of your theme.

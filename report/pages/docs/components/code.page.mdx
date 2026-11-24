@@ -1,0 +1,39 @@
+---
+title: "Code"
+cover: false
+---
+
+import { Collapsible } from "report-maker";
+
+# Code
+
+Two types: `inline`, for short references like file names or commands inside a sentence — for example `npm run dev` sits right in the flow — and `bloc`, for actual code:
+
+```ts
+interface Report {
+  title: string
+  sections: Section[]
+}
+```
+
+<Collapsible>
+
+```tsx bar name="Code.tsx"
+type CodeProps = {
+    type?: "inline" | "bloc";  // "inline" by default
+    lang?: string;             // any language Shiki supports — "bloc" only
+    bar?: boolean;             // shows a header bar with the file name
+    name?: string;             // file name shown in the bar
+    copy?: boolean;            // adds a copy-to-clipboard button
+    children: ReactNode;
+};
+```
+
+Add a header bar with a file name and a copy button when it's worth labeling:
+
+```bash bar copy name="terminal"
+npm run build:hybrid
+```
+
+Blocks are highlighted by Shiki **at build time**, so no Shiki, WASM or grammar ends up in the final report. A block whose language or content isn't a static string (a `{...}` expression containing `${}`, say) can't be read by the build: it renders as plain text, and the build prints a warning for each one. In dev mode, blocks are highlighted live, with every Shiki language and theme available.
+</Collapsible>

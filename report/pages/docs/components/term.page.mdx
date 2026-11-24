@@ -1,0 +1,91 @@
+---
+title: "Term"
+cover: false
+---
+
+import {
+    Callout,
+    Collapsible,
+    Tabs,
+    Term
+} from "report-maker";
+
+# Term
+
+An inline word with a tooltip attached — for definitions, jargon, or anything a reader might want explained without leaving the sentence. It's drawn with a dotted underline: hover :term[latency] (or Tab to it) and the tooltip appears after a short delay. For words you reuse, define them once in [the glossary](/docs/glossary).
+
+:::callout{type="tip" title="Pin a tooltip"}
+Hover a term, then **middle-click** it or its tooltip to pin it open — its border gets stronger to show it. Click anywhere else to close it.
+:::
+
+<Collapsible>
+```mdx bar name="report.mdx"
+import { Term } from "report-maker"
+```
+
+```tsx bar name="Term.tsx"
+type TermProps = {
+    tooltip: ReactNode;   // anything — text, Markdown, or other components
+    children: ReactNode;  // the visible term
+    openDelay?: number;   // ms before showing on hover (300 by default)
+    closeDelay?: number;  // ms before hiding once the pointer leaves (100 by default)
+};
+```
+
+<Tabs>
+    <Tabs.Item label="Exemple">
+        Hover <Term tooltip={<>Time between a request and its response.</>}>latency</Term> to read its definition.
+    </Tabs.Item>
+    <Tabs.Item label="Code">
+        ```mdx
+        Hover <Term tooltip={<>Time between a request and its response.</>}>latency</Term> to read its definition.
+        ```
+    </Tabs.Item>
+</Tabs>
+
+The tooltip accepts any JSX, not just text — including other components:
+
+<Tabs>
+    <Tabs.Item label="Exemple">
+        <Term tooltip={<Callout type="tip">Callouts work in a tooltip too.</Callout>}>
+            Hover me
+        </Term>
+        .
+    </Tabs.Item>
+    <Tabs.Item label="Code">
+        ```mdx
+        <Term tooltip={<Callout type="tip">Callouts work in a tooltip too.</Callout>}>Hover me</Term>
+        ```
+    </Tabs.Item>
+</Tabs>
+
+## Nesting
+
+A tooltip can contain terms of its own, as deep as you like — a term, in a term, in a term:
+
+<Tabs>
+    <Tabs.Item label="Exemple">
+        <Term tooltip={<>Time between a <Term tooltip={<Collapsible>A request is a <Term tooltip={<>If you don't know what this is, you suck.</>}>network</Term> thing.</Collapsible>}>request</Term> and its response.</>}>latency</Term>
+    </Tabs.Item>
+    <Tabs.Item label="Code">
+        ```mdx
+        <Term tooltip={<>Time between a <Term tooltip={<Collapsible>A request is a <Term tooltip={<>If you don't know what this is, you suck.</>}>network</Term> thing.</Collapsible>}>request</Term> and its response.</>}>latency</Term>
+        ```
+    </Tabs.Item>
+</Tabs>
+
+When a nested tooltip opens, the one that contains it is **pinned automatically**, so the whole chain stays on screen while you read down it. A click anywhere outside the chain closes every pinned tooltip at once. Closing a tooltip always closes the ones nested inside it.
+
+## Controls
+
+- **Hover** a term to open its tooltip after `openDelay`. The pointer can move onto the tooltip without it closing, so its content stays readable and clickable.
+- **Tab** to a term to open its tooltip immediately.
+- **Middle-click** a term or a tooltip to pin it. A pinned tooltip ignores the pointer leaving and only closes on an outside click.
+- **Escape** closes the innermost open tooltip.
+
+Any number of tooltips can be pinned at the same time, including from different terms.
+
+:::callout{type="warning" title="Keep tooltips light"}
+Pinning is mouse-only, so keyboard and touch readers can't pin a tooltip. A tooltip also closes as soon as keyboard focus leaves its term, which means links or buttons inside one are out of keyboard reach. Put anything essential in the page itself, and use tooltips for supporting detail only. Also avoid placing a `Term` inside a link or a button: it is focusable itself.
+:::
+</Collapsible>
