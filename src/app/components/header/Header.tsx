@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import { Link as RouterLink } from "react-router";
-import ReportMakerLogo from "../../assets/report-maker_logo.svg?react";
 import styles from "./Header.module.css";
 
 type HeaderProps = {
@@ -11,7 +10,7 @@ type HeaderProps = {
 
 export function Header({
   title = "[report title]",
-  logo = <ReportMakerLogo aria-label="Report Maker" />,
+  logo,
   logoAlt = "Logo",
 }: HeaderProps) {
   return (
