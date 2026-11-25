@@ -29,11 +29,10 @@ export type ReportConfig = {
     authors?: Author[];
     affiliations?: string[];
   };
-  toc?: {
+  toc?: boolean | {
     title?: string;
   };
-
-  lof?: {
+  lof?: boolean | {
     title?: string;
   };
 };

@@ -99,13 +99,23 @@ export function resolvePageConfig(
     documentTitle: resolveDocumentTitle(config.title, frontmatter.title),
     header,
     cover,
-    toc: frontmatter.toc !== false,
-    tocTitle: typeof frontmatter.toc === "object"
-      ? frontmatter.toc.title
-      : config.toc?.title,
-    lof: frontmatter.lof !== false,
-    lofTitle: typeof frontmatter.lof === "object"
-      ? frontmatter.lof.title
-      : config.lof?.title,
+    toc: frontmatter.toc !== undefined
+      ? frontmatter.toc !== false
+      : config.toc !== false,
+    tocTitle:
+      frontmatter.toc && typeof frontmatter.toc === "object"
+        ? frontmatter.toc.title
+        : config.toc && typeof config.toc === "object"
+          ? config.toc.title
+          : undefined,
+    lof: frontmatter.lof !== undefined
+      ? frontmatter.lof !== false
+      : config.lof !== false,
+    lofTitle:
+      frontmatter.lof && typeof frontmatter.lof === "object"
+        ? frontmatter.lof.title
+        : config.lof && typeof config.lof === "object"
+          ? config.lof.title
+          : undefined,
   };
 }

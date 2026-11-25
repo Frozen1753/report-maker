@@ -16,6 +16,7 @@ import { loadAssetConfig, shouldInlineAsset } from "./assets/rules.ts";
 import { assetsServerPlugin } from "./assets/server.ts";
 import { exportServerPlugin } from "./export/server.ts";
 import { inlineFaviconPlugin } from "./favicon/plugin.ts";
+import remarkAssets from "./mdx/remark-assets.ts";
 import remarkFigures from "./mdx/remark-figures.ts";
 import remarkHeadingNumbers from "./mdx/remark-heading-numbers.ts";
 import remarkInclude from "./mdx/remark-include.ts";
@@ -39,6 +40,7 @@ export function reportMaker(): UserConfig {
     /* do NOT touch the order */
     remarkFrontmatter,
     [remarkMdxFrontmatter, { name: "frontmatter" }],
+    remarkAssets,
     remarkGfm,
     remarkInclude,
     remarkHeadingNumbers,

@@ -31,3 +31,34 @@ export function exportConst(name: string, value: unknown) {
         },
     } as never;
 }
+
+export function importDefault(name: string, source: string) {
+    return {
+        type: "mdxjsEsm",
+        value: "",
+        data: {
+            estree: {
+                type: "Program",
+                sourceType: "module",
+                body: [
+                    {
+                        type: "ImportDeclaration",
+                        specifiers: [
+                            {
+                                type: "ImportDefaultSpecifier",
+                                local: {
+                                    type: "Identifier",
+                                    name,
+                                },
+                            },
+                        ],
+                        source: {
+                            type: "Literal",
+                            value: source,
+                        },
+                    },
+                ],
+            },
+        },
+    } as never;
+}
