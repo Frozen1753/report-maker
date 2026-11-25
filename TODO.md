@@ -2,16 +2,6 @@
 
 ## Features
 
-- [?] Markdown-friendly syntax
-  - [X] `<Tabs/>`
-  - [X] `<Comparison/>`
-  - [X] `<Term/>`
-  - [X] `<Code/>`
-  - [X] `<Mermaid/>`
-  - [X] `<Callout/>`
-  - [X] `<Separator/>`
-  - [?] `<Collapsible/>`
-  - [?] `<Figure/>`
 - [ ] Panel components redesign 
   - [X] `<ExportPanel/>` :
   - [ ] `<ThemePanel/>` :
