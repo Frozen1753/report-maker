@@ -24,8 +24,17 @@
 .logo {
   display: flex;
   flex-direction: row-reverse;
-  align-content: center;
+  align-items: center;
   color: var(--c-text-on-accent);
+}
+
+.logo img,
+.logo svg {
+  display: block;
+  width: 180px;
+  height: auto;
+  max-height: 48px;
+  object-fit: contain;
 }
 
 @media (max-width: 768px) {
@@ -35,5 +44,11 @@
 
   .title {
     font-size: 1rem;
+  }
+
+  .logo img,
+  .logo svg {
+    width: 120px;
+    max-height: 36px;
   }
 }
