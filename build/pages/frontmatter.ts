@@ -20,6 +20,8 @@ export function readFrontmatter(source: string, label: string): unknown {
 
 const KEYS = {
   page: ["title", "slug", "devOnly", "header", "cover", "toc", "lof"],
+  toc: ["title"],
+  lof: ["title"],
   title: ["value", "concatenate"],
   header: ["title", "logo", "logoAlt"],
   cover: ["title", "date", "media", "authors", "affiliations"],
@@ -91,14 +93,23 @@ export function validateFrontmatter(data: unknown, label: string, warn: (message
   const page = object(data, "(frontmatter)");
   keys(page, KEYS.page, "");
 
+  const validateSection = (value: unknown, path: string, allowed: readonly string[]) => {
+    if (typeof value === "boolean") return;
+
+    check(object(value, path), `${path}.`, allowed, {
+      title: string,
+    });
+  };
+
   if (page.title !== undefined && typeof page.title !== "string") {
     check(object(page.title, "title"), "title.", KEYS.title, { value: string, concatenate: boolean });
     if (typeof (page.title as Obj).value !== "string") fail("title.value", "a string (it is required in the object form)");
   }
   if (page.slug !== undefined) string(page.slug, "slug");
   if (page.devOnly !== undefined) boolean(page.devOnly, "devOnly");
-  if (page.toc !== undefined) boolean(page.toc, "toc");
-  if (page.lof !== undefined) boolean(page.lof, "lof");
+
+  if (page.toc !== undefined) validateSection(page.toc, "toc", KEYS.toc);
+  if (page.lof !== undefined) validateSection(page.lof, "lof", KEYS.lof);
 
   if (page.header !== undefined) {
     check(object(page.header, "header"), "header.", KEYS.header, { title: string, logo: string, logoAlt: string });

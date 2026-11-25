@@ -29,6 +29,13 @@ export type ReportConfig = {
     authors?: Author[];
     affiliations?: string[];
   };
+  toc?: {
+    title?: string;
+  };
+
+  lof?: {
+    title?: string;
+  };
 };
 
 /** Identity helper: autocompletion and type-checking for report/report.config.tsx. */

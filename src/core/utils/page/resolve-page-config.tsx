@@ -51,7 +51,9 @@ export interface ResolvedPage {
   /** null: no cover page on this page. */
   cover: ResolvedCover | null;
   toc: boolean;
+  tocTitle?: string;
   lof: boolean;
+  lofTitle?: string;
 }
 
 /**
@@ -97,7 +99,13 @@ export function resolvePageConfig(
     documentTitle: resolveDocumentTitle(config.title, frontmatter.title),
     header,
     cover,
-    toc: frontmatter.toc ?? true,
-    lof: frontmatter.lof ?? true,
+    toc: frontmatter.toc !== false,
+    tocTitle: typeof frontmatter.toc === "object"
+      ? frontmatter.toc.title
+      : config.toc?.title,
+    lof: frontmatter.lof !== false,
+    lofTitle: typeof frontmatter.lof === "object"
+      ? frontmatter.lof.title
+      : config.lof?.title,
   };
 }

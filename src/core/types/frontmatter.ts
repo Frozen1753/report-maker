@@ -36,7 +36,7 @@ export interface PageFrontmatter {
     affiliations?: string[];
   };
   /** Table of contents. Default: true. */
-  toc?: boolean;
+  toc?: boolean | { title?: string };
   /** List of figures. Default: true. */
-  lof?: boolean;
+  lof?: boolean | { title?: string };
 }

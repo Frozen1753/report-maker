@@ -64,8 +64,18 @@ export function PageRoute({ entry }: { entry: PageEntry }) {
   return (
     <>
       {page.cover && <CoverPage {...page.cover} />}
-      {page.toc && mdx.toc.length > 0 && <TableOfContent items={mdx.toc} />}
-      {page.lof && <ListOfFigures items={mdx.figures} />}
+      {page.toc && mdx.toc.length > 0 && (
+        <TableOfContent
+          title={page.tocTitle}
+          items={mdx.toc}
+        />
+      )}
+      {page.lof && (
+        <ListOfFigures
+          title={page.lofTitle}
+          items={mdx.figures}
+        />
+      )}
 
       <Content components={mdxComponents} />
     </>
