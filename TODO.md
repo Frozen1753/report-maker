@@ -21,7 +21,7 @@
   - [X] automate page pre-rendering
   - [X] frontmatter node et resolver de config
   - [ ] asset plugin for frontmatter
-  - [ ] toc / tof title property frontmatter
+  - [X] toc / tof title property frontmatter
 - [X] Responsive
 - [ ] Docs
   - [ ] Components
