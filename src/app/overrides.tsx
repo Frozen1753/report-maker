@@ -3,6 +3,7 @@ import { terms } from "../../report/custom/glossary";
 import {
   Callout,
   Code,
+  Collapsible,
   GlossaryProvider,
   GlossaryTerm,
   Link,
@@ -50,6 +51,7 @@ export const mdxComponents = {
   hr: () => <Separator />,
   separator: (props: SeparatorProps) => <Separator {...props} />,
   callout: (props: CalloutProps) => <Callout {...props} />,
+  collapsible: (props: CalloutProps) => <Collapsible {...props} />,
   term: (props: GlossaryTermProps) => <GlossaryTerm {...props} />,
   a: ({ href, ...props }: ComponentProps<"a">) =>
     href ? <Link href={href} {...props} /> : <a {...props} />,
