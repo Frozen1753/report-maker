@@ -16,6 +16,7 @@ import { loadAssetConfig, shouldInlineAsset } from "./assets/rules.ts";
 import { assetsServerPlugin } from "./assets/server.ts";
 import { exportServerPlugin } from "./export/server.ts";
 import { inlineFaviconPlugin } from "./favicon/plugin.ts";
+import { includePlugin } from "./mdx/include-plugin.ts";
 import remarkAssets from "./mdx/remark-assets.ts";
 import remarkFigures from "./mdx/remark-figures.ts";
 import remarkHeadingNumbers from "./mdx/remark-heading-numbers.ts";
@@ -56,6 +57,8 @@ export function reportMaker(): UserConfig {
 
     plugins: [
       // Must run before @vitejs/plugin-react transforms the JSX MDX compiles down to.
+
+      includePlugin(),
 
       {
         enforce: "pre",
