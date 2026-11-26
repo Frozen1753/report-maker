@@ -51,6 +51,8 @@ h6 {
   margin: 2rem 0 0.8em;
   font-weight: 700;
   line-height: 1.25;
+  display: flex;
+  gap: 5px;
 }
 
 h1 {

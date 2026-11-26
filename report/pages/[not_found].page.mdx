@@ -1,13 +1,20 @@
 ---
-title: "Err 404"
+title: "Error 404"
 
 header:
-    title: "Err 404"
+  title: "Page not found"
 
-toc: false 
+toc: false
 lof: false
 ---
+import { FileQuestionMark } from "lucide-react";
 
-<u><b>[Err 404] Page not found</b></u>
+<h1>
+    <FileQuestionMark size={37} strokeWidth={1.5} aria-hidden="true" />
+    Error 404 
+</h1>
 
-There is no page at this address. :link[Back to home page]{href="/"}.
+The page you are looking for does not exist or has been moved.
+<br/>
+
+Please check the address or return to :link[the  home page]{href="/" icon=true}.
