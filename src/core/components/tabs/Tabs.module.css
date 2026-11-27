@@ -67,6 +67,10 @@
   animation: tabs-panel-in 180ms ease;
 }
 
+.tabspanel[hidden] {
+  display: none;
+}
+
 .tabspanel:focus-visible {
   border-radius: var(--radius-5);
 }

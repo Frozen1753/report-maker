@@ -1,4 +1,11 @@
-import { useId, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
+import {
+  useId,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type ReactNode,
+} from "react";
+
 import { createSlot, readSlots } from "../../utils/components/slots";
 import styles from "./Tabs.module.css";
 
@@ -11,19 +18,41 @@ export type TabItemProps = {
 export type TabsProps = {
   children: ReactNode;
   defaultActive?: number;
+  activeIndex?: number;
+  onActiveChange?: (index: number) => void;
   className?: string;
 };
 
 const Item = createSlot<TabItemProps>("Tabs.Item");
 
-function TabsRoot({ children, defaultActive = 0, className = "" }: TabsProps) {
-  const [activeIndex, setActiveIndex] = useState(defaultActive);
+function TabsRoot({
+  children,
+  defaultActive = 0,
+  activeIndex: controlledIndex,
+  onActiveChange,
+  className = "",
+}: TabsProps) {
+  const [internalIndex, setInternalIndex] = useState(defaultActive);
+  const activeIndex = controlledIndex ?? internalIndex;
   const tabsId = useId();
   const buttonRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
-  const tabItems = readSlots(children, [Item], "Tabs").map(({ props }) => props);
+  const tabItems = readSlots(children, [Item], "Tabs").map(
+    ({ props }) => props,
+  );
 
-  const getNextEnabledIndex = (index: number, direction: 1 | -1): number => {
+  const setActiveIndex = (index: number) => {
+    if (controlledIndex === undefined) {
+      setInternalIndex(index);
+    }
+
+    onActiveChange?.(index);
+  };
+
+  const getNextEnabledIndex = (
+    index: number,
+    direction: 1 | -1,
+  ): number => {
     let nextIndex = index;
     for (let i = 0; i < tabItems.length; i++) {
       nextIndex = (nextIndex + direction + tabItems.length) % tabItems.length;
@@ -74,18 +103,25 @@ function TabsRoot({ children, defaultActive = 0, className = "" }: TabsProps) {
     return null;
   }
 
-  const activeTab = tabItems[activeIndex] ?? tabItems[0];
-  const activeTabId = `${tabsId}-tab-${activeIndex}`;
-  const activePanelId = `${tabsId}-panel-${activeIndex}`;
+  const effectiveIndex =
+    tabItems[activeIndex] && !tabItems[activeIndex].disabled
+      ? activeIndex
+      : Math.max(0, tabItems.findIndex((tab) => !tab.disabled));
 
   return (
-    <div className={`${styles.tabs} ${className}`}>
-      {/* Tab Triggers Header */}
-      <div className={styles.tabslist} role="tablist" aria-label="Content sections">
+    <div
+      className={`${styles.tabs} ${className}`}
+      data-reveal-container="tabs"
+    >
+      <div
+        className={styles.tabslist}
+        role="tablist"
+        aria-label="Content sections"
+      >
         {tabItems.map((tab, index) => {
           const tabId = `${tabsId}-tab-${index}`;
           const panelId = `${tabsId}-panel-${index}`;
-          const isActive = index === activeIndex;
+          const isActive = index === effectiveIndex;
 
           return (
             <button
@@ -96,7 +132,9 @@ function TabsRoot({ children, defaultActive = 0, className = "" }: TabsProps) {
               id={tabId}
               type="button"
               role="tab"
-              className={`${styles.tabstrigger} ${isActive ? styles.active : ""}`}
+              data-reveal-tab-trigger={index}
+              className={`${styles.tabstrigger} ${isActive ? styles.active : ""
+                }`}
               aria-selected={isActive}
               aria-controls={panelId}
               tabIndex={isActive ? 0 : -1}
@@ -110,16 +148,26 @@ function TabsRoot({ children, defaultActive = 0, className = "" }: TabsProps) {
         })}
       </div>
 
-      {/* Active Tab Content Panel */}
-      <div
-        id={activePanelId}
-        className={styles.tabspanel}
-        role="tabpanel"
-        aria-labelledby={activeTabId}
-        tabIndex={0}
-      >
-        {activeTab.children}
-      </div>
+      {tabItems.map((tab, index) => {
+        const tabId = `${tabsId}-tab-${index}`;
+        const panelId = `${tabsId}-panel-${index}`;
+        const isActive = index === effectiveIndex;
+
+        return (
+          <div
+            key={panelId}
+            id={panelId}
+            className={styles.tabspanel}
+            role="tabpanel"
+            aria-labelledby={tabId}
+            tabIndex={0}
+            hidden={!isActive}
+            data-reveal-tab-panel={index}
+          >
+            {tab.children}
+          </div>
+        );
+      })}
     </div>
   );
 }

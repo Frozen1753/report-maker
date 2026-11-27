@@ -2,6 +2,7 @@ import { HashRouter, Route, Routes } from "react-router";
 import { notFound, pages } from "virtual:report-pages";
 import { NotFound } from "./shell/NotFound";
 import { PageRoute } from "./shell/PageRoute";
+import { RevealOnHashChange } from "./shell/RevealOnHashChange";
 import { Shell } from "./shell/Shell";
 
 /**
@@ -12,6 +13,8 @@ import { Shell } from "./shell/Shell";
 export default function App() {
   return (
     <HashRouter>
+      <RevealOnHashChange />
+
       <Routes>
         <Route element={<Shell />}>
           {pages.map((page) => (
