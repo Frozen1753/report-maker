@@ -48,7 +48,7 @@
   margin: 0;
   padding: 0.3rem 0.75rem;
 
-  border-radius: var(--radius-full);
+  border-radius: var(--radius-8);
 
   background: rgb(20 12 9 / 65%);
   color: var(--c-text-on-accent);
