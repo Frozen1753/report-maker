@@ -1,5 +1,5 @@
+import { Link } from "@report-maker";
 import { FileQuestionMark } from "lucide-react";
-import { Link } from "report-maker";
 
 /** Default 404. Add report/pages/[not_found].page.mdx to replace it. */
 export function NotFound() {

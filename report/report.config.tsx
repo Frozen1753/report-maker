@@ -1,6 +1,6 @@
-import { defineReport } from "report-maker";
-import ReportMakerIcon from "./assets/report-maker_icon.svg?react";
-import ReportMakerLogo from "./assets/report-maker_logo.svg?react";
+import { defineReport } from "@report-maker";
+import ReportMakerIcon from "@report/assets/report-maker_icon.svg?react";
+import ReportMakerLogo from "@report/assets/report-maker_logo.svg?react";
 
 /*
  * Priority order:

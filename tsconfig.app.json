@@ -21,7 +21,12 @@
     "jsx": "react-jsx",
     /* Public API for report.mdx and report/custom */
     "paths": {
-      "report-maker": ["./src/core/mdx.ts"]
+      "@report-maker": [
+        "./src/core/mdx.ts"
+      ],
+      "@report/*": [
+        "./report/*"
+      ]
     },
     /* Linting */
     "noUnusedLocals": true,

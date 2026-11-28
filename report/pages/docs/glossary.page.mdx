@@ -6,7 +6,7 @@ cover: false
 import {
     Collapsible,
     Tabs
-} from "report-maker";
+} from "@report-maker";
 
 # Glossary
 
@@ -23,7 +23,7 @@ Writing `<Term tooltip={...}>` every time gets heavy once the same word shows up
 Definitions live in `report/custom/glossary.tsx`, away from the report content. The tooltip is regular JSX, so anything that works in a `Term` works here — import what you need at the top of the file.
 
 ```tsx bar name="report/custom/glossary.tsx"
-import type { GlossaryEntries } from "report-maker";
+import type { GlossaryEntries } from "@report-maker";
 
 export const terms = {
   latency: <>Time between a request and its response.</>,

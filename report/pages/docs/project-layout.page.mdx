@@ -3,7 +3,7 @@ title: "Project Layout"
 cover: false
 ---
 
-import { Collapsible } from "report-maker";
+import { Collapsible } from "@report-maker";
 
 # Project Layout
 
@@ -36,8 +36,8 @@ build/                     <- Vite configuration and plugins (Mermaid, Shiki, th
 The title, the cover page and the header are configured in one place, as plain data — there is no component to edit:
 
 ```tsx bar name="report/report.config.tsx"
-import { defineReport } from "report-maker";
-import MyLogo from "./assets/logo.svg?react";
+import { defineReport } from "@report-maker";
+import MyLogo from "@report/assets/logo.svg?react";
 
 export default defineReport({
   title: "My report",

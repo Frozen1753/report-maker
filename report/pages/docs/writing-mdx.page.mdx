@@ -3,7 +3,7 @@ title: "Writing Content in MDX"
 cover: false
 ---
 
-import { Collapsible } from "report-maker";
+import { Collapsible } from "@report-maker";
 
 # Writing Content in MDX
 
@@ -63,7 +63,7 @@ Text like `note:foo` would be read as the directive `foo`. To write a literal co
 Images, gifs, and videos are real imports, not plain string paths — that's what lets the build pipeline hash them, inline them in `singlefile` mode, or keep them external in `hybrid` mode:
 
 ```mdx
-import myScreenshot from './assets/screenshot.png'
+import myScreenshot from '@report/assets/screenshot.png'
 
 <Figure caption="...">
     <img src={myScreenshot} alt="..." />
@@ -73,7 +73,7 @@ import myScreenshot from './assets/screenshot.png'
 Feel free to organize the `assets/` folder however you like, grouping files into sub-folders or by naming convention — you just need the right path when importing them.
 
 :::callout{type="warning" title="Avoid plain string paths"}
-    Writing `src="./assets/screenshot.png"` directly (instead of importing it) means the
+    Writing `src="@report/assets/screenshot.png"` directly (instead of importing it) means the
     bundler never sees the file — it won't be hashed, won't be inlined in singlefile builds, and
     will likely 404 once the report is actually deployed somewhere other than exactly where you
     tested it.
