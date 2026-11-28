@@ -46,7 +46,7 @@ export function resolveAssetReference(
     // Local paths must be relative.
     if (path.isAbsolute(input)) {
         throw new Error(
-            `[assets] asset path must be relative to its page: "${input}".`,
+            `[assets] asset path must be relative: "${input}".`,
         );
     }
 
@@ -83,19 +83,23 @@ export function resolveAssetReference(
         );
     }
 
+    const reportDirectory = path.resolve(process.cwd(), "report");
     const pageDirectory = path.dirname(path.resolve(pageFile));
     const absolutePath = path.resolve(pageDirectory, assetPath);
 
-    // Prevent paths escaping the allowed page directory.
-    const relative = path.relative(pageDirectory, absolutePath);
+    // prevent paths escaping report/
+    const relativeToReport = path.relative(
+        reportDirectory,
+        absolutePath,
+    );
 
     if (
-        relative === ".." ||
-        relative.startsWith(`..${path.sep}`) ||
-        path.isAbsolute(relative)
+        relativeToReport === ".." ||
+        relativeToReport.startsWith(`..${path.sep}`) ||
+        path.isAbsolute(relativeToReport)
     ) {
         throw new Error(
-            `[assets] asset path cannot escape the page directory: "${input}".`,
+            `[assets] asset path cannot escape the report directory: "${input}".`,
         );
     }
 
@@ -108,8 +112,10 @@ export function resolveAssetReference(
         );
     }
 
-    const importPath =
-        `./${relative.split(path.sep).join("/")}`;
+    const importPath = `./${path.relative(
+        pageDirectory,
+        absolutePath,
+    ).split(path.sep).join("/")}`;
 
     if (query === "react") {
         return {
