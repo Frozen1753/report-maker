@@ -29,3 +29,4 @@
 - [ ] Default date in cover page always display Date.now() and not build date
 - [ ] check-boundaries.mjs doesn't work without .git
 - [ ] horizontal scroll bar seems to appear on some instance of a table
+- [ ] @report alias should be usable with classic MD `[]()` / `![]()` directives and frontmatter
